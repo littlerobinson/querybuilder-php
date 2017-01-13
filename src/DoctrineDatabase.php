@@ -57,9 +57,10 @@ class DoctrineDatabase
     /**
      * writeDoctrineYamlConfig method
      * Write the yaml config file for the query builder using doctrine
-     * @return int
+     * @param int $yamlInline
+     * @return bool|int
      */
-    public function writeDatabaseYamlConfig()
+    public function writeDatabaseYamlConfig($yamlInline = 4)
     {
         /// Get existing configuration if exist
         $currentConfig = false;
@@ -73,7 +74,8 @@ class DoctrineDatabase
         if ($currentConfig) {
             $arrDiff = array_diff(array_map('serialize', $currentConfig), array_map('serialize', $datas));
             foreach ($arrDiff as $tableKey => $tableDiff) {
-                $newTableDiff                          = unserialize($tableDiff);
+                $newTableDiff = unserialize($tableDiff);
+
                 $datas[$tableKey]['_table_traduction'] = $newTableDiff['_table_traduction'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
                     if (!is_array($fieldDiff)) {
@@ -92,9 +94,11 @@ class DoctrineDatabase
                 }
             }
         }
+        /// Add FK
+        $datas = $this->addForeignKeys($datas);
 
         /// Write yaml
-        $yaml = Yaml::dump($datas, 3);
+        $yaml = Yaml::dump($datas, $yamlInline);
 
         return @file_put_contents(__DIR__ . '/../config/database-config.yml', $yaml);
     }
@@ -103,7 +107,7 @@ class DoctrineDatabase
      * @param string $table
      * @return \Doctrine\DBAL\Schema\Table
      */
-    public function getTableDetails(string $table)
+    private function getTableDetails(string $table)
     {
         return $this->schemaManager->listTableDetails($table);
     }
@@ -113,7 +117,8 @@ class DoctrineDatabase
      * @param string $table
      * @return array
      */
-    public function getTableColumns(string $table)
+    private
+    function getTableColumns(string $table)
     {
         $response = [];
         $columns  = $this->schemaManager->listTableColumns($table);
@@ -134,33 +139,48 @@ class DoctrineDatabase
      * @param string $table
      * @return array
      */
-    public function getPrimaryKey(string $table)
+    private
+    function getPrimaryKey(string $table)
     {
         return $this->getTableDetails($table)->getPrimaryKey()->getColumns();
     }
 
     /**
-     * @param string $table
-     * @return array
+     * addForeignKeys method
+     * @param array $datas
+     * @return array|null
      */
-    public function getForeignKeys(string $table)
+    private
+    function addForeignKeys(array $datas)
     {
         $listForeignKey = [];
-        foreach ($this->getTableDetails($table)->getForeignKeys() as $fk) {
-            $listForeignKey['tableName']      = $fk->getForeignTableName();
-            $listForeignKey['columns']        = $fk->getForeignTableName();
-            $listForeignKey['foreignColumns'] = $fk->getForeignTableName();
-            $listForeignKey['name']           = $fk->getForeignTableName();
-            $listForeignKey['options']        = $fk->getForeignTableName();
+        $listTables = $this->getTables();
+
+        foreach ($listTables as $table) {
+            try {
+                foreach ($this->getTableDetails($table)->getForeignKeys() as $key => $fk) {
+                    $listForeignKey[$table][$fk->getColumns()[0]]['tableName']      = $fk->getForeignTableName();
+                    $listForeignKey[$table][$fk->getColumns()[0]]['columns']        = $fk->getColumns()[0];
+                    $listForeignKey[$table][$fk->getColumns()[0]]['foreignColumns'] = $fk->getForeignColumns()[0];
+                    $listForeignKey[$table][$fk->getColumns()[0]]['name']           = $fk->getName();
+                    $listForeignKey[$table][$fk->getColumns()[0]]['options']        = $fk->getOptions();
+
+                    /// Update $datas
+                    $datas[$table][$fk->getColumns()[0]]['FK'] = $listForeignKey[$table][$fk->getColumns()[0]];
+                }
+            } catch (\Exception $e) {
+                return null;
+            }
         }
-        return $listForeignKey;
+        return $datas;
     }
 
     /* ============================================================================================================== */
     /* ============================================== ACCESSORS ==================================================== */
     /* ============================================================================================================== */
 
-    public function getTables()
+    public
+    function getTables()
     {
         return $this->tables;
     }

@@ -5,9 +5,6 @@
 /bin/*
 /vendor/
 
-# Tests
-/tests
-
 # OS generated files #
 ######################
 .idea/
@@ -20,3 +17,4 @@ Icon?
 ehthumbs.db
 Thumbs.db
 *.db3
+config/
