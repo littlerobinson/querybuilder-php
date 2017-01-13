@@ -63,8 +63,8 @@ class DoctrineDatabase
     {
         /// Get existing configuration if exist
         $currentConfig = false;
-        if (@file_get_contents(__DIR__ . '/../config/database-config.yaml')) {
-            $currentConfig = Yaml::parse(file_get_contents(__DIR__ . '/../config/database-config.yaml'));
+        if (@file_get_contents(__DIR__ . '/../config/database-config.yml')) {
+            $currentConfig = Yaml::parse(file_get_contents(__DIR__ . '/../config/database-config.yml'));
         }
         /// Get database config array
         $datas = $this->getDatabaseConfig();
@@ -73,19 +73,19 @@ class DoctrineDatabase
         if ($currentConfig) {
             $arrDiff = array_diff(array_map('serialize', $currentConfig), array_map('serialize', $datas));
             foreach ($arrDiff as $tableKey => $tableDiff) {
-                $newTableDiff                           = unserialize($tableDiff);
-                $datas[$tableKey]['__table_traduction'] = $newTableDiff['__table_traduction'];
+                $newTableDiff                          = unserialize($tableDiff);
+                $datas[$tableKey]['_table_traduction'] = $newTableDiff['_table_traduction'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
                     if (!is_array($fieldDiff)) {
                         continue;
                     }
                     try {
-                        $datas[$tableKey][$fieldKey]['__field_traduction'] = $fieldDiff['__field_traduction'];
-                        $datas[$tableKey][$fieldKey]['name']               = $fieldDiff['name'];
-                        $datas[$tableKey][$fieldKey]['type']               = $fieldDiff['type'];
-                        $datas[$tableKey][$fieldKey]['length']             = $fieldDiff['length'];
-                        $datas[$tableKey][$fieldKey]['not_null']           = $fieldDiff['not_null'];
-                        $datas[$tableKey][$fieldKey]['definition']         = $fieldDiff['definition'];
+                        $datas[$tableKey][$fieldKey]['_field_traduction'] = $fieldDiff['_field_traduction'];
+                        $datas[$tableKey][$fieldKey]['name']              = $fieldDiff['name'];
+                        $datas[$tableKey][$fieldKey]['type']              = $fieldDiff['type'];
+                        $datas[$tableKey][$fieldKey]['length']            = $fieldDiff['length'];
+                        $datas[$tableKey][$fieldKey]['not_null']          = $fieldDiff['not_null'];
+                        $datas[$tableKey][$fieldKey]['definition']        = $fieldDiff['definition'];
                     } catch (\Exception $e) {
                         return false;
                     }
@@ -96,7 +96,7 @@ class DoctrineDatabase
         /// Write yaml
         $yaml = Yaml::dump($datas, 3);
 
-        return @file_put_contents(__DIR__ . '/../config/database-config.yaml', $yaml);
+        return @file_put_contents(__DIR__ . '/../config/database-config.yml', $yaml);
     }
 
     /**
@@ -118,14 +118,14 @@ class DoctrineDatabase
         $response = [];
         $columns  = $this->schemaManager->listTableColumns($table);
         foreach ($columns as $key => $column) {
-            $response['__table_traduction']       = null;
-            $response[$key]['name']               = $column->getName();
-            $response[$key]['__field_traduction'] = null;
-            $response[$key]['type']               = $column->getType()->getName();
-            $response[$key]['default']            = $column->getDefault();
-            $response[$key]['length']             = $column->getLength();
-            $response[$key]['not_null']           = $column->getNotnull();
-            $response[$key]['definition']         = $column->getColumnDefinition();
+            $response['_table_traduction']       = null;
+            $response[$key]['name']              = $column->getName();
+            $response[$key]['_field_traduction'] = null;
+            $response[$key]['type']              = $column->getType()->getName();
+            $response[$key]['default']           = $column->getDefault();
+            $response[$key]['length']            = $column->getLength();
+            $response[$key]['not_null']          = $column->getNotnull();
+            $response[$key]['definition']        = $column->getColumnDefinition();
         }
         return $response;
     }
