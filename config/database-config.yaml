@@ -1,0 +1,1947 @@
+affiliation_social_security:
+    __table_traduction: Sécu
+    id:
+        name: id
+        __field_traduction: Sécu
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        __field_traduction: Inscrit
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    parent_salary_scheme_id:
+        name: parent_salary_scheme_id
+        __field_traduction: 'Salaire parents'
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    order_number:
+        name: order_number
+        __field_traduction: null
+        type: string
+        default: null
+        length: 30
+        not_null: true
+        definition: null
+    is_scholarship:
+        name: is_scholarship
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_unemployment:
+        name: is_unemployment
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    treatment_date:
+        name: treatment_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    organization_name:
+        name: organization_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    parent2_salary_scheme_id:
+        name: parent2_salary_scheme_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+attachment:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    attachment_type_id:
+        name: attachment_type_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    comment:
+        name: comment
+        __field_traduction: null
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    created_at:
+        name: created_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    file_name:
+        name: file_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+attachment_type:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    enabled:
+        name: enabled
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    comment:
+        name: comment
+        __field_traduction: null
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+campus:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    is_enabled:
+        name: is_enabled
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+campuses_users:
+    __table_traduction: null
+    user_id:
+        name: user_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    campus_id:
+        name: campus_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+civility:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 20
+        not_null: true
+        definition: null
+company:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    type:
+        name: type
+        __field_traduction: null
+        type: string
+        default: null
+        length: 50
+        not_null: true
+        definition: null
+    corporate_name:
+        name: corporate_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    siren:
+        name: siren
+        __field_traduction: null
+        type: string
+        default: null
+        length: 11
+        not_null: true
+        definition: null
+    intra_community_vat:
+        name: intra_community_vat
+        __field_traduction: null
+        type: string
+        default: null
+        length: 20
+        not_null: true
+        definition: null
+    vat_rate:
+        name: vat_rate
+        __field_traduction: null
+        type: float
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    rcs:
+        name: rcs
+        __field_traduction: null
+        type: string
+        default: null
+        length: 50
+        not_null: false
+        definition: null
+    capital:
+        name: capital
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    ape:
+        name: ape
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    particular_mention:
+        name: particular_mention
+        __field_traduction: null
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+company_internship:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registration_id:
+        name: registration_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    company_name:
+        name: company_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 150
+        not_null: true
+        definition: null
+    address1:
+        name: address1
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    address2:
+        name: address2
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    zip:
+        name: zip
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    city:
+        name: city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 70
+        not_null: false
+        definition: null
+    phone:
+        name: phone
+        __field_traduction: null
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    tutor_first_name:
+        name: tutor_first_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    tutor_last_name:
+        name: tutor_last_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    tutor_email:
+        name: tutor_email
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    signatory_first_name:
+        name: signatory_first_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    signatory_last_name:
+        name: signatory_last_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    begin_date:
+        name: begin_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    end_date:
+        name: end_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    observation:
+        name: observation
+        __field_traduction: null
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    shipment_agreement_date:
+        name: shipment_agreement_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    return_agreement_date:
+        name: return_agreement_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    tutor_civility_id:
+        name: tutor_civility_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    tutor_function:
+        name: tutor_function
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    signatory_civility_id:
+        name: signatory_civility_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+country:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: string
+        default: null
+        length: 2
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    calling_codes:
+        name: calling_codes
+        __field_traduction: null
+        type: simple_array
+        default: null
+        length: null
+        not_null: false
+        definition: null
+diploma:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+exit_cause:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    created_at:
+        name: created_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+experience_lign:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_name:
+        name: training_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    school_year:
+        name: school_year
+        __field_traduction: null
+        type: string
+        default: null
+        length: 9
+        not_null: false
+        definition: null
+    begin_date:
+        name: begin_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    end_date:
+        name: end_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    exit_date:
+        name: exit_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    exit_reason:
+        name: exit_reason
+        __field_traduction: null
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    establishment:
+        name: establishment
+        __field_traduction: null
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    establishment_city:
+        name: establishment_city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    diploma_name:
+        name: diploma_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    is_diploma_validate:
+        name: is_diploma_validate
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    diploma_validation_date:
+        name: diploma_validation_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    diploma_speciality:
+        name: diploma_speciality
+        __field_traduction: null
+        type: string
+        default: null
+        length: 50
+        not_null: false
+        definition: null
+institution:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    company_id:
+        name: company_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_head_office:
+        name: is_head_office
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    siret:
+        name: siret
+        __field_traduction: null
+        type: string
+        default: null
+        length: 14
+        not_null: true
+        definition: null
+    address1:
+        name: address1
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    address2:
+        name: address2
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    zip:
+        name: zip
+        __field_traduction: null
+        type: string
+        default: null
+        length: 5
+        not_null: true
+        definition: null
+    city:
+        name: city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+registrant:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    crm_id:
+        name: crm_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    student_number:
+        name: student_number
+        __field_traduction: null
+        type: string
+        default: null
+        length: 11
+        not_null: false
+        definition: null
+    last_name:
+        name: last_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    first_name:
+        name: first_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    birth_date:
+        name: birth_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    birth_city:
+        name: birth_city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    birth_department:
+        name: birth_department
+        __field_traduction: null
+        type: smallint
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    nationality:
+        name: nationality
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    social_security:
+        name: social_security
+        __field_traduction: null
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    address1:
+        name: address1
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    address2:
+        name: address2
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    zip:
+        name: zip
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    city:
+        name: city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    email:
+        name: email
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    email_school:
+        name: email_school
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    cell_phone:
+        name: cell_phone
+        __field_traduction: null
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    phone:
+        name: phone
+        __field_traduction: null
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    parent1_address1:
+        name: parent1_address1
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent1_address2:
+        name: parent1_address2
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent1_zip:
+        name: parent1_zip
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    parent1_city:
+        name: parent1_city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent1_email:
+        name: parent1_email
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    parent1_cell_phone:
+        name: parent1_cell_phone
+        __field_traduction: null
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    parent1_phone:
+        name: parent1_phone
+        __field_traduction: null
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    bac_establishment:
+        name: bac_establishment
+        __field_traduction: null
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    bac_option:
+        name: bac_option
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    bac_date:
+        name: bac_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    bac_establishment_department:
+        name: bac_establishment_department
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    bac_establishment_city:
+        name: bac_establishment_city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    is_bac_public_establishment:
+        name: is_bac_public_establishment
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    bac_classroom_exit:
+        name: bac_classroom_exit
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    is_doubling:
+        name: is_doubling
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    created_at:
+        name: created_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    campus_id:
+        name: campus_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    parent1_last_name:
+        name: parent1_last_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent1_first_name:
+        name: parent1_first_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_last_name:
+        name: parent2_last_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_first_name:
+        name: parent2_first_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_address1:
+        name: parent2_address1
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent2_address2:
+        name: parent2_address2
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent2_zip:
+        name: parent2_zip
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    parent2_city:
+        name: parent2_city
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_email:
+        name: parent2_email
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    parent2_cell_phone:
+        name: parent2_cell_phone
+        __field_traduction: null
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    parent2_phone:
+        name: parent2_phone
+        __field_traduction: null
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    country_id:
+        name: country_id
+        __field_traduction: null
+        type: string
+        default: null
+        length: 2
+        not_null: false
+        definition: null
+    civility_id:
+        name: civility_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    maiden_name:
+        name: maiden_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    birth_country:
+        name: birth_country
+        __field_traduction: null
+        type: string
+        default: null
+        length: 2
+        not_null: false
+        definition: null
+    diploma:
+        name: diploma
+        __field_traduction: null
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    diploma_code:
+        name: diploma_code
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    diploma_obtained:
+        name: diploma_obtained
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    diploma_speciality:
+        name: diploma_speciality
+        __field_traduction: null
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    diploma_speciality_code:
+        name: diploma_speciality_code
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    is_apprenticeship:
+        name: is_apprenticeship
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    diploma_level:
+        name: diploma_level
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    bac_type:
+        name: bac_type
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent1_salary_scheme_id:
+        name: parent1_salary_scheme_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    parent2_salary_scheme_id:
+        name: parent2_salary_scheme_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    is_disabled:
+        name: is_disabled
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    parent1_civility_id:
+        name: parent1_civility_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    parent2_civility_id:
+        name: parent2_civility_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+registrant_status:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    comment:
+        name: comment
+        __field_traduction: null
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+registration:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    user_id:
+        name: user_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    registration_amount:
+        name: registration_amount
+        __field_traduction: null
+        type: string
+        default: null
+        length: 6
+        not_null: false
+        definition: null
+    registration_date:
+        name: registration_date
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registration_breach_date:
+        name: registration_breach_date
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    registration_signature_date:
+        name: registration_signature_date
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    first_warning_date:
+        name: first_warning_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    second_warning_date:
+        name: second_warning_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    third_warning_date:
+        name: third_warning_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    is_educational_contract:
+        name: is_educational_contract
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_id:
+        name: training_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    school_year_id:
+        name: school_year_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    exit_cause:
+        name: exit_cause
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    registrant_status_id:
+        name: registrant_status_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    social_security_institution_id:
+        name: social_security_institution_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    is_check:
+        name: is_check
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_rib:
+        name: is_rib
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_cerfa:
+        name: is_cerfa
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_scholarship:
+        name: is_scholarship
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_unemployment:
+        name: is_unemployment
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    treatment_date:
+        name: treatment_date
+        __field_traduction: null
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    section_id:
+        name: section_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    hyperplanning_uuid:
+        name: hyperplanning_uuid
+        __field_traduction: null
+        type: string
+        default: null
+        length: 50
+        not_null: false
+        definition: null
+    created_at:
+        name: created_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        __field_traduction: null
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+salary_scheme:
+    __table_traduction: null
+    code:
+        name: code
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 150
+        not_null: true
+        definition: null
+    level:
+        name: level
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+school:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    code_uai:
+        name: code_uai
+        __field_traduction: null
+        type: string
+        default: null
+        length: 8
+        not_null: false
+        definition: null
+    hyperplanning_wsdl:
+        name: hyperplanning_wsdl
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    hyperplanning_login:
+        name: hyperplanning_login
+        __field_traduction: null
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    hyperplanning_pass:
+        name: hyperplanning_pass
+        __field_traduction: null
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    campus_id:
+        name: campus_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+school_year:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: true
+        definition: null
+    is_active:
+        name: is_active
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+schools_users:
+    __table_traduction: null
+    user_id:
+        name: user_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    school_id:
+        name: school_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+section:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    training_id:
+        name: training_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+social_security_institution:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    is_enabled:
+        name: is_enabled
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+speciality:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    diploma_id:
+        name: diploma_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 25
+        not_null: false
+        definition: null
+training:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    school_id:
+        name: school_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_enabled:
+        name: is_enabled
+        __field_traduction: null
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_info_id:
+        name: training_info_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_objective_id:
+        name: training_objective_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    training_level_id:
+        name: training_level_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    diploma_id:
+        name: diploma_id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    full_name:
+        name: full_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    short_name:
+        name: short_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    speciality_bpf:
+        name: speciality_bpf
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    speciality_opqf:
+        name: speciality_opqf
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+training_level:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 10
+        not_null: true
+        definition: null
+    level:
+        name: level
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+training_objective:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 50
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 1
+        not_null: false
+        definition: null
+user:
+    __table_traduction: null
+    id:
+        name: id
+        __field_traduction: null
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    first_name:
+        name: first_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    last_name:
+        name: last_name
+        __field_traduction: null
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    roles:
+        name: roles
+        __field_traduction: null
+        type: json_array
+        default: null
+        length: null
+        not_null: true
+        definition: null
+'':
+    __table_traduction:
+        __table_traduction: { __field_traduction: S }
+        id: { __field_traduction: null }
+        registrant_id: { __field_traduction: Inscrit }
+        parent_salary_scheme_id: { __field_traduction: null }
+        order_number: { __field_traduction: null }
+        is_scholarship: { __field_traduction: null }
+        is_unemployment: { __field_traduction: null }
+        treatment_date: { __field_traduction: null }
+        organization_name: { __field_traduction: null }
+        parent2_salary_scheme_id: { __field_traduction: null }
+        __field_traduction: null
+        name: null
+        type: null
+        length: null
+        not_null: null
+        definition: null
+    name:
+        __field_traduction: null
+        name: null
+        type: null
+        length: null
+        not_null: null
+        definition: null
+    type:
+        __field_traduction: null
+        name: null
+        type: null
+        length: null
+        not_null: null
+        definition: null
+    length:
+        __field_traduction: null
+        name: null
+        type: null
+        length: null
+        not_null: null
+        definition: null
+    not_null:
+        __field_traduction: null
+        name: null
+        type: null
+        length: null
+        not_null: null
+        definition: null
+    definition:
+        __field_traduction: null
+        name: null
+        type: null
+        length: null
+        not_null: null
+        definition: null

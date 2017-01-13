@@ -1,0 +1,30 @@
+{
+  "name": "littlerobinson/querybuilder-reflection-sdk",
+  "description": "SDK for creating query builder with JSON input.",
+  "keywords": [
+    "querybuilder", "reflection", "sdk", "php", "doctrine"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexandre André",
+      "email": "2a.alexandre@gmail.com",
+      "homepage": "https://www.littlerobinson.xyz",
+      "role": "Developer"
+    }
+  ],
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "Littlerobinson\\QuerybuilderDoctrine\\": "src/"
+    }
+  },
+  "require": {
+    "php" : ">=7.0",
+    "doctrine/orm": "*",
+    "symfony/yaml": "^3.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.5.*"
+  }
+}
