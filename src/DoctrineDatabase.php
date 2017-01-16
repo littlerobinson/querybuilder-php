@@ -57,16 +57,18 @@ class DoctrineDatabase
     /**
      * writeDoctrineYamlConfig method
      * Write the yaml config file for the query builder using doctrine
+     * @param string $configPath
      * @param int $yamlInline
-     * @return bool|int
+     * @return bool
      */
-    public function writeDatabaseYamlConfig($yamlInline = 4)
+    public function writeDatabaseYamlConfig($configPath = __DIR__ . '/../config/database-config.yml', $yamlInline = 4)
     {
         /// Get existing configuration if exist
         $currentConfig = false;
-        if (@file_get_contents(__DIR__ . '/../config/database-config.yml')) {
-            $currentConfig = Yaml::parse(file_get_contents(__DIR__ . '/../config/database-config.yml'));
+        if (@file_get_contents($configPath)) {
+            $currentConfig = Yaml::parse(file_get_contents($configPath));
         }
+
         /// Get database config array
         $datas = $this->getDatabaseConfig();
 
@@ -100,7 +102,9 @@ class DoctrineDatabase
         /// Write yaml
         $yaml = Yaml::dump($datas, $yamlInline);
 
-        return @file_put_contents(__DIR__ . '/../config/database-config.yml', $yaml);
+        $response = (@file_put_contents($configPath, $yaml) === false) ? false : true;
+
+        return $response;
     }
 
     /**
@@ -117,8 +121,7 @@ class DoctrineDatabase
      * @param string $table
      * @return array
      */
-    private
-    function getTableColumns(string $table)
+    private function getTableColumns(string $table)
     {
         $response = [];
         $columns  = $this->schemaManager->listTableColumns($table);
@@ -139,8 +142,7 @@ class DoctrineDatabase
      * @param string $table
      * @return array
      */
-    private
-    function getPrimaryKey(string $table)
+    private function getPrimaryKey(string $table)
     {
         return $this->getTableDetails($table)->getPrimaryKey()->getColumns();
     }
@@ -150,11 +152,10 @@ class DoctrineDatabase
      * @param array $datas
      * @return array|null
      */
-    private
-    function addForeignKeys(array $datas)
+    private function addForeignKeys(array $datas)
     {
         $listForeignKey = [];
-        $listTables = $this->getTables();
+        $listTables     = $this->getTables();
 
         foreach ($listTables as $table) {
             try {
@@ -179,10 +180,14 @@ class DoctrineDatabase
     /* ============================================== ACCESSORS ==================================================== */
     /* ============================================================================================================== */
 
-    public
-    function getTables()
+    public function getTables()
     {
         return $this->tables;
+    }
+
+    public function getConnexion()
+    {
+        return $this->connection;
     }
 
 }
