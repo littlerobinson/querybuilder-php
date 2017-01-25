@@ -1,5 +1,5 @@
 <?php
-namespace Littlerobinson\QuerybuilderDoctrine\Utils;
+namespace Littlerobinson\QueryBuilder\Utils;
 
 /**
  * Class Database

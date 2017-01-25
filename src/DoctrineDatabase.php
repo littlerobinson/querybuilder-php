@@ -1,11 +1,16 @@
 <?php
-namespace Littlerobinson\QuerybuilderDoctrine;
+namespace Littlerobinson\QueryBuilder;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Yaml\Yaml;
-use Littlerobinson\QuerybuilderDoctrine\Utils\Database;
+use Littlerobinson\QueryBuilder\Utils\Database;
 
+/**
+ * Class DoctrineDatabase
+ * Get Database config using Doctrine
+ * @package Littlerobinson\QueryBuilder
+ */
 class DoctrineDatabase
 {
     private $configuration;
@@ -80,7 +85,7 @@ class DoctrineDatabase
 
                 $datas[$tableKey]['_table_traduction'] = $newTableDiff['_table_traduction'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
-                    if (!is_array($fieldDiff)) {
+                    if (!is_array($fieldDiff) || $fieldKey === '_FK') {
                         continue;
                     }
                     try {
@@ -105,6 +110,26 @@ class DoctrineDatabase
         $response = (@file_put_contents($configPath, $yaml) === false) ? false : true;
 
         return $response;
+    }
+
+    /**
+     * Get database config
+     * Return a json response
+     * @param bool $jsonResponse
+     * @param string $configPath
+     * @return bool|array|string JSON
+     */
+    public function getDatabaseYamlConfig($jsonResponse = false, $configPath = __DIR__ . '/../config/database-config.yml')
+    {
+        if (@file_get_contents($configPath)) {
+            $config = Yaml::parse(file_get_contents($configPath));
+            if ($jsonResponse) {
+                return json_encode($config);
+            }
+            return $config;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -163,11 +188,10 @@ class DoctrineDatabase
                     $listForeignKey[$table][$fk->getColumns()[0]]['tableName']      = $fk->getForeignTableName();
                     $listForeignKey[$table][$fk->getColumns()[0]]['columns']        = $fk->getColumns()[0];
                     $listForeignKey[$table][$fk->getColumns()[0]]['foreignColumns'] = $fk->getForeignColumns()[0];
-                    $listForeignKey[$table][$fk->getColumns()[0]]['name']           = $fk->getName();
                     $listForeignKey[$table][$fk->getColumns()[0]]['options']        = $fk->getOptions();
 
                     /// Update $datas
-                    $datas[$table][$fk->getColumns()[0]]['FK'] = $listForeignKey[$table][$fk->getColumns()[0]];
+                    $datas[$table]['_FK'][$fk->getName()] = $listForeignKey[$table][$fk->getColumns()[0]];
                 }
             } catch (\Exception $e) {
                 return null;
@@ -176,18 +200,57 @@ class DoctrineDatabase
         return $datas;
     }
 
-    /* ============================================================================================================== */
-    /* ============================================== ACCESSORS ==================================================== */
-    /* ============================================================================================================== */
-
-    public function getTables()
+    /**
+     * @return array
+     */
+    public function getTables(): array
     {
         return $this->tables;
     }
 
-    public function getConnexion()
+    /* ============================================================================================================== */
+    /* ============================================== ACCESSORS ==================================================== */
+    /* ============================================================================================================== */
+
+    /**
+     * @return \Doctrine\ORM\Configuration
+     */
+    public function getConfiguration(): \Doctrine\ORM\Configuration
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @return \Doctrine\DBAL\Connection
+     */
+    public function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->connection;
     }
+
+    /**
+     * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
+     */
+    public function getSchemaManager(): \Doctrine\DBAL\Schema\AbstractSchemaManager
+    {
+        return $this->schemaManager;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDatabases(): array
+    {
+        return $this->databases;
+    }
+
 
 }

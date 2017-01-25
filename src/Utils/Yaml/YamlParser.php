@@ -1,5 +1,5 @@
 <?php
-namespace Littlerobinson\QuerybuilderDoctrine\Utils\Yaml;
+namespace Littlerobinson\QueryBuilder\Utils\Yaml;
 
 use Symfony\Component\Yaml\Yaml;
 

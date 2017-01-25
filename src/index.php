@@ -1,12 +1,44 @@
 <?php
 require "../vendor/autoload.php";
 
-use Littlerobinson\QuerybuilderDoctrine\DoctrineDatabase;
+use Littlerobinson\QueryBuilder\DoctrineDatabase;
+use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
 
 $db = new DoctrineDatabase();
 
-$tables  = $db->getTables();
+$db->writeDatabaseYamlConfig();
+
+$jsonQuery = '
+{
+    "from": {
+        "registrant": [
+            "id", "first_name", "last_name"
+        ],
+        "civility": [
+            "id", "name"
+        ],
+        "registration": [
+            "id", "registration_amount"
+        ]
+    },
+    "where": {
+        "AND": {
+            "civility.name": {
+                "EQUAL": ["Monsieur"]            
+            }
+        }
+    },
+    "orderBy": {
+        "asc": {
+            "post": ["name", "id"]
+        }
+    }
+}
+';
 
 echo '<pre>';
-echo $db->writeDatabaseYamlConfig();
+//var_dump($db->getDatabaseYamlConfig());
+$qb = new QueryBuilderDoctrine();
+$qb->prepare($jsonQuery);
 echo '</pre>';
+

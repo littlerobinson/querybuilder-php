@@ -1,8 +1,8 @@
 <?php
-namespace Littlerobinson\QuerybuilderDoctrine\Tests;
+namespace Littlerobinson\QueryBuilder\Tests;
 
 use Doctrine\DBAL\Connection;
-use Littlerobinson\QuerybuilderDoctrine\DoctrineDatabase;
+use Littlerobinson\QueryBuilder\DoctrineDatabase;
 use Symfony\Component\Yaml\Yaml;
 
 class DoctrineDatabaseTest extends \PHPUnit_Framework_TestCase

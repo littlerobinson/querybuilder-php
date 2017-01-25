@@ -1,7 +1,8 @@
 <?php
-namespace Littlerobinson\QuerybuilderDoctrine\Tests;
+namespace Littlerobinson\QueryBuilder\Tests;
 
-use Littlerobinson\QuerybuilderDoctrine\Utils\Yaml\YamlParser;
+use Littlerobinson\QueryBuilder\Utils\Yaml\YamlParser;
+use Littlerobinson\QueryBuilder\Utils\Yaml\YamlParserException;
 
 class YamlParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,7 +36,7 @@ class YamlParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Littlerobinson\QuerybuilderDoctrine\Utils\Yaml\YamlParserException
+     * @expectedException YamlParserException
      */
     public function testExceptionForWrongSyntax()
     {

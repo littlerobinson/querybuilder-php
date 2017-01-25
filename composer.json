@@ -16,7 +16,7 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "Littlerobinson\\QuerybuilderDoctrine\\": "src/"
+      "Littlerobinson\\QueryBuilder\\": "src/"
     }
   },
   "require": {
