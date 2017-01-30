@@ -1,6 +1,8 @@
 <?php
 namespace Littlerobinson\QueryBuilder;
 
+use Doctrine\ORM\Query\Expr;
+
 /**
  * Class QueryBuilderDoctrine
  * @package Littlerobinson\QueryBuilder
@@ -29,11 +31,11 @@ class QueryBuilderDoctrine
             /// Try to decode json
             $queryObj = json_decode($jsonQuery);
             /// Get From
-            $this->from = $queryObj->from;
+            $this->from = (array)$queryObj->from;
             /// Get where conditions
-            $this->where = $queryObj->where;
+            $this->where = (array)$queryObj->where;
             /// Get orderBy
-            $this->orderBy = $queryObj->orderBy;
+            $this->orderBy = (array)$queryObj->orderBy;
             /// Array with FK
             $fkList = [];
 
@@ -41,40 +43,40 @@ class QueryBuilderDoctrine
             $objDbConfig = json_decode($dbConfig);
 
             /// Create FK array
-            foreach ($this->from as $table => $fields) {
-                if (property_exists($objDbConfig->{$table}, '_FK')) {
-                    $fkList[$table] = $objDbConfig->{$table}->_FK;
+            $getFkList = function () use ($objDbConfig, &$fkList) {
+                foreach ($this->from as $table => $fields) {
+                    if (property_exists($objDbConfig->{$table}, '_FK')) {
+                        $fkList[$table] = $objDbConfig->{$table}->_FK;
+                    }
                 }
-            }
+            };
+            $getFkList();
 
+            foreach ($this->from as $fromTable => $fields) {
+                /// Add From
+                $this->queryBuilder->from($fromTable, $fromTable);
+                /// Add Select
+                foreach ($fields as $key => $field) {
+                    if (is_object($field)) {
+                        $this->queryBuilder->leftJoin($fkList[$fromTable]->{$key}->{'tableName'}, $fkList[$fromTable]->{$key}->{'tableName'}, 'ON', $fkList[$fromTable]->{$key}->{'tableName'} . '.' . $fkList[$fromTable]->{$key}->{'foreignColumns'} . ' = ' . $fromTable . '.' . $fkList[$fromTable]->{$key}->{'columns'});
+                        foreach ($field as $objField) {
+                            $this->queryBuilder->addSelect($fkList[$fromTable]->{$key}->{'tableName'} . '.' . $objField . ' AS ' . $fkList[$fromTable]->{$key}->{'tableName'} . '_' . $objField);
+                        }
+                    } else {
+                        $this->queryBuilder->addSelect($fromTable . '.' . $field . ' AS ' . $fromTable . '_' . $field);
+                    }
+                }
 
-            /// Create select Query
-            foreach ($fkList as $table => $tableFK) {
-                foreach ($tableFK as $key => $value) {
-                    if ((isset($fkList[$value->tableName]))) {
-                        array_filter(
-                            $fkList,
-                            function ($e) use (&$key, &$table) {
-                                if (property_exists($e, $key)) {
-                                    /// Add select
-                                    foreach ($this->from->{$table} as $field) {
-                                        $this->queryBuilder->addSelect($table . '.' . $field);
-                                    }
-                                    /// Add From
-                                    $this->queryBuilder->from($e->{$key}->{'tableName'}, $e->{$key}->{'tableName'});
-                                    /// Add Join
-                                    $this->queryBuilder->leftJoin($table, $table, 'ON', $table . '.' . $e->{$key}->{'columns'} . ' = ' . $e->{$key}->{'tableName'} . '.' . $e->{$key}->{'foreignColumns'});
-                                }
-                            }
-                        );
+                /// Search and add Join
+                foreach ($fkList as $fkTable => $fkArr) {
+                    foreach ($fkArr as $key => $fk) {
+                        if ($fromTable === $fk->{'tableName'}) {
+                            /// Add Join
+                            $this->queryBuilder->leftJoin($fkTable, $key, 'ON', $fromTable . '.' . $fk->{'foreignColumns'} . ' = ' . $key . '.' . $fk->{'columns'});
+                        }
                     }
                 }
             }
-            var_dump($this->queryBuilder->getDQL());
-            $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
-            var_dump($result->fetchAll());
-            die;
-
             /// Adding query conditions
             foreach ($this->where as $logicalOperator => $request) {
                 foreach ($request as $condition => $value) {
@@ -110,16 +112,7 @@ class QueryBuilderDoctrine
             var_dump($this->queryBuilder->getDQL());
             $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
             var_dump($result->fetchAll());
-            die;
-            echo '<hr>';
-            echo '<hr>';
-            var_dump($this->getQuery());
-            echo '<hr>';
-            foreach ($this->orderBy as $key => $field) {
-                var_dump($key);
-                var_dump($field);
-                echo '<hr>';
-            }
+            die();
         } catch (\Exception $e) {
             http_response_code(400);
             echo 'ERROR : ' . $e->getMessage();

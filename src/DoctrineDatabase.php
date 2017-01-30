@@ -164,15 +164,6 @@ class DoctrineDatabase
     }
 
     /**
-     * @param string $table
-     * @return array
-     */
-    private function getPrimaryKey(string $table)
-    {
-        return $this->getTableDetails($table)->getPrimaryKey()->getColumns();
-    }
-
-    /**
      * addForeignKeys method
      * @param array $datas
      * @return array|null
@@ -188,10 +179,11 @@ class DoctrineDatabase
                     $listForeignKey[$table][$fk->getColumns()[0]]['tableName']      = $fk->getForeignTableName();
                     $listForeignKey[$table][$fk->getColumns()[0]]['columns']        = $fk->getColumns()[0];
                     $listForeignKey[$table][$fk->getColumns()[0]]['foreignColumns'] = $fk->getForeignColumns()[0];
+                    $listForeignKey[$table][$fk->getColumns()[0]]['name']           = $fk->getName();
                     $listForeignKey[$table][$fk->getColumns()[0]]['options']        = $fk->getOptions();
 
                     /// Update $datas
-                    $datas[$table]['_FK'][$fk->getName()] = $listForeignKey[$table][$fk->getColumns()[0]];
+                    $datas[$table]['_FK'][$fk->getColumns()[0]] = $listForeignKey[$table][$fk->getColumns()[0]];
                 }
             } catch (\Exception $e) {
                 return null;
@@ -208,6 +200,15 @@ class DoctrineDatabase
         return $this->tables;
     }
 
+    /**
+     * @param string $table
+     * @return array
+     */
+    public function getPrimaryKey(string $table): array
+    {
+        return $this->getTableDetails($table)->getPrimaryKey()->getColumns();
+    }
+
     /* ============================================================================================================== */
     /* ============================================== ACCESSORS ==================================================== */
     /* ============================================================================================================== */
@@ -215,7 +216,8 @@ class DoctrineDatabase
     /**
      * @return \Doctrine\ORM\Configuration
      */
-    public function getConfiguration(): \Doctrine\ORM\Configuration
+    public
+    function getConfiguration(): \Doctrine\ORM\Configuration
     {
         return $this->configuration;
     }
@@ -223,7 +225,8 @@ class DoctrineDatabase
     /**
      * @return EntityManager
      */
-    public function getEntityManager(): EntityManager
+    public
+    function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
@@ -231,7 +234,8 @@ class DoctrineDatabase
     /**
      * @return \Doctrine\DBAL\Connection
      */
-    public function getConnection(): \Doctrine\DBAL\Connection
+    public
+    function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->connection;
     }
@@ -239,7 +243,8 @@ class DoctrineDatabase
     /**
      * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
      */
-    public function getSchemaManager(): \Doctrine\DBAL\Schema\AbstractSchemaManager
+    public
+    function getSchemaManager(): \Doctrine\DBAL\Schema\AbstractSchemaManager
     {
         return $this->schemaManager;
     }
@@ -247,7 +252,8 @@ class DoctrineDatabase
     /**
      * @return array
      */
-    public function getDatabases(): array
+    public
+    function getDatabases(): array
     {
         return $this->databases;
     }
