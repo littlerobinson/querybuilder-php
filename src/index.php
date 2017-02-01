@@ -69,18 +69,26 @@ $jsonQuery2 = '
 {
    "from":{
       "registration":{
-         "registrant_id": {
-             "0":"id",
-             "1":"first_name",
-             "2":"last_name",
-             "civility_id":{
-                "0": "name"
-             },
-             "country_id":{
-                "0": "name",
-                "1": "calling_codes"
+         "0": "treatment_date",
+         "1": {
+            "registrant_id": {
+                 "0":"id",
+                 "1":"first_name",
+                 "2":"last_name",
+                 "3": {
+                     "civility_id":{
+                        "0": "name"
+                     }
+                 },
+                 "4": {
+                    "country_id":{
+                        "0": "name",
+                        "1": "calling_codes"
+                     }
+                 }
              }
-         }
+         },
+         "2": "created_at"
       }
    },
    "where": {
@@ -98,9 +106,10 @@ $jsonQuery2 = '
 }
 ';
 
+
 echo '<pre>';
 //var_dump($db->getDatabaseYamlConfig());
 $qb = new QueryBuilderDoctrine();
-$qb->prepare($jsonQuery);
+$qb->prepare($jsonQuery2);
 echo '</pre>';
 
