@@ -19,6 +19,11 @@ class QueryBuilderDoctrine
 
     private $orderBy;
 
+    private $fkList;
+
+    /**
+     * QueryBuilderDoctrine constructor.
+     */
     public function __construct()
     {
         $this->doctrineDb   = new DoctrineDatabase();
@@ -27,36 +32,53 @@ class QueryBuilderDoctrine
         $this->objDbConfig  = json_decode($dbConfig);
     }
 
-    private function getFKList($fromObject)
+    /**
+     * Return an array with all foreign keys in show config file
+     * @param $fromObject
+     * @throws \Exception
+     * @return array
+     */
+    private function getFKList($fromObject): array
     {
         $fkList = [];
-        try {
-            foreach ($fromObject as $table => $fields) {
-                if (property_exists($this->objDbConfig->{$table}, '_FK')) {
-                    $fkList[$table] = $this->objDbConfig->{$table}->_FK;
-                }
+        foreach ($fromObject as $table => $fields) {
+            if (!isset($this->objDbConfig->{$table})) {
+                http_response_code(400);
+                throw new \Exception('This table not exist : ' . $table . '.');
             }
-        } catch (\Exception $e) {
-            var_dump($e->getMessage());
-            die;
+            if (property_exists($this->objDbConfig->{$table}, '_FK')) {
+                $fkList[$table] = $this->objDbConfig->{$table}->_FK;
+            }
         }
         return $fkList;
     }
 
-    private function addSelect($fkList, $fromTable, $select)
+    /**
+     * Add query select
+     * @param $fkList
+     * @param $fromTable
+     * @param $select
+     * @throws \Exception
+     */
+    private function addQuerySelect($fkList, $fromTable, $select): void
     {
         foreach ($select as $key => $field) {
             if (is_object($field)) {
+                /// Add joins
                 foreach ($field as $fkName => $object) {
+                    if (!isset($fkList[$fromTable]->{$fkName}->{'tableName'})) {
+                        http_response_code(400);
+                        throw new \Exception('This foreign key not exist : ' . $fkName . '.');
+                    }
                     $newFromTable = $fkList[$fromTable]->{$fkName}->{'tableName'};
                     $newFrom      = array($newFromTable => $field->{$fkName});
                     $newfkList    = $this->getFKList($newFrom);
-                    $this->queryBuilder->leftJoin($newFromTable, $newFromTable, 'ON', $newFromTable . '.' . $fkList[$fromTable]->{$fkName}->{'foreignColumns'} . ' = ' . $fromTable . '.' . $fkName);
-                    $this->addSelect($newfkList, $newFromTable, $object);
+                    $this->queryBuilder->leftJoin($newFromTable, $newFromTable, 'ON', $newFromTable . ' . ' . $fkList[$fromTable]->{$fkName}->{'foreignColumns'} . ' = ' . $fromTable . ' . ' . $fkName);
+                    $this->addQuerySelect($newfkList, $newFromTable, $object);
                 }
             } else {
                 $this->queryBuilder->addSelect(
-                    $fromTable . '.' .
+                    $fromTable . ' . ' .
                     $field . ' AS ' .
                     $fromTable . '_' .
                     $field);
@@ -64,75 +86,95 @@ class QueryBuilderDoctrine
         }
     }
 
-    public function prepare(string $jsonQuery)
+    /**
+     * Add query conditions
+     */
+    private function addQueryCondition(): void
     {
-        try {
-            /// Try to decode json
-            $queryObj = json_decode($jsonQuery);
-            /// Get From
-            $this->from = (array)$queryObj->from;
-            /// Get where conditions
-            $this->where = (array)$queryObj->where;
-            /// Get orderBy
-            $this->orderBy = (array)$queryObj->orderBy;
+        if ($this->where === null) {
+            return;
+        }
+        foreach ($this->where as $logicalOperator => $request) {
+            foreach ($request as $condition => $value) {
+                //if (property_exists($objDbConfig->{$table}, '_FK')) {
+                $arrRequest = explode('.', $condition);
+                /// Get field type
+                $fieldType = $this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type;
+                /// Add comma if not boolean or integer
+                $value = ($fieldType === 'integer' || $fieldType === 'boolean') ? implode(',', $value->EQUAL) : implode(',', $value->EQUAL);
 
-            /// Create FK array
-            $fkList = $this->getFKList($this->from);
-
-            foreach ($this->from as $fromTable => $select) {
-                /// Add From
-                $this->queryBuilder->from($fromTable, $fromTable);
-                /// Add Select
-                $this->addSelect($fkList, $fromTable, $select);
-            }
-
-
-            /// Adding query conditions
-            foreach ($this->where as $logicalOperator => $request) {
-                foreach ($request as $condition => $value) {
-                    //if (property_exists($objDbConfig->{$table}, '_FK')) {
-                    $arrRequest = explode('.', $condition);
-                    /// Get field type
-                    $fieldType = $this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type;
-                    /// Add comma if not boolean or integer
-                    $value = ($fieldType === 'integer' || $fieldType === 'boolean') ? implode(',', $value->EQUAL) : implode(',', $value->EQUAL);
-
-                    switch ($logicalOperator) {
-                        case 'AND':
-                            $this->queryBuilder->andWhere($condition . ' = ' . '\'' . $value . '\'');
-                            break;
-                        case 'OR':
-                            $this->queryBuilder->orWhere($condition . ':' . $i);
-                            $this->queryBuilder->setParameter($i, $value);
-                            break;
-                        case 'AND_HAVING':
-                            $this->queryBuilder->andHaving($condition . ':' . $i);
-                            $this->queryBuilder->setParameter($i, $value);
-                            break;
-                        case 'OR_HAVING':
-                            $this->queryBuilder->orHaving($condition . ':' . $i);
-                            $this->queryBuilder->setParameter($i, $value);
-                            break;
-                        default:
-                            break;
-                    }
+                switch ($logicalOperator) {
+                    case 'AND':
+                        $this->queryBuilder->andWhere($condition . ' = ' . '\'' . $value . '\'');
+                        break;
+                    case 'OR':
+                        $this->queryBuilder->orWhere($condition . ':' . $i);
+                        $this->queryBuilder->setParameter($i, $value);
+                        break;
+                    case 'AND_HAVING':
+                        $this->queryBuilder->andHaving($condition . ':' . $i);
+                        $this->queryBuilder->setParameter($i, $value);
+                        break;
+                    case 'OR_HAVING':
+                        $this->queryBuilder->orHaving($condition . ':' . $i);
+                        $this->queryBuilder->setParameter($i, $value);
+                        break;
+                    default:
+                        break;
                 }
             }
-
-            var_dump($this->queryBuilder->getDQL());
-            $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
-            var_dump($result->fetchAll(\PDO::FETCH_ASSOC));
-            die();
-        } catch (\Exception $e) {
-            http_response_code(400);
-            echo 'ERROR : ' . $e->getMessage();
         }
     }
 
+    /**
+     * Prepare the query with the json request
+     * @param string $jsonQuery
+     * @throws \Exception
+     */
+    private function prepareJsonQuery(string $jsonQuery): void
+    {
+        /// Try to decode json
+        $queryObj = json_decode($jsonQuery);
+        /// Get From
+        $this->from = (property_exists($queryObj, 'from')) ? (array)$queryObj->from : null;
+        /// Exception if there is no From
+        if ($this->from === null) {
+            http_response_code(400);
+            throw new \Exception('No From in request.');
+        }
+        /// Get where conditions
+        $this->where = (property_exists($queryObj, 'where')) ? (array)$queryObj->where : null;
+        /// Get orderBy
+        $this->orderBy = (property_exists($queryObj, 'orderBy')) ? (array)$queryObj->orderBy : null;
+        /// Create FK array
+        $this->fkList = (property_exists($queryObj, 'from')) ? $this->getFKList($this->from) : null;
+    }
 
-    /* ============================================================================================================== */
-    /* ============================================== ACCESSORS ==================================================== */
-    /* ============================================================================================================== */
+    /**
+     * Execute the query
+     * @param string $jsonQuery
+     * @return array
+     */
+    public
+    function executeQuery(string $jsonQuery): ?array
+    {
+        /// Prepare query
+        $this->prepareJsonQuery($jsonQuery);
 
+        /// Loop on tables
+        foreach ($this->from as $fromTable => $select) {
+            /// Add From
+            $this->queryBuilder->from($fromTable, $fromTable);
+            /// Add Select
+            $this->addQuerySelect($this->fkList, $fromTable, $select);
+        }
 
+        /// Adding query conditions
+        $this->addQueryCondition();
+
+        var_dump($this->queryBuilder->getDQL());
+        /// Execute query and fetch result
+        $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
+        return $result->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
