@@ -19,7 +19,7 @@ class DoctrineDatabaseTest extends \PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->db         = new DoctrineDatabase();
-        $this->connection = $this->db->getConnexion();
+        $this->connection = $this->db->getConnection();
     }
 
     public function testGetConnection()

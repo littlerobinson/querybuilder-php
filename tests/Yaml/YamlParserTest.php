@@ -2,7 +2,6 @@
 namespace Littlerobinson\QueryBuilder\Tests;
 
 use Littlerobinson\QueryBuilder\Utils\Yaml\YamlParser;
-use Littlerobinson\QueryBuilder\Utils\Yaml\YamlParserException;
 
 class YamlParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,7 +35,7 @@ class YamlParserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException YamlParserException
+     * @expectedException Littlerobinson\QueryBuilder\Utils\Yaml\YamlParserException
      */
     public function testExceptionForWrongSyntax()
     {

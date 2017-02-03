@@ -98,6 +98,10 @@ class QueryBuilderDoctrine
             foreach ($request as $condition => $value) {
                 //if (property_exists($objDbConfig->{$table}, '_FK')) {
                 $arrRequest = explode('.', $condition);
+                if (!isset($this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type)) {
+                    http_response_code(400);
+                    throw new \Exception('This field not exist : ' . $arrRequest[0] . '.' . $arrRequest[1]);
+                }
                 /// Get field type
                 $fieldType = $this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type;
                 /// Add comma if not boolean or integer
@@ -155,8 +159,7 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @return array
      */
-    public
-    function executeQuery(string $jsonQuery): ?array
+    public function executeQuery(string $jsonQuery): ?array
     {
         /// Prepare query
         $this->prepareJsonQuery($jsonQuery);
@@ -172,7 +175,6 @@ class QueryBuilderDoctrine
         /// Adding query conditions
         $this->addQueryCondition();
 
-        var_dump($this->queryBuilder->getDQL());
         /// Execute query and fetch result
         $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
         return $result->fetchAll(\PDO::FETCH_ASSOC);

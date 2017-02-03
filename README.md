@@ -180,38 +180,42 @@ comment:
 {
    "from":{
       "post":{
-         "0": "title",
-         "1": {
-            "category_id": {
-                 "0":"id",
-                 "1":"title",
-                 "2":"last_name",
-                 "3": {
-                     "civility_id":{
-                        "0": "name"
-                     }
-                 },
-                 "4": {
-                    "country_id":{
-                        "0": "name",
-                        "1": "calling_codes"
-                     }
-                 }
-             }
+         "0":"title",
+         "1":{
+            "category_id":{
+               "0":"id",
+               "1":"name"
+            }
          },
-         "2": "created_at"
+         "2":{
+            "user_id":{
+               "0":"firstname",
+               "1":"lastname",
+               "3":{
+                  "group_id":{
+                     "0":"name"
+                  }
+               }
+            }
+         },
+         "3":"id"
       }
    },
-   "where": {
-      "AND": {
-          "civility.name": {
-              "EQUAL": ["Monsieur"]            
-          }
+   "where":{
+      "AND":{
+         "group.name":{
+            "EQUAL":[
+               "ADMIN"
+            ]
+         }
       }
    },
-   "orderBy": {
-      "asc": {
-        "post": ["name", "id"]
+   "orderBy":{
+      "asc":{
+         "user":[
+            "name",
+            "id"
+         ]
       }
    }
 }
@@ -221,20 +225,34 @@ comment:
 
 ```mysql
 SELECT 
-    post.id, 
-    post.tittle, 
-    post.content,
-    category.id,
-    category.name
+    post.title AS post_title, 
+    category.id AS category_id,
+    category.name AS category_name,
+    user.firstname AS user_firstname,
+    user.lastname AS user_lastname,
+    group.name AS group_name,
+    post.id AS post_id
 FROM
     post AS post
 LEFT jOIN
     category as category
 ON 
     post.category_id = category.id
+LEFT JOIN 
+    user AS user
+ON 
+    post.user_id = user.id
+LEFT JOIN
+    group AS group
+ON
+    user.group_id = group.id
 WHERE
-    category.name in("info", "elec")
+    group.name = 'ADMIN'
 ORDER BY
-    post.name, post.id ASC;
+    user.name, user.id ASC;
 ```
 
+### Tests
+```
+phpunit --bootstrap vendor/autoload.php  tests/
+```

@@ -216,8 +216,7 @@ class DoctrineDatabase
     /**
      * @return \Doctrine\ORM\Configuration
      */
-    public
-    function getConfiguration(): \Doctrine\ORM\Configuration
+    public function getConfiguration(): \Doctrine\ORM\Configuration
     {
         return $this->configuration;
     }
@@ -225,8 +224,7 @@ class DoctrineDatabase
     /**
      * @return EntityManager
      */
-    public
-    function getEntityManager(): EntityManager
+    public function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
@@ -234,8 +232,7 @@ class DoctrineDatabase
     /**
      * @return \Doctrine\DBAL\Connection
      */
-    public
-    function getConnection(): \Doctrine\DBAL\Connection
+    public function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->connection;
     }
@@ -243,8 +240,7 @@ class DoctrineDatabase
     /**
      * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
      */
-    public
-    function getSchemaManager(): \Doctrine\DBAL\Schema\AbstractSchemaManager
+    public function getSchemaManager(): \Doctrine\DBAL\Schema\AbstractSchemaManager
     {
         return $this->schemaManager;
     }
@@ -252,8 +248,7 @@ class DoctrineDatabase
     /**
      * @return array
      */
-    public
-    function getDatabases(): array
+    public function getDatabases(): array
     {
         return $this->databases;
     }
