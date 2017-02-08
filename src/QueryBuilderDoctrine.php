@@ -77,6 +77,14 @@ class QueryBuilderDoctrine
                     $this->addQuerySelect($newfkList, $newFromTable, $object);
                 }
             } else {
+                /// Exit if there is no visibility on the table in config file
+                if ($this->objDbConfig->{$fromTable}->{'_table_visibility'} === false) {
+                    continue;
+                }
+                /// Exit if there is no visibility on the field in config file
+                if ($this->objDbConfig->{$fromTable}->{$field}->{'_field_visibility'} === false) {
+                    continue;
+                }
                 $this->queryBuilder->addSelect(
                     $fromTable . ' . ' .
                     $field . ' AS ' .
@@ -112,16 +120,13 @@ class QueryBuilderDoctrine
                         $this->queryBuilder->andWhere($condition . ' = ' . '\'' . $value . '\'');
                         break;
                     case 'OR':
-                        $this->queryBuilder->orWhere($condition . ':' . $i);
-                        $this->queryBuilder->setParameter($i, $value);
+                        $this->queryBuilder->orWhere($condition . ' = ' . '\'' . $value . '\'');
                         break;
                     case 'AND_HAVING':
-                        $this->queryBuilder->andHaving($condition . ':' . $i);
-                        $this->queryBuilder->setParameter($i, $value);
+                        $this->queryBuilder->andHaving($condition . ' = ' . '\'' . $value . '\'');
                         break;
                     case 'OR_HAVING':
-                        $this->queryBuilder->orHaving($condition . ':' . $i);
-                        $this->queryBuilder->setParameter($i, $value);
+                        $this->queryBuilder->orHaving($condition . ' = ' . '\'' . $value . '\'');
                         break;
                     default:
                         break;
