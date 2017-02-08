@@ -1,7 +1,6 @@
 <?php
 namespace Littlerobinson\QueryBuilder\Tests;
 
-use Doctrine\DBAL\Driver\PDOException;
 use Littlerobinson\QueryBuilder\DoctrineDatabase;
 use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
 
