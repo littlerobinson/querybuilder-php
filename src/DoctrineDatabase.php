@@ -83,18 +83,20 @@ class DoctrineDatabase
             foreach ($arrDiff as $tableKey => $tableDiff) {
                 $newTableDiff = unserialize($tableDiff);
 
-                $datas[$tableKey]['_table_traduction'] = $newTableDiff['_table_traduction'];
+                $datas[$tableKey]['_table_translation'] = $newTableDiff['_table_translation'];
+                $datas[$tableKey]['_table_visibility']  = $newTableDiff['_table_visibility'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
                     if (!is_array($fieldDiff) || $fieldKey === '_FK') {
                         continue;
                     }
                     try {
-                        $datas[$tableKey][$fieldKey]['_field_traduction'] = $fieldDiff['_field_traduction'];
-                        $datas[$tableKey][$fieldKey]['name']              = $fieldDiff['name'];
-                        $datas[$tableKey][$fieldKey]['type']              = $fieldDiff['type'];
-                        $datas[$tableKey][$fieldKey]['length']            = $fieldDiff['length'];
-                        $datas[$tableKey][$fieldKey]['not_null']          = $fieldDiff['not_null'];
-                        $datas[$tableKey][$fieldKey]['definition']        = $fieldDiff['definition'];
+                        $datas[$tableKey][$fieldKey]['_field_translation'] = $fieldDiff['_field_translation'];
+                        $datas[$tableKey][$fieldKey]['_field_visibility']  = $fieldDiff['_field_visibility'];
+                        $datas[$tableKey][$fieldKey]['name']               = $fieldDiff['name'];
+                        $datas[$tableKey][$fieldKey]['type']               = $fieldDiff['type'];
+                        $datas[$tableKey][$fieldKey]['length']             = $fieldDiff['length'];
+                        $datas[$tableKey][$fieldKey]['not_null']           = $fieldDiff['not_null'];
+                        $datas[$tableKey][$fieldKey]['definition']         = $fieldDiff['definition'];
                     } catch (\Exception $e) {
                         return false;
                     }
@@ -151,14 +153,16 @@ class DoctrineDatabase
         $response = [];
         $columns  = $this->schemaManager->listTableColumns($table);
         foreach ($columns as $key => $column) {
-            $response['_table_traduction']       = null;
-            $response[$key]['name']              = $column->getName();
-            $response[$key]['_field_traduction'] = null;
-            $response[$key]['type']              = $column->getType()->getName();
-            $response[$key]['default']           = $column->getDefault();
-            $response[$key]['length']            = $column->getLength();
-            $response[$key]['not_null']          = $column->getNotnull();
-            $response[$key]['definition']        = $column->getColumnDefinition();
+            $response['_table_translation']       = null;
+            $response['_table_visibility']        = true;
+            $response[$key]['name']               = $column->getName();
+            $response[$key]['_field_translation'] = null;
+            $response[$key]['_field_visibility']  = true;
+            $response[$key]['type']               = $column->getType()->getName();
+            $response[$key]['default']            = $column->getDefault();
+            $response[$key]['length']             = $column->getLength();
+            $response[$key]['not_null']           = $column->getNotnull();
+            $response[$key]['definition']         = $column->getColumnDefinition();
         }
         return $response;
     }
