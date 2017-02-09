@@ -7,8 +7,9 @@ namespace Littlerobinson\QueryBuilder\Utils;
  */
 class Database
 {
-    public static $paths     = array("/src/entity");
-    public static $isDevMode = false;
+    public static $paths      = array('/src/entity');
+    public static $isDevMode  = false;
+    public static $configPath = __DIR__ . '/../../config/database-config.yml';
 
     // the connection configuration
     public static $params = array(

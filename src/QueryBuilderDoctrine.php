@@ -23,10 +23,11 @@ class QueryBuilderDoctrine
 
     /**
      * QueryBuilderDoctrine constructor.
+     * @param DoctrineDatabase $doctrineDb
      */
-    public function __construct()
+    public function __construct(DoctrineDatabase $doctrineDb)
     {
-        $this->doctrineDb   = new DoctrineDatabase();
+        $this->doctrineDb   = $doctrineDb;
         $this->queryBuilder = $this->doctrineDb->getEntityManager()->createQueryBuilder();
         $dbConfig           = $this->doctrineDb->getDatabaseYamlConfig(true);
         $this->objDbConfig  = json_decode($dbConfig);
@@ -81,10 +82,16 @@ class QueryBuilderDoctrine
                 if ($this->objDbConfig->{$fromTable}->{'_table_visibility'} === false) {
                     continue;
                 }
+                /// Control if field exist
+                if (!isset($this->objDbConfig->{$fromTable}->{$field})) {
+                    http_response_code(400);
+                    throw new \Exception('This field key not exist : ' . $field . '.');
+                }
                 /// Exit if there is no visibility on the field in config file
                 if ($this->objDbConfig->{$fromTable}->{$field}->{'_field_visibility'} === false) {
                     continue;
                 }
+
                 $this->queryBuilder->addSelect(
                     $fromTable . ' . ' .
                     $field . ' AS ' .

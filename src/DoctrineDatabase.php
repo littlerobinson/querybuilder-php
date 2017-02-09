@@ -15,6 +15,8 @@ class DoctrineDatabase
 {
     private $configuration;
 
+    private $configPath;
+
     private $entityManager;
 
     private $connection;
@@ -27,10 +29,12 @@ class DoctrineDatabase
 
     /**
      * DoctrineDatabase constructor.
+     * @param string|null $configPath this value is on the config file by default
      */
-    public function __construct()
+    public function __construct(string $configPath = null)
     {
         $this->configuration = Setup::createAnnotationMetadataConfiguration(Database::$paths, Database::$isDevMode);
+        $this->configPath    = $configPath ?? Database::$configPath;
         $this->entityManager = EntityManager::create(Database::$params, $this->configuration);
         $this->connection    = $this->entityManager->getConnection();
         $this->schemaManager = $this->connection->getSchemaManager();
@@ -62,16 +66,15 @@ class DoctrineDatabase
     /**
      * writeDoctrineYamlConfig method
      * Write the yaml config file for the query builder using doctrine
-     * @param string $configPath
      * @param int $yamlInline
      * @return bool
      */
-    public function writeDatabaseYamlConfig($configPath = __DIR__ . '/../config/database-config.yml', $yamlInline = 4)
+    public function writeDatabaseYamlConfig($yamlInline = 3)
     {
         /// Get existing configuration if exist
         $currentConfig = false;
-        if (@file_get_contents($configPath)) {
-            $currentConfig = Yaml::parse(file_get_contents($configPath));
+        if (@file_get_contents($this->configPath)) {
+            $currentConfig = Yaml::parse(file_get_contents($this->configPath));
         }
 
         /// Get database config array
@@ -109,7 +112,7 @@ class DoctrineDatabase
         /// Write yaml
         $yaml = Yaml::dump($datas, $yamlInline);
 
-        $response = (@file_put_contents($configPath, $yaml) === false) ? false : true;
+        $response = (@file_put_contents($this->configPath, $yaml) === false) ? false : true;
 
         return $response;
     }
@@ -117,15 +120,14 @@ class DoctrineDatabase
     /**
      * Get database config
      * Return a json response
-     * @param bool $jsonResponse
-     * @param string $configPath
+     * @param bool $isJsonResponse
      * @return bool|array|string JSON
      */
-    public function getDatabaseYamlConfig($jsonResponse = false, $configPath = __DIR__ . '/../config/database-config.yml')
+    public function getDatabaseYamlConfig($isJsonResponse = false)
     {
-        if (@file_get_contents($configPath)) {
-            $config = Yaml::parse(file_get_contents($configPath));
-            if ($jsonResponse) {
+        if (@file_get_contents($this->configPath)) {
+            $config = Yaml::parse(file_get_contents($this->configPath));
+            if ($isJsonResponse) {
                 return json_encode($config);
             }
             return $config;

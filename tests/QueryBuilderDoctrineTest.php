@@ -21,9 +21,10 @@ class QueryBuilderDoctrineTest extends \PHPUnit_Framework_TestCase
 
     public function setup()
     {
-        $this->db         = new DoctrineDatabase();
+        $configPath       = __DIR__ . '/config/test-database-config.yml';
+        $this->db         = new DoctrineDatabase($configPath);
         $this->connection = $this->db->getConnection();
-        $this->qb         = new QueryBuilderDoctrine();
+        $this->qb         = new QueryBuilderDoctrine($this->db);
     }
 
     public Function testGoodJsonQuery()
@@ -58,7 +59,21 @@ class QueryBuilderDoctrineTest extends \PHPUnit_Framework_TestCase
     {
         $jsonQuery = file_get_contents(__DIR__ . '/Json/qb-bad-condition-syntax.json');
         $result    = $this->qb->executeQuery($jsonQuery);
-        $this->expectException(\Exception::class);
+    }
+
+
+    public Function testTableVisibility()
+    {
+        $jsonQuery = file_get_contents(__DIR__ . '/Json/qb-good-syntax.json');
+        $result    = $this->qb->executeQuery($jsonQuery);
+        $this->assertArrayNotHasKey('user_id', $result[0]);
+    }
+
+    public Function testFieldVisibility()
+    {
+        $jsonQuery = file_get_contents(__DIR__ . '/Json/qb-good-syntax.json');
+        $result    = $this->qb->executeQuery($jsonQuery);
+        $this->assertArrayNotHasKey('country_id', $result[0]);
     }
 
 }

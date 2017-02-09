@@ -5,6 +5,7 @@ use Littlerobinson\QueryBuilder\DoctrineDatabase;
 use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
 
 $db = new DoctrineDatabase();
+
 $db->writeDatabaseYamlConfig();
 
 $jsonQuery = '
@@ -30,13 +31,7 @@ $jsonQuery = '
                  }
              }
          },
-        "2": {
-            "user_id": {
-                "0": "id",
-                "1": "first_name"
-            }
-        },
-         "3": "created_at"
+         "2": "created_at"
       }
    },
    "where": {
@@ -56,8 +51,8 @@ $jsonQuery = '
 
 
 echo '<pre>';
-$qb     = new QueryBuilderDoctrine($db);
+$qb     = new QueryBuilderDoctrine();
 $result = $qb->executeQuery($jsonQuery);
-var_dump($result);
+//var_dump($result);
 echo '</pre>';
 

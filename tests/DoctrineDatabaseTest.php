@@ -15,10 +15,13 @@ class DoctrineDatabaseTest extends \PHPUnit_Framework_TestCase
 
     private $connection;
 
+    private $configPath;
+
 
     public function setup()
     {
-        $this->db         = new DoctrineDatabase();
+        $this->configPath       = __DIR__ . '/config/test-database-config.yml';
+        $this->db         = new DoctrineDatabase($this->configPath);
         $this->connection = $this->db->getConnection();
     }
 
@@ -41,12 +44,11 @@ class DoctrineDatabaseTest extends \PHPUnit_Framework_TestCase
 
     public Function testWriteDatabaseYamlConfig()
     {
-        $configPath = __DIR__ . '/config/existing-database-config.yml';
-        $this->assertEquals(true, $this->db->writeDatabaseYamlConfig($configPath));
+        $this->assertEquals(true, $this->db->writeDatabaseYamlConfig());
 
-        $currentConfig = Yaml::parse(file_get_contents($configPath));
-        $this->assertEquals('Replacement secu', $currentConfig['affiliation_social_security']['_table_traduction']);
-        $this->assertEquals('Replacement field id', $currentConfig['affiliation_social_security']['id']['_field_traduction']);
+        $currentConfig = Yaml::parse(file_get_contents($this->configPath));
+        $this->assertEquals('Replacement secu', $currentConfig['affiliation_social_security']['_table_translation']);
+        $this->assertEquals('Replacement field id', $currentConfig['affiliation_social_security']['id']['_field_translation']);
     }
 
 }
