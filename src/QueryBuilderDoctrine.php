@@ -21,6 +21,10 @@ class QueryBuilderDoctrine
 
     private $fkList;
 
+    private $fields;
+
+    private $queryResult;
+
     /**
      * QueryBuilderDoctrine constructor.
      * @param DoctrineDatabase $doctrineDb
@@ -61,7 +65,7 @@ class QueryBuilderDoctrine
      * @param $select
      * @throws \Exception
      */
-    private function addQuerySelect($fkList, $fromTable, $select): void
+    private function addQuerySelect($fkList, $fromTable, $select)
     {
         foreach ($select as $key => $field) {
             if (is_object($field)) {
@@ -92,6 +96,9 @@ class QueryBuilderDoctrine
                     continue;
                 }
 
+                /// Feed $fields
+                $this->fields[$fromTable][] = $field;
+
                 $this->queryBuilder->addSelect(
                     $fromTable . ' . ' .
                     $field . ' AS ' .
@@ -104,9 +111,9 @@ class QueryBuilderDoctrine
     /**
      * Add query conditions
      */
-    private function addQueryCondition(): void
+    private function addQueryCondition()
     {
-        if ($this->where === null) {
+        if (null === $this->where) {
             return;
         }
         foreach ($this->where as $logicalOperator => $request) {
@@ -147,7 +154,7 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @throws \Exception
      */
-    private function prepareJsonQuery(string $jsonQuery): void
+    private function prepareJsonQuery(string $jsonQuery)
     {
         /// Try to decode json
         $queryObj = json_decode($jsonQuery);
@@ -171,8 +178,10 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @return array
      */
-    public function executeQuery(string $jsonQuery): ?array
+    public function executeQuery(string $jsonQuery): array
     {
+        /// Reset DQL parts if exist
+        $this->resetSQLRequest();
         /// Prepare query
         $this->prepareJsonQuery($jsonQuery);
 
@@ -188,7 +197,74 @@ class QueryBuilderDoctrine
         $this->addQueryCondition();
 
         /// Execute query and fetch result
-        $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
-        return $result->fetchAll(\PDO::FETCH_ASSOC);
+        $result            = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
+        $this->queryResult = $result->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $this->queryResult;
+    }
+
+    /**
+     * Execute the query and return json
+     * @param string $jsonQuery
+     * @return string
+     */
+    public function executeQueryJson(string $jsonQuery): string
+    {
+        $result            = $this->executeQuery($jsonQuery);
+        $response['total'] = sizeof($result);
+        $response['items'] = $result;
+
+        return json_encode($response);
+    }
+
+    /**
+     * Get the query columns list
+     * @param bool $getTranslationName
+     * @return array
+     * @throws \Exception
+     */
+    public function getQueryColumns(bool $getTranslationName = false): array
+    {
+        if (null === $this->fields) {
+            http_response_code(400);
+            throw new \Exception('There is no query.');
+        }
+        $columns = [];
+        foreach ($this->fields as $table => $rows) {
+            foreach ($rows as $field) {
+                $columns[] = (!$getTranslationName && null !== $this->objDbConfig->{$table}->{$field}->{'_field_translation'})
+                    ?
+                    $this->objDbConfig->{$table}->{$field}->{'_field_translation'}
+                    :
+                    $table . '_' . $this->objDbConfig->{$table}->{$field}->{'name'};
+            }
+        }
+        return $columns;
+    }
+
+    /**
+     * @param bool $getTranslationName
+     * @return string
+     */
+    public function getJsonQueryColumns(bool $getTranslationName = false): string
+    {
+        return json_encode($this->getQueryColumns($getTranslationName));
+    }
+
+    /**
+     * Return the SQL request
+     * @return string
+     */
+    public function getSQLRequest(): string
+    {
+        return $this->queryBuilder->getDQL();
+    }
+
+    /**
+     * Reset DQL parts
+     */
+    private function resetSQLRequest()
+    {
+        $this->queryBuilder->resetDQLParts();
     }
 }
