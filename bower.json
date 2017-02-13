@@ -1,0 +1,17 @@
+{
+  "name": "querybuilder-sdk",
+  "authors": [
+    "littlerobinson"
+  ],
+  "description": "IHM for query builder",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
