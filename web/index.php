@@ -3,7 +3,6 @@ require "../bootstrap.php";
 
 use Littlerobinson\QueryBuilder\DoctrineDatabase;
 use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
-use Littlerobinson\QueryBuilder\Request;
 
 $jsonQuery = '
 {
@@ -59,8 +58,6 @@ echo '<pre>';
 $db = new DoctrineDatabase();
 $qb = new QueryBuilderDoctrine($db);
 
-$request = Request::create();
-
 //$db->writeDatabaseYamlConfig();
 $jsonResponse       = $qb->executeQueryJson($jsonQuery);
 $sqlRequest         = $qb->getSQLRequest();
@@ -68,7 +65,6 @@ $data               = json_decode($jsonResponse);
 $databaseConfig     = $db->getDatabaseYamlConfig();
 $databaseConfigJson = $db->getDatabaseYamlConfig(true);
 $jsonQueryColumns   = $qb->getJsonQueryColumns();
-$tableColumns       = $db->getTableColumns('affiliation_social_security');
 echo '</pre>';
 
 
@@ -115,18 +111,7 @@ echo '</pre>';
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong>Conditions</strong></div>
                     <div class="panel-body">
-                        <?php
-                        echo '<pre>';
-                        var_dump($request->getMethod());
-                        var_dump($request->getHttpCode());
-                        var_dump($request->getRemoteAddress());
-                        var_dump($request->getRequest());
-                        var_dump($request->getPayload());
-                        var_dump($request->getServerAddress());
-                        var_dump($request->getScheme());
-                        var_dump($request->getUri());
-                        echo '</pre>';
-                        ?>
+
                     </div>
                 </div>
             </div>
