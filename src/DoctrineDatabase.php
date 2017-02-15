@@ -199,14 +199,6 @@ class DoctrineDatabase
     }
 
     /**
-     * @return array
-     */
-    public function getTables(): array
-    {
-        return $this->tables;
-    }
-
-    /**
      * @param string $table
      * @return array
      */
@@ -218,6 +210,14 @@ class DoctrineDatabase
     /* ============================================================================================================== */
     /* ============================================== ACCESSORS ==================================================== */
     /* ============================================================================================================== */
+
+    /**
+     * @return array
+     */
+    public function getTables(): array
+    {
+        return $this->tables;
+    }
 
     /**
      * @return \Doctrine\ORM\Configuration

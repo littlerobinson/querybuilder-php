@@ -66,8 +66,6 @@ $databaseConfig     = $db->getDatabaseYamlConfig();
 $databaseConfigJson = $db->getDatabaseYamlConfig(true);
 $jsonQueryColumns   = $qb->getJsonQueryColumns();
 echo '</pre>';
-
-
 ?>
 
 <!DOCTYPE html>
@@ -89,21 +87,18 @@ echo '</pre>';
                 <div class="panel panel-default">
                     <div class="panel-heading"><strong>Liste des tables</strong></div>
                     <div class="panel-body">
-                        <?php
-                        foreach ($databaseConfig as $key => $value) {
-                            if ($value['_table_visibility']) {
-                                $tableName = (null != $value['_table_translation']) ? $value['_table_translation'] : $key;
-                                echo '<div class="checkbox">';
-                                echo '<label for="' . $tableName . '">';
-                                echo '<input type="checkbox" id="' . $tableName . '" value="' . $key . '" v-model="checkedTables" @click="getTableRows">';
-                                echo $tableName . '</label>';
-                                echo '</div>';
-                            }
-                        }
-                        ?>
+                        <input type="hidden" id="databaseConfigJson"
+                               value="<?php echo htmlentities($databaseConfigJson); ?>">
+                        <div class="checkbox" v-for="(value, key, index) in items">
+                            <label for="index">
+                                <input type="checkbox" :id="key" :value="value.name" v-model="checkedTables"
+                                       @click="getTableRows">
+                                {{ value.name }}
+                            </label>
+                        </div>
                     </div>
                     <div class="panel-footer alert-danger">
-                        {{ checkedList }}
+                        {{ checkedTables }}
                     </div>
                 </div>
             </div>
@@ -184,7 +179,6 @@ echo '</pre>';
 
 <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
 <script src="assets/vendor/vue/dist/vue.js"></script>
-<script src="assets/vendor/vue-resource/dist/vue-resource.js"></script>
 <script src="assets/js/vue/component/grid.js"></script>
 <script src="assets/js/vue/app.js"></script>
 
