@@ -96,15 +96,20 @@ echo '</pre>';
                                         :id="key"
                                         :value="key"
                                         v-model="checkedTables"
-                                        @click="getTableRows"
+                                        @click="changeTableStatus"
                                 >
                                 {{ table.name }}
                             </label>
                             <template :id="table.name" v-if="table.status">
                                 <div class="checkbox-row" v-for="(rowValue, rowKey, rowIndex) in table.rows">
                                     <label for="index">
-                                        <input type="checkbox" :id="key + '_' + rowKey" :value="rowKey">
-                                        {{ rowValue }}
+                                        <input
+                                                type="checkbox"
+                                                :id="key + '_' + rowKey"
+                                                :value="rowKey"
+                                                @click="changeRowStatus(key, rowKey)"
+                                        >
+                                        {{ rowValue.name }}
                                     </label>
                                 </div>
                             </template>

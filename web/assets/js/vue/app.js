@@ -9,8 +9,7 @@ var select = new Vue({
         databaseConfigJson: databaseConfigJson,
         items: [],
         dbObj: '',
-        checkedTables: [],
-        tableRows: ''
+        checkedTables: []
     },
     mounted: function () {
         console.log('mounted method in select app');
@@ -37,10 +36,12 @@ var select = new Vue({
                     if (typeof $items[$tableName]['rows'] !== 'object') {
                         $items[$tableName]['rows'] = {};
                     }
-                    if (this.dbObj[$tableName][$fieldName]['_field_translation'] != null) {
-                        $items[$tableName]['rows'][$fieldName] = this.dbObj[$tableName][$fieldName]['_field_translation'];
+                    $items[$tableName]['rows'][$fieldName] = {};
+                    $items[$tableName]['rows'][$fieldName]['status'] = false;
+                    if (this.dbObj[$tableName][$fieldName]['_field_translation'] !== null) {
+                        $items[$tableName]['rows'][$fieldName]['name'] = this.dbObj[$tableName][$fieldName]['_field_translation'];
                     } else {
-                        $items[$tableName]['rows'][$fieldName] = $fieldName;
+                        $items[$tableName]['rows'][$fieldName]['name'] = $fieldName;
                     }
                 }
             }
@@ -48,19 +49,16 @@ var select = new Vue({
         this.items = Object.assign({}, this.items, $items);
     },
     methods: {
-        getTableRows: function (event) {
-            var $rows = {};
-            var $items = this.items;
-
+        changeTableStatus: function () {
             /// Change checkbox status
             this.items[event.target.value].status = event.target.checked;
 
-            this.checkedTables.forEach(function ($table) {
-                Object.keys($rows).map(function ($rowName, $index) {
-                    $rows[$table][$rowName] = $rowName;
-                });
-            });
-            this.tableRows = Object.assign({}, this.tableRows, $rows);
+            /// Disable tables with no relation
+
+        },
+        changeRowStatus: function (table, row) {
+            /// Change checkbox status
+            this.items[table].rows[row].status = event.target.checked;
         }
     }
 });
