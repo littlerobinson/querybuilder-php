@@ -1,7 +1,8 @@
-// bootstrap the select
-
 var databaseConfigJson = $("#databaseConfigJson").val();
 
+/* *********************************************************************************** */
+/* ***************************** Bootstrap SELECT ************************************ */
+/* *********************************************************************************** */
 var select = new Vue({
     el: '#app-select',
     data: {
@@ -14,7 +15,6 @@ var select = new Vue({
     mounted: function () {
         console.log('mounted method in select app');
         this.dbObj = JSON.parse(databaseConfigJson);
-        var $checkedTables = this.checkedTables;
         var $items = {};
         for (var $tableName in this.dbObj) {
             /// Push table name
@@ -22,6 +22,7 @@ var select = new Vue({
                 continue;
             }
             $items[$tableName] = {};
+            $items[$tableName].status = false;
             if (this.dbObj[$tableName]['_table_translation'] !== null) {
                 $items[$tableName].name = this.dbObj[$tableName]['_table_translation'];
             } else {
@@ -47,50 +48,26 @@ var select = new Vue({
         this.items = Object.assign({}, this.items, $items);
     },
     methods: {
-        getTableRows: function () {
-            var $tableRows = [];
-            var $dbObj = JSON.parse(databaseConfigJson);
-            var $checkedTables = this.checkedTables;
+        getTableRows: function (event) {
+            var $rows = {};
+            var $items = this.items;
 
-            /**
-             * Manage checkbox when checked or uncheck
-             */
-            Object.keys($dbObj).map(function (objectValue, index, array) {
-                $checkedTables.forEach(function (table) {
-                    if (objectValue === table) { /// checkbox checked
-                        console.log(objectValue, index, table);
-                    } else { /// checkbox unchecked
-                        $tableRows = [];
-                    }
+            /// Change checkbox status
+            this.items[event.target.value].status = event.target.checked;
+
+            this.checkedTables.forEach(function ($table) {
+                Object.keys($rows).map(function ($rowName, $index) {
+                    $rows[$table][$rowName] = $rowName;
                 });
             });
-
-            this.checkedTables.forEach(function (table) {
-                console.log('enter checkedTables loop');
-                $tableRows[table] = [];
-                var $i = 0;
-                Object.keys($dbObj[table]).map(function (objectKey, index) {
-                    if (objectKey[0] != '_') {
-                        if ($dbObj[table][objectKey]['_field_visibility'] === false) {
-                            return;
-                        }
-                        $tableRows[table][$i] = [];
-                        if ($dbObj[table][objectKey]['_field_translation'] !== null) {
-                            $tableRows[table][$i].push($dbObj[table][objectKey]['_field_translation']);
-                        } else {
-                            $tableRows[table][$i].push(objectKey);
-                        }
-                        $i++;
-                    }
-                });
-            });
-            console.log($tableRows);
-            this.tableRows = Object.assign({}, this.tableRows, $tableRows);
+            this.tableRows = Object.assign({}, this.tableRows, $rows);
         }
     }
 });
 
-// bootstrap the condition
+/* *********************************************************************************** */
+/* **************************** Bootstrap CONDITION ********************************** */
+/* *********************************************************************************** */
 var condition = new Vue({
     el: '#app-condition',
     data: {

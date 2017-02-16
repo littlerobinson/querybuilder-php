@@ -95,3 +95,17 @@ th.active .arrow {
     border-right: 4px solid transparent;
     border-top: 4px solid #ffffff;
 }
+
+#app-select .panel-body {
+    max-height: 600px;
+    overflow: auto;
+}
+
+.checkbox-table {
+    color: #ac2925;
+}
+
+.checkbox-row {
+    margin-left: 10%;
+    color: #555555;
+}

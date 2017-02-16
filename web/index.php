@@ -89,15 +89,29 @@ echo '</pre>';
                     <div class="panel-body">
                         <input type="hidden" id="databaseConfigJson"
                                value="<?php echo htmlentities($databaseConfigJson); ?>">
-                        <div class="checkbox" v-for="(value, key, index) in items">
+                        <div class="checkbox-table" v-for="(table, key, index) in items">
                             <label for="index">
-                                <input type="checkbox" :id="key" :value="value.name" v-model="checkedTables"
-                                       @click="getTableRows">
-                                {{ value.name }}
+                                <input
+                                        type="checkbox"
+                                        :id="key"
+                                        :value="key"
+                                        v-model="checkedTables"
+                                        @click="getTableRows"
+                                >
+                                {{ table.name }}
                             </label>
+                            <template :id="table.name" v-if="table.status">
+                                <div class="checkbox-row" v-for="(rowValue, rowKey, rowIndex) in table.rows">
+                                    <label for="index">
+                                        <input type="checkbox" :id="key + '_' + rowKey" :value="rowKey">
+                                        {{ rowValue }}
+                                    </label>
+                                </div>
+                            </template>
                         </div>
                     </div>
                     <div class="panel-footer alert-danger">
+                        <strong>Liste des tables séléctionnées : </strong><br>
                         {{ checkedTables }}
                     </div>
                 </div>
