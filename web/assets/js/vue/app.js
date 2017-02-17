@@ -9,7 +9,9 @@ var select = new Vue({
         databaseConfigJson: databaseConfigJson,
         items: [],
         dbObj: '',
-        checkedTables: []
+        checkedTables: [],
+        foreignTables: [],
+        foreignKeys: [],
     },
     mounted: function () {
         console.log('mounted method in select app');
@@ -52,13 +54,35 @@ var select = new Vue({
         changeTableStatus: function () {
             /// Change checkbox status
             this.items[event.target.value].status = event.target.checked;
+            /**
+             * Add Foreign Keys and Disable tables with no relation
+             * Add FK if checked
+             */
+            $foreignKeys = this.dbObj[event.target.value]['_FK'];
+            $status = this.items[event.target.value].status;
 
-            /// Disable tables with no relation
-
+            for (var $field in $foreignKeys) {
+                /// Add foreignKey
+                $indexFK = this.foreignKeys.indexOf($foreignKeys[$field]['tableName'] + '.' + $foreignKeys[$field]['columns']);
+                $indexFKTable = this.foreignTables.indexOf($foreignKeys[$field]['tableName']);
+                $status ? this.foreignKeys.push($foreignKeys[$field]['tableName'] + '.' + $foreignKeys[$field]['columns']) : this.foreignKeys.splice($indexFK, 1);
+                if ($indexFKTable === -1) {
+                    /// Add relation table
+                    $status ? this.foreignTables.push($foreignKeys[$field]['tableName']) : this.foreignTables.splice($indexFKTable, 1);
+                } else {
+                    /// A REVOIR
+                    if (!$status) this.foreignTables.splice($indexFKTable, 1);
+                }
+            }
         },
         changeRowStatus: function (table, row) {
             /// Change checkbox status
             this.items[table].rows[row].status = event.target.checked;
+        }
+    },
+    computed: {
+        displayTable: function () {
+
         }
     }
 });

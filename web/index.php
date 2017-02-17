@@ -85,7 +85,7 @@ echo '</pre>';
         <div class="row">
             <div id="app-select" class="col-xs-3">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><strong>Liste des tables</strong></div>
+                    <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
                     <div class="panel-body">
                         <input type="hidden" id="databaseConfigJson"
                                value="<?php echo htmlentities($databaseConfigJson); ?>">
@@ -123,7 +123,7 @@ echo '</pre>';
             </div>
             <div id="app-condition" class="col-xs-9">
                 <div class="panel panel-default">
-                    <div class="panel-heading"><strong>Conditions</strong></div>
+                    <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
                     <div class="panel-body">
 
                     </div>
@@ -199,6 +199,7 @@ echo '</pre>';
 <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
 <script src="assets/vendor/vue/dist/vue.js"></script>
 <script src="assets/js/vue/component/grid.js"></script>
+<script src="assets/js/vue/filter.js"></script>
 <script src="assets/js/vue/app.js"></script>
 
 <script>
