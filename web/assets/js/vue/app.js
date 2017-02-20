@@ -11,7 +11,7 @@ var select = new Vue({
         dbObj: '',
         checkedTables: [],
         foreignTables: [],
-        foreignKeys: [],
+        foreignKeys: []
     },
     mounted: function () {
         console.log('mounted method in select app');
@@ -60,18 +60,27 @@ var select = new Vue({
              */
             $foreignKeys = this.dbObj[event.target.value]['_FK'];
             $status = this.items[event.target.value].status;
-
             for (var $field in $foreignKeys) {
                 /// Add foreignKey
                 $indexFK = this.foreignKeys.indexOf($foreignKeys[$field]['tableName'] + '.' + $foreignKeys[$field]['columns']);
                 $indexFKTable = this.foreignTables.indexOf($foreignKeys[$field]['tableName']);
                 $status ? this.foreignKeys.push($foreignKeys[$field]['tableName'] + '.' + $foreignKeys[$field]['columns']) : this.foreignKeys.splice($indexFK, 1);
-                if ($indexFKTable === -1) {
-                    /// Add relation table
-                    $status ? this.foreignTables.push($foreignKeys[$field]['tableName']) : this.foreignTables.splice($indexFKTable, 1);
-                } else {
-                    /// A REVOIR
-                    if (!$status) this.foreignTables.splice($indexFKTable, 1);
+                if ($status === true && $indexFKTable === -1) {
+                    this.foreignTables.push($foreignKeys[$field]['tableName']);
+                } else if (
+                    this.checkedTables.indexOf($foreignKeys[$field]['tableName']) === -1
+                    && $status === false
+                    && $indexFKTable > -1
+                ) { /// delete foreignTable indexes if not anymore used
+                    $selectListTables = []; /// Table list not to delete in foreignTable (keep in select query)
+                    /// Get the table list to keep
+                    for (var $actualSelect in this.foreignKeys) {
+                        $selectTable = this.foreignKeys[$actualSelect].split(".");
+                        $selectListTables.push($selectTable[0]);
+                    }
+                    if ($selectListTables.indexOf($foreignKeys[$field]['tableName']) === -1) {
+                        this.foreignTables.splice(this.foreignTables.indexOf($foreignKeys[$field]['tableName']), 1);
+                    }
                 }
             }
         },
