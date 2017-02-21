@@ -90,8 +90,16 @@ var select = new Vue({
         }
     },
     computed: {
-        displayTable: function () {
-
+        tableToDisplay: function () {
+            if (this.checkedTables.length > 0) {
+                return this.checkedTables.concat(this.foreignTables);
+            } else {
+                var $tableList = [];
+                for (var index in this.items) {
+                    $tableList.push(index);
+                }
+                return $tableList;
+            }
         }
     }
 });

@@ -109,3 +109,14 @@ th.active .arrow {
     margin-left: 10%;
     color: #555555;
 }
+
+/* ++++++++++++++++++++++++++++++ */
+/* ++++++++++ VUEJS +++++++++++++ */
+/* ++++++++++++++++++++++++++++++ */
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 1s, transform 1s;
+}
+.fade-enter, .fade-leave-active {
+    opacity: 0;
+    transform: translateX(20px);
+}

@@ -84,50 +84,56 @@ echo '</pre>';
     <div>
         <div class="row">
             <div id="app-select" class="col-xs-3">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
-                    <div class="panel-body">
-                        <input type="hidden" id="databaseConfigJson"
-                               value="<?php echo htmlentities($databaseConfigJson); ?>">
-                        <div class="checkbox-table" v-for="(table, key, index) in items">
-                            <label for="index">
-                                <input
-                                        type="checkbox"
-                                        :id="key"
-                                        :value="key"
-                                        v-model="checkedTables"
-                                        @click="changeTableStatus"
-                                >
-                                {{ table.name }}
-                            </label>
-                            <template :id="table.name" v-if="table.status">
-                                <div class="checkbox-row" v-for="(rowValue, rowKey, rowIndex) in table.rows">
-                                    <label for="index">
-                                        <input
-                                                type="checkbox"
-                                                :id="key + '_' + rowKey"
-                                                :value="rowKey"
-                                                @click="changeRowStatus(key, rowKey)"
-                                        >
-                                        {{ rowValue.name }}
-                                    </label>
-                                </div>
-                            </template>
+                <transition name="fade" appear hidden>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
+                        <div class="panel-body">
+                            <input type="hidden" id="databaseConfigJson"
+                                   value="<?php echo htmlentities($databaseConfigJson); ?>">
+                            <div class="checkbox-table" v-for="(table, key, index) in items"
+                                 v-if="tableToDisplay.indexOf(key) > -1">
+                                <label :for="key">
+                                    <input
+                                            type="checkbox"
+                                            :id="key"
+                                            :value="key"
+                                            v-model="checkedTables"
+                                            @click="changeTableStatus"
+                                    >
+                                    {{ table.name }}
+                                </label>
+                                <template :id="table.name" v-if="table.status">
+                                    <div class="checkbox-row" v-for="(rowValue, rowKey, rowIndex) in table.rows"
+                                         :key="rowKey">
+                                        <label :for="key + '_' + rowKey">
+                                            <input
+                                                    type="checkbox"
+                                                    :id="key + '_' + rowKey"
+                                                    :value="rowKey"
+                                                    @click="changeRowStatus(key, rowKey)"
+                                            >
+                                            {{ rowValue.name }}
+                                        </label>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        <div class="panel-footer alert-danger">
+                            <strong>Liste des tables séléctionnées : </strong><br>
+                            {{ checkedTables }}
                         </div>
                     </div>
-                    <div class="panel-footer alert-danger">
-                        <strong>Liste des tables séléctionnées : </strong><br>
-                        {{ checkedTables }}
-                    </div>
-                </div>
+                </transition>
             </div>
             <div id="app-condition" class="col-xs-9">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
-                    <div class="panel-body">
+                <transition name="fade" appear hidden>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
+                        <div class="panel-body">
 
+                        </div>
                     </div>
-                </div>
+                </transition>
             </div>
         </div>
 
