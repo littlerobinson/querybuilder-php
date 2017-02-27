@@ -76,6 +76,7 @@ echo '</pre>';
     <title>Query Builder</title>
     <link rel="stylesheet" href="assets/vendor/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -90,32 +91,58 @@ echo '</pre>';
                         <div class="panel-body">
                             <input type="hidden" id="databaseConfigJson"
                                    value="<?php echo htmlentities($databaseConfigJson); ?>">
-                            <div class="checkbox-table" v-for="(table, key, index) in items"
+                            <div class="checkbox checkbox-danger" v-for="(table, key, index) in items"
                                  v-if="tableToDisplay.indexOf(key) > -1">
-                                <label :for="key">
-                                    <input
-                                            type="checkbox"
-                                            :id="key"
-                                            :value="key"
-                                            v-model="checkedTables"
-                                            @click="changeTableStatus"
-                                    >
-                                    {{ table.name }}
-                                </label>
+                                <input
+                                        type="checkbox"
+                                        :id="key"
+                                        :value="key"
+                                        v-model="checkedTables"
+                                        @click="changeTableStatus"
+                                >
+                                <label :for="key">{{ table.name }}</label>
+
                                 <template :id="table.name" v-if="table.status">
-                                    <div class="checkbox-row" v-for="(rowValue, rowKey, rowIndex) in table.rows"
+                                    <div class="checkbox checkbox-warning"
+                                         v-for="(rowValue, rowKey, rowIndex) in table.rows"
                                          :key="rowKey">
-                                        <label :for="key + '_' + rowKey">
-                                            <input
-                                                    type="checkbox"
-                                                    :id="key + '_' + rowKey"
-                                                    :value="rowKey"
-                                                    @click="changeRowStatus(key, rowKey)"
+                                        <input
+                                                type="checkbox"
+                                                :id="key + '_' + rowKey"
+                                                :value="rowKey"
+                                                @click="changeParentRowStatus(key, rowKey)"
+                                        >
+                                        <label :for="key + '_' + rowKey">{{ rowValue.name }}</label>
+                                        <div v-if="rowValue.status" :id="rowValue._FK" :folder="key + '_' + rowKey">
+                                            <div class="checkbox checkbox-primary"
+                                                 v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows">
+                                                <select-item
+                                                        :parent-key="key"
+                                                        :id="rowValue._FK"
+                                                        :child-row-key="childRowKey"
+                                                        :child-row-value="childRowValue.name"
+                                                        :row-key="rowKey"
+                                                >
+                                                </select-item>
+                                            </div>
+                                            <!--
+                                            <div class="checkbox checkbox-primary"
+                                                 v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows"
                                             >
-                                            {{ rowValue.name }}
-                                        </label>
+                                                <input
+                                                        type="checkbox"
+                                                        :id="rowValue._FK"
+                                                        :value="childRowKey"
+                                                        @click="changeChildRowStatus(key, childRowKey, childRowValue, rowKey)"
+                                                >
+                                                <label :for="rowValue._FK">{{ childRowValue.name }}</label>
+                                                {{ childRowValue.status }}
+                                            </div>
+                                            -->
+                                        </div>
                                     </div>
                                 </template>
+
                             </div>
                         </div>
                         <div class="panel-footer alert-danger">

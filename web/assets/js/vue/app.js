@@ -1,5 +1,30 @@
 var databaseConfigJson = $("#databaseConfigJson").val();
 
+Vue.component('selectItem', {
+    props: [
+        'id',
+        'childRowValue',
+        'childRowKey',
+        'childRowIndex',
+        'parentKey',
+        'rowKey'
+    ],
+    mounted: function () {
+        console.log(this.$parent);
+    },
+    template: '\
+       <div>\
+       <input\
+       type="checkbox"\
+       :id="id"\
+       :value="childRowKey"\
+       @click="this.$parent.changeChildRowStatus(parentKey, childRowKey, childRowValue, rowKey)"\
+       >\
+       <label :for="id">{{ childRowValue }}</label>\
+       </div>\
+   '
+});
+
 /* *********************************************************************************** */
 /* ***************************** Bootstrap SELECT ************************************ */
 /* *********************************************************************************** */
@@ -7,9 +32,11 @@ var select = new Vue({
     el: '#app-select',
     data: {
         databaseConfigJson: databaseConfigJson,
-        items: [],
-        dbObj: '',
+        jsonQuery: {},
+        items: {},
+        dbObj: {},
         checkedTables: [],
+        checkedRows: [],
         foreignTables: [],
         foreignKeys: []
     },
@@ -17,35 +44,10 @@ var select = new Vue({
         console.log('mounted method in select app');
         this.dbObj = JSON.parse(databaseConfigJson);
         var $items = {};
+        /// Update database items
         for (var $tableName in this.dbObj) {
-            /// Push table name
-            if (this.dbObj[$tableName]['_table_visibility'] === false) {
-                continue;
-            }
-            $items[$tableName] = {};
-            $items[$tableName].status = false;
-            if (this.dbObj[$tableName]['_table_translation'] !== null) {
-                $items[$tableName].name = this.dbObj[$tableName]['_table_translation'];
-            } else {
-                $items[$tableName].name = $tableName;
-            }
-            /// Push rows name
-            for (var $fieldName in this.dbObj[$tableName]) {
-                if ($fieldName[0] != '_') {
-                    if (this.dbObj[$tableName][$fieldName]['_field_visibility'] === false) {
-                        continue;
-                    }
-                    if (typeof $items[$tableName]['rows'] !== 'object') {
-                        $items[$tableName]['rows'] = {};
-                    }
-                    $items[$tableName]['rows'][$fieldName] = {};
-                    $items[$tableName]['rows'][$fieldName]['status'] = false;
-                    if (this.dbObj[$tableName][$fieldName]['_field_translation'] !== null) {
-                        $items[$tableName]['rows'][$fieldName]['name'] = this.dbObj[$tableName][$fieldName]['_field_translation'];
-                    } else {
-                        $items[$tableName]['rows'][$fieldName]['name'] = $fieldName;
-                    }
-                }
+            if (this._getTableItems($tableName)) {
+                $items[$tableName] = this._getTableItems($tableName);
             }
         }
         this.items = Object.assign({}, this.items, $items);
@@ -84,15 +86,91 @@ var select = new Vue({
                 }
             }
         },
-        changeRowStatus: function (table, row) {
+        changeParentRowStatus: function ($table, $row) {
             /// Change checkbox status
-            this.items[table].rows[row].status = event.target.checked;
+            this.items[$table].rows[$row].status = event.target.checked;
+            if (this.checkedRows.indexOf($table) === -1) {
+                this.checkedRows[$table] = {};
+            }
+            /// If is foreign key
+            if (this.items[$table].rows[$row]._FK !== null) {
+                $fk = this.items[$table].rows[$row]._FK.split(".");
+                $tableItems = this._getTableItems($fk[0]);
+                this.items[$table].rows[$row]['rows'] = {};
+                this.items[$table].rows[$row]['rows'] = $tableItems.rows;
+            }
+        },
+        changeChildRowStatus: function ($firstParent, $parent, $row, $rowKey) {
+            console.log($firstParent, $rowKey, $parent, $row);
+            $actualFk = $row._FK.split(".");
+            $rowsPath = this.items[$firstParent].rows[$rowKey].rows[$parent];
+            Vue.set(this.items[$firstParent].rows[$rowKey].rows[$parent], 'rows', this.dbObj[$actualFk[0]]);
+            /// Change checkbox status
+            Vue.set(this.items[$firstParent].rows[$rowKey].rows[$parent], 'status', event.target.checked);
+            //this.items[$firstParent].rows[$rowKey].rows[$parent].rows = {};
+            //this.items[$firstParent].rows[$rowKey].rows[$parent].rows = this.dbObj[$actualFk[0]];
+            console.log(this.items[$firstParent].rows[$rowKey].rows[$parent]);
+            /*
+             for ($value in $listPath) {
+             if ($listPath[$value] !== $parent && $rowsPath[$listPath[$value]]) {
+             /// Update this.items
+             console.log($listPath, $value, $parent, $rowsPath, $row, $listPath[$value]);
+             /// Change checkbox status
+             //$rowsPath.status = event.target.checked;
+             }
+             }
+             */
+        },
+        _getTableItems: function ($tableName) {
+            if (typeof this.dbObj[$tableName] !== 'object') {
+                return false;
+            }
+            if (this.dbObj[$tableName]['_table_visibility'] === false) {
+                return false;
+            }
+            var $items = {};
+            $items[$tableName] = {};
+            $items[$tableName].status = false;
+            if (this.dbObj[$tableName]['_table_translation'] !== null) {
+                $items[$tableName].name = this.dbObj[$tableName]['_table_translation'];
+            } else {
+                $items[$tableName].name = $tableName;
+            }
+            for (var $fieldName in this.dbObj[$tableName]) {
+                if ($fieldName[0] != '_') {
+                    if (this.dbObj[$tableName][$fieldName]['_field_visibility'] === false) {
+                        continue;
+                    }
+                    if (typeof $items[$tableName]['rows'] !== 'object') {
+                        $items[$tableName]['rows'] = {};
+                    }
+
+                    $items[$tableName]['rows'][$fieldName] = {};
+                    $items[$tableName]['rows'][$fieldName]['status'] = false;
+                    $items[$tableName]['rows'][$fieldName]['_FK'] = null;
+                    $items[$tableName]['rows'][$fieldName]['rows'] = null;
+
+                    if (typeof this.dbObj[$tableName]['_FK'] !== 'undefined' && typeof this.dbObj[$tableName]['_FK'][$fieldName] !== 'undefined') {
+                        $fkTableName = this.dbObj[this.dbObj[$tableName]['_FK'][$fieldName]['tableName']]['_table_translation'] !== null
+                            ? this.dbObj[this.dbObj[$tableName]['_FK'][$fieldName]['tableName']]['_table_translation']
+                            : this.dbObj[$tableName]['_FK'][$fieldName]['tableName'];
+                        $rowName = (this.dbObj[$tableName][$fieldName]['_field_translation'] !== null) ? ' (' + this.dbObj[$tableName][$fieldName]['_field_translation'] + ')' : '';
+                        $items[$tableName]['rows'][$fieldName]['name'] = $fkTableName + $rowName;
+                        $items[$tableName]['rows'][$fieldName]['_FK'] = this.dbObj[$tableName]['_FK'][$fieldName]['tableName'] + '.' + this.dbObj[$tableName][$fieldName]['name'];
+                    } else {
+                        $rowName = (this.dbObj[$tableName][$fieldName]['_field_translation'] !== null) ? this.dbObj[$tableName][$fieldName]['_field_translation'] : this.dbObj[$tableName][$fieldName]['name'];
+                        $items[$tableName]['rows'][$fieldName]['name'] = $rowName;
+                    }
+                }
+            }
+            return $items[$tableName];
         }
     },
     computed: {
         tableToDisplay: function () {
             if (this.checkedTables.length > 0) {
-                return this.checkedTables.concat(this.foreignTables);
+                //return this.checkedTables.concat(this.foreignTables);
+                return this.checkedTables;
             } else {
                 var $tableList = [];
                 for (var index in this.items) {
@@ -100,6 +178,13 @@ var select = new Vue({
                 }
                 return $tableList;
             }
+        }
+    },
+    filter: {
+        getChildren: function (path) {
+            return this.items.filter(function (el) {
+                return el.items == path;
+            });
         }
     }
 });
