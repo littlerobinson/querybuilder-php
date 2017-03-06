@@ -1,35 +1,10 @@
 var databaseConfigJson = $("#databaseConfigJson").val();
 
-Vue.component('selectItem', {
-    props: [
-        'id',
-        'childRowValue',
-        'childRowKey',
-        'childRowIndex',
-        'parentKey',
-        'rowKey'
-    ],
-    mounted: function () {
-        console.log(this.$parent);
-    },
-    template: '\
-       <div>\
-       <input\
-       type="checkbox"\
-       :id="id"\
-       :value="childRowKey"\
-       @click="this.$parent.changeChildRowStatus(parentKey, childRowKey, childRowValue, rowKey)"\
-       >\
-       <label :for="id">{{ childRowValue }}</label>\
-       </div>\
-   '
-});
-
 /* *********************************************************************************** */
-/* ***************************** Bootstrap SELECT ************************************ */
+/* ******************************* Bootstrap REQUEST ************************************* */
 /* *********************************************************************************** */
-var select = new Vue({
-    el: '#app-select',
+var request = new Vue({
+    el: '#app-request',
     data: {
         databaseConfigJson: databaseConfigJson,
         jsonQuery: {},
@@ -95,31 +70,23 @@ var select = new Vue({
             /// If is foreign key
             if (this.items[$table].rows[$row]._FK !== null) {
                 $fk = this.items[$table].rows[$row]._FK.split(".");
+                //this.checkedTables.push($fk[0]);
                 $tableItems = this._getTableItems($fk[0]);
                 this.items[$table].rows[$row]['rows'] = {};
                 this.items[$table].rows[$row]['rows'] = $tableItems.rows;
             }
         },
-        changeChildRowStatus: function ($firstParent, $parent, $row, $rowKey) {
-            console.log($firstParent, $rowKey, $parent, $row);
-            $actualFk = $row._FK.split(".");
-            $rowsPath = this.items[$firstParent].rows[$rowKey].rows[$parent];
-            Vue.set(this.items[$firstParent].rows[$rowKey].rows[$parent], 'rows', this.dbObj[$actualFk[0]]);
-            /// Change checkbox status
-            Vue.set(this.items[$firstParent].rows[$rowKey].rows[$parent], 'status', event.target.checked);
-            //this.items[$firstParent].rows[$rowKey].rows[$parent].rows = {};
-            //this.items[$firstParent].rows[$rowKey].rows[$parent].rows = this.dbObj[$actualFk[0]];
-            console.log(this.items[$firstParent].rows[$rowKey].rows[$parent]);
-            /*
-             for ($value in $listPath) {
-             if ($listPath[$value] !== $parent && $rowsPath[$listPath[$value]]) {
-             /// Update this.items
-             console.log($listPath, $value, $parent, $rowsPath, $row, $listPath[$value]);
-             /// Change checkbox status
-             //$rowsPath.status = event.target.checked;
-             }
-             }
-             */
+        changeChildRowStatus: function ($firstParent, $rowKey, $row, $parent) {
+            /// If is table, add rows to item object
+            if ($row._FK) {
+                $actualFk = $row._FK.split(".");
+                //this.checkedTables.push($actualFk[0]);
+                $rowsPath = this.items[$firstParent].rows[$parent].rows[$];
+                console.log(this.dbObj[$actualFk[0]], $firstParent, $parent, $row, $rowKey);
+                Vue.set(this.items[$firstParent].rows[$parent].rows[$rowKey], 'rows', this.dbObj[$actualFk[0]]);
+                /// Change checkbox status
+                Vue.set(this.items[$firstParent].rows[$parent].rows[$rowKey], 'status', event.target.checked);
+            }
         },
         _getTableItems: function ($tableName) {
             if (typeof this.dbObj[$tableName] !== 'object') {
@@ -186,15 +153,5 @@ var select = new Vue({
                 return el.items == path;
             });
         }
-    }
-});
-
-/* *********************************************************************************** */
-/* **************************** Bootstrap CONDITION ********************************** */
-/* *********************************************************************************** */
-var condition = new Vue({
-    el: '#app-condition',
-    data: {
-        select: null
     }
 });

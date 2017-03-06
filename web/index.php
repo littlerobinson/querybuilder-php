@@ -82,85 +82,100 @@ echo '</pre>';
 <body>
 
 <div class="container well">
+    <h1>Requêteur</h1>
+    <hr>
     <div>
         <div class="row">
-            <div id="app-select" class="col-xs-3">
-                <transition name="fade" appear hidden>
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
-                        <div class="panel-body">
-                            <input type="hidden" id="databaseConfigJson"
-                                   value="<?php echo htmlentities($databaseConfigJson); ?>">
-                            <div class="checkbox checkbox-danger" v-for="(table, key, index) in items"
-                                 v-if="tableToDisplay.indexOf(key) > -1">
-                                <input
-                                        type="checkbox"
-                                        :id="key"
-                                        :value="key"
-                                        v-model="checkedTables"
-                                        @click="changeTableStatus"
-                                >
-                                <label :for="key">{{ table.name }}</label>
+            <div id="app-request">
+                <input type="hidden" v-model="checkedTables">
+                <div id="select" class="col-xs-3">
+                    <transition name="fade" appear hidden>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
+                            <div class="panel-body">
+                                <input type="hidden" id="databaseConfigJson"
+                                       value="<?php echo htmlentities($databaseConfigJson); ?>">
+                                <div class="checkbox checkbox-danger" v-for="(table, key, index) in items"
+                                     v-if="tableToDisplay.indexOf(key) > -1">
+                                    <input
+                                            type="checkbox"
+                                            :id="key"
+                                            :value="key"
+                                            v-model="checkedTables"
+                                            @click="changeTableStatus"
+                                    >
+                                    <label :for="key">{{ table.name }}</label>
 
-                                <template :id="table.name" v-if="table.status">
-                                    <div class="checkbox checkbox-warning"
-                                         v-for="(rowValue, rowKey, rowIndex) in table.rows"
-                                         :key="rowKey">
-                                        <input
-                                                type="checkbox"
-                                                :id="key + '_' + rowKey"
-                                                :value="rowKey"
-                                                @click="changeParentRowStatus(key, rowKey)"
-                                        >
-                                        <label :for="key + '_' + rowKey">{{ rowValue.name }}</label>
-                                        <div v-if="rowValue.status" :id="rowValue._FK" :folder="key + '_' + rowKey">
-                                            <div class="checkbox checkbox-primary"
-                                                 v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows">
-                                                <select-item
-                                                        :parent-key="key"
-                                                        :id="rowValue._FK"
-                                                        :child-row-key="childRowKey"
-                                                        :child-row-value="childRowValue.name"
-                                                        :row-key="rowKey"
-                                                >
-                                                </select-item>
-                                            </div>
-                                            <!--
-                                            <div class="checkbox checkbox-primary"
-                                                 v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows"
+                                    <template :id="table.name" v-if="table.status">
+                                        <div class="checkbox checkbox-warning"
+                                             v-for="(rowValue, rowKey, rowIndex) in table.rows"
+                                             :key="rowKey">
+                                            <input
+                                                    type="checkbox"
+                                                    :id="key + '_' + rowKey"
+                                                    :value="rowKey"
+                                                    @click="changeParentRowStatus(key, rowKey)"
                                             >
-                                                <input
-                                                        type="checkbox"
-                                                        :id="rowValue._FK"
-                                                        :value="childRowKey"
-                                                        @click="changeChildRowStatus(key, childRowKey, childRowValue, rowKey)"
-                                                >
-                                                <label :for="rowValue._FK">{{ childRowValue.name }}</label>
-                                                {{ childRowValue.status }}
+                                            <label :for="key + '_' + rowKey">{{ rowValue.name }}</label>
+                                            <div v-if="rowValue.status" :id="rowValue._FK" :folder="key + '_' + rowKey">
+                                                <div class="checkbox checkbox-primary">
+                                                    <select-item
+                                                            v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows"
+                                                            :parent-key="key"
+                                                            :id="rowValue._FK"
+                                                            :child-row-key="childRowKey"
+                                                            :child-row-value="childRowValue"
+                                                            :row-key="rowKey"
+                                                            :change-child-row-status="changeChildRowStatus"
+                                                    >
+                                                    </select-item>
+                                                </div>
                                             </div>
-                                            -->
-                                        </div>
-                                    </div>
-                                </template>
 
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="panel-footer alert-danger">
+                                <strong>Liste des tables séléctionnées : </strong><br>
+                                {{ checkedTables }}
                             </div>
                         </div>
-                        <div class="panel-footer alert-danger">
-                            <strong>Liste des tables séléctionnées : </strong><br>
-                            {{ checkedTables }}
+                    </transition>
+                </div>
+                <div id="condition" class="col-xs-9">
+                    <transition name="fade" appear hidden>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
+                            <div class="panel-body">
+                                <script type="text/x-template" id="condition-item">
+                                    <div>
+                                        <select v-if="checkedTables.length > 0">
+                                            <option value="">-- Sélectionner une table --</option>
+                                            <option v-for="table in checkedTables" :value="table">
+                                                {{ table }}
+                                            </option>
+                                        </select>
+                                        <button type="text" v-model="newCondition" @keyup.enter="addCondition">
+                                            Ajouter une condition
+                                        </button>
+                                        <hr>
+                                        <div
+                                                v-for="(conditionValue, conditionKey, conditionIndex) in conditions"
+                                                :key="conditionKey"
+                                        >
+                                            <input value="conditionValue">
+                                        </div
+                                    </div>
+                                </script>
+                                <condition-item
+                                        :checked-tables="checkedTables"
+                                >
+                                </condition-item>
+                            </div>
                         </div>
-                    </div>
-                </transition>
-            </div>
-            <div id="app-condition" class="col-xs-9">
-                <transition name="fade" appear hidden>
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
-                        <div class="panel-body">
-
-                        </div>
-                    </div>
-                </transition>
+                    </transition>
+                </div>
             </div>
         </div>
 
@@ -232,8 +247,10 @@ echo '</pre>';
 <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
 <script src="assets/vendor/vue/dist/vue.js"></script>
 <script src="assets/js/vue/component/grid.js"></script>
+<script src="assets/js/vue/component/select.js"></script>
+<script src="assets/js/vue/component/condition.js"></script>
 <script src="assets/js/vue/filter.js"></script>
-<script src="assets/js/vue/app.js"></script>
+<script src="assets/js/vue/appRequest.js"></script>
 
 <script>
     // bootstrap the research
