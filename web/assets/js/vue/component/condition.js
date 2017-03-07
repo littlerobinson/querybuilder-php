@@ -1,31 +1,47 @@
 Vue.component('conditionItem', {
     template: '#condition-item',
     props: {
-        value: {
-            type: Array,
-            default: function () {
-                return []
-            }
-        },
         checkedTables: {
             type: Array,
             default: function () {
                 return []
             }
+        },
+        items: {
+            type: Object,
+            default: function () {
+                return {}
+            }
         }
     },
     data: function () {
         return {
-            conditions: this.value,
-            newCondition: '',
-            tables: this.checkedTables
+            conditions: [],
+            rows: [],
+            newRuleTable: '',
+            newRuleRow: '',
+            newOperator: '',
+            newValue: '',
+            newCondition: [],
+            operatorList: [
+                {value: 'EQUAL', name: 'Est égal à'},
+                {value: 'LIKE', name: 'Contient'}
+            ]
         }
     },
     methods: {
         addCondition: function () {
-            console.log(this.newCondition);
-            this.value.push(this.newCondition);
-            this.newCondition = '';
+            var $newCondition = {
+                rule: this.newRuleRow + ' (' + this.newRuleTable + ')',
+                operator: this.newOperator,
+                value: this.newValue
+            };
+            this.conditions.push($newCondition);
+        },
+        addRuleRows: function () {
+            for (var $rowName in this.items[this.newRuleTable].rows) {
+                this.rows.push($rowName);
+            }
         }
     }
 });

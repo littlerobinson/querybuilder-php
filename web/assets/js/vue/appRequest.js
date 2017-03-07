@@ -70,7 +70,7 @@ var request = new Vue({
             /// If is foreign key
             if (this.items[$table].rows[$row]._FK !== null) {
                 $fk = this.items[$table].rows[$row]._FK.split(".");
-                //this.checkedTables.push($fk[0]);
+                this.checkedTables.push($fk[0]);
                 $tableItems = this._getTableItems($fk[0]);
                 this.items[$table].rows[$row]['rows'] = {};
                 this.items[$table].rows[$row]['rows'] = $tableItems.rows;
@@ -80,9 +80,8 @@ var request = new Vue({
             /// If is table, add rows to item object
             if ($row._FK) {
                 $actualFk = $row._FK.split(".");
-                //this.checkedTables.push($actualFk[0]);
+                this.checkedTables.push($actualFk[0]);
                 $rowsPath = this.items[$firstParent].rows[$parent].rows[$];
-                console.log(this.dbObj[$actualFk[0]], $firstParent, $parent, $row, $rowKey);
                 Vue.set(this.items[$firstParent].rows[$parent].rows[$rowKey], 'rows', this.dbObj[$actualFk[0]]);
                 /// Change checkbox status
                 Vue.set(this.items[$firstParent].rows[$parent].rows[$rowKey], 'status', event.target.checked);

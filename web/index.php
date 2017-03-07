@@ -81,6 +81,78 @@ echo '</pre>';
 </head>
 <body>
 
+<!-- component for cndition template -->
+<script type="text/x-template" id="condition-item">
+    <div class="row">
+        <div class="col-md-12">
+            <select v-model="newRuleTable" @change="addRuleRows">
+                <option value="">-- Sélectionner une table --</option>
+                <option v-if="checkedTables.length > 0" v-for="(table, index) in checkedTables">
+                    {{ table }}
+                </option>
+            </select>
+            <select v-model="newRuleRow">
+                <option value="">-- Sélectionner un champs --</option>
+                <option v-if="newRuleTable != ''" v-for="(row, index) in rows">
+                    {{ row }}
+                </option>
+            </select>
+            <select v-model="newOperator">
+                <option value="">-- Sélectionner une condition --</option>
+                <option v-for="(operator, key) in operatorList" :value="operator.value">
+                    {{ operator.name }}
+                </option>
+            </select>
+            <input type="text" v-model="newValue" placeholder="Condition">
+            <input type="button" value="Ajouter une condition" @click="addCondition">
+            <hr>
+            <table class="table table-responsive" v-if="conditions.length > 0">
+                <thead>
+                <tr>
+                    <th>Donnée</th>
+                    <th>Opérateur</th>
+                    <th>Valeur</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr
+                        v-for="(conditionValue, conditionKey, conditionIndex) in conditions"
+                        :key="conditionKey"
+                >
+                    <td>{{ conditionValue.rule }}</td>
+                    <td>{{ conditionValue.operator }}</td>
+                    <td>{{ conditionValue.value }}</td>
+                    <td><i class="fa fa-minus-circle fa-2x text-warning" aria-hidden="true"></i></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</script>
+
+<!-- component grid result template -->
+<script type="text/x-template" id="grid-template">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th v-for="key in columns"
+                @click="sortBy(key)"
+                :class="{ active: sortKey == key }">
+                {{ key | capitalize }}
+                <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="entry in filteredData">
+            <td v-for="key in columns">
+                {{entry[key]}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</script>
+
 <div class="container well">
     <h1>Requêteur</h1>
     <hr>
@@ -148,28 +220,9 @@ echo '</pre>';
                         <div class="panel panel-default">
                             <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
                             <div class="panel-body">
-                                <script type="text/x-template" id="condition-item">
-                                    <div>
-                                        <select v-if="checkedTables.length > 0">
-                                            <option value="">-- Sélectionner une table --</option>
-                                            <option v-for="table in checkedTables" :value="table">
-                                                {{ table }}
-                                            </option>
-                                        </select>
-                                        <button type="text" v-model="newCondition" @keyup.enter="addCondition">
-                                            Ajouter une condition
-                                        </button>
-                                        <hr>
-                                        <div
-                                                v-for="(conditionValue, conditionKey, conditionIndex) in conditions"
-                                                :key="conditionKey"
-                                        >
-                                            <input value="conditionValue">
-                                        </div
-                                    </div>
-                                </script>
                                 <condition-item
                                         :checked-tables="checkedTables"
+                                        :items="items"
                                 >
                                 </condition-item>
                             </div>
@@ -190,29 +243,6 @@ echo '</pre>';
                             </tbody>
                         </table>
 
-                        <!-- component template -->
-                        <script type="text/x-template" id="grid-template">
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th v-for="key in columns"
-                                        @click="sortBy(key)"
-                                        :class="{ active: sortKey == key }">
-                                        {{ key | capitalize }}
-                                        <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="entry in filteredData">
-                                    <td v-for="key in columns">
-                                        {{entry[key]}}
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </script>
-
                         <!-- research root element -->
                         <div id="app-result-research">
                             <form id="search">
@@ -224,7 +254,6 @@ echo '</pre>';
                                     :filter-key="searchQuery">
                             </grid>
                         </div>
-
                     </div>
                 </div>
             </div>
