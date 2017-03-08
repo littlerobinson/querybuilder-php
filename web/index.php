@@ -54,6 +54,24 @@ $jsonQuery = '
 }
 ';
 
+function executeQueryJson($jsonQuery) {
+    $db = new DoctrineDatabase();
+    $qb = new QueryBuilderDoctrine($db);
+    return $qb->executeQueryJson($jsonQuery);
+}
+
+if(isset($_GET['action'])) {
+    $action = $_GET['action'];
+    switch($action) {
+        case 'executeQueryJson':
+            executeQueryJson($jsonQuery);
+            break;
+        default:
+            die('Access denied for this function.');
+    }
+    var_dump($action); die();
+}
+
 echo '<pre>';
 $db = new DoctrineDatabase();
 $qb = new QueryBuilderDoctrine($db);
@@ -64,7 +82,7 @@ $sqlRequest         = $qb->getSQLRequest();
 $data               = json_decode($jsonResponse);
 $databaseConfig     = $db->getDatabaseYamlConfig();
 $databaseConfigJson = $db->getDatabaseYamlConfig(true);
-$jsonQueryColumns   = $qb->getJsonQueryColumns();
+$jsonQueryColumns   = $qb->getJsonQueryColumns(false);
 echo '</pre>';
 ?>
 
@@ -122,7 +140,7 @@ echo '</pre>';
                     <td>{{ conditionValue.rule }}</td>
                     <td>{{ conditionValue.operator }}</td>
                     <td>{{ conditionValue.value }}</td>
-                    <td><i class="fa fa-minus-circle fa-2x text-warning" aria-hidden="true"></i></td>
+                    <td><i class="fa fa-minus-circle fa-lg text-danger" aria-hidden="true"></i></td>
                 </tr>
                 </tbody>
             </table>
@@ -146,7 +164,7 @@ echo '</pre>';
         <tbody>
         <tr v-for="entry in filteredData">
             <td v-for="key in columns">
-                {{entry[key]}}
+                {{ entry[key] }}
             </td>
         </tr>
         </tbody>
@@ -156,82 +174,82 @@ echo '</pre>';
 <div class="container well">
     <h1>Requêteur</h1>
     <hr>
-    <div>
-        <div class="row">
-            <div id="app-request">
-                <input type="hidden" v-model="checkedTables">
-                <div id="select" class="col-xs-3">
-                    <transition name="fade" appear hidden>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
-                            <div class="panel-body">
-                                <input type="hidden" id="databaseConfigJson"
-                                       value="<?php echo htmlentities($databaseConfigJson); ?>">
-                                <div class="checkbox checkbox-danger" v-for="(table, key, index) in items"
-                                     v-if="tableToDisplay.indexOf(key) > -1">
-                                    <input
-                                            type="checkbox"
-                                            :id="key"
-                                            :value="key"
-                                            v-model="checkedTables"
-                                            @click="changeTableStatus"
-                                    >
-                                    <label :for="key">{{ table.name }}</label>
-
-                                    <template :id="table.name" v-if="table.status">
-                                        <div class="checkbox checkbox-warning"
-                                             v-for="(rowValue, rowKey, rowIndex) in table.rows"
-                                             :key="rowKey">
-                                            <input
-                                                    type="checkbox"
-                                                    :id="key + '_' + rowKey"
-                                                    :value="rowKey"
-                                                    @click="changeParentRowStatus(key, rowKey)"
-                                            >
-                                            <label :for="key + '_' + rowKey">{{ rowValue.name }}</label>
-                                            <div v-if="rowValue.status" :id="rowValue._FK" :folder="key + '_' + rowKey">
-                                                <div class="checkbox checkbox-primary">
-                                                    <select-item
-                                                            v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows"
-                                                            :parent-key="key"
-                                                            :id="rowValue._FK"
-                                                            :child-row-key="childRowKey"
-                                                            :child-row-value="childRowValue"
-                                                            :row-key="rowKey"
-                                                            :change-child-row-status="changeChildRowStatus"
-                                                    >
-                                                    </select-item>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                            <div class="panel-footer alert-danger">
-                                <strong>Liste des tables séléctionnées : </strong><br>
-                                {{ checkedTables }}
-                            </div>
-                        </div>
-                    </transition>
-                </div>
-                <div id="condition" class="col-xs-9">
-                    <transition name="fade" appear hidden>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
-                            <div class="panel-body">
-                                <condition-item
-                                        :checked-tables="checkedTables"
-                                        :items="items"
+    <div class="row">
+        <div id="app-request">
+            <input type="hidden" v-model="checkedTables">
+            <div id="select" class="col-xs-3">
+                <transition name="fade" appear hidden>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
+                        <div class="panel-body">
+                            <input type="hidden" id="databaseConfigJson"
+                                   value="<?php echo htmlentities($databaseConfigJson); ?>">
+                            <div class="checkbox checkbox-danger" v-for="(table, key, index) in items"
+                                 v-if="tableToDisplay.indexOf(key) > -1">
+                                <input
+                                        type="checkbox"
+                                        :id="key"
+                                        :value="key"
+                                        v-model="checkedTables"
+                                        @click="changeTableStatus"
                                 >
-                                </condition-item>
+                                <label :for="key">{{ table.name }}</label>
+
+                                <template :id="table.name" v-if="table.status">
+                                    <div class="checkbox checkbox-warning"
+                                         v-for="(rowValue, rowKey, rowIndex) in table.rows"
+                                         :key="rowKey">
+                                        <input
+                                                type="checkbox"
+                                                :id="key + '_' + rowKey"
+                                                :value="rowKey"
+                                                @click="changeParentRowStatus(key, rowKey)"
+                                        >
+                                        <label :for="key + '_' + rowKey">{{ rowValue.name }}</label>
+                                        <div v-if="rowValue.status" :id="rowValue._FK" :folder="key + '_' + rowKey">
+                                            <div class="checkbox checkbox-primary">
+                                                <select-item
+                                                        v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows"
+                                                        :parent-key="key"
+                                                        :id="rowValue._FK"
+                                                        :child-row-key="childRowKey"
+                                                        :child-row-value="childRowValue"
+                                                        :row-key="rowKey"
+                                                        :change-child-row-status="changeChildRowStatus"
+                                                >
+                                                </select-item>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </template>
                             </div>
                         </div>
-                    </transition>
-                </div>
+                        <div class="panel-footer alert-danger">
+                            <strong>Liste des tables séléctionnées : </strong><br>
+                            {{ checkedTables }}
+                        </div>
+                    </div>
+                </transition>
+            </div>
+            <div id="condition" class="col-xs-9">
+                <transition name="fade" appear hidden>
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
+                        <div class="panel-body">
+                            <condition-item
+                                    :checked-tables="checkedTables"
+                                    :items="items"
+                            >
+                            </condition-item>
+                            <button type="button" class="btn btn-success pull-right" aria-expanded="false" @click="search">Recherche</button>
+                        </div>
+                    </div>
+                </transition>
             </div>
         </div>
 
+        <!-- result -->
         <div class="row">
             <div class="col-xs-12">
                 <div class="panel panel-default">
@@ -259,6 +277,7 @@ echo '</pre>';
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
@@ -271,10 +290,12 @@ echo '</pre>';
             </div>
         </div>
     </div>
+
 </div>
 
 <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
 <script src="assets/vendor/vue/dist/vue.js"></script>
+<script src="assets/vendor/vue-resource/dist/vue-resource.min.js"></script>
 <script src="assets/js/vue/component/grid.js"></script>
 <script src="assets/js/vue/component/select.js"></script>
 <script src="assets/js/vue/component/condition.js"></script>

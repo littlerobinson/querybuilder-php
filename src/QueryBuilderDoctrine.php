@@ -232,7 +232,7 @@ class QueryBuilderDoctrine
         $columns = [];
         foreach ($this->fields as $table => $rows) {
             foreach ($rows as $field) {
-                $columns[] = (!$getTranslationName && null !== $this->objDbConfig->{$table}->{$field}->{'_field_translation'})
+                $columns[] = ($getTranslationName && null !== $this->objDbConfig->{$table}->{$field}->{'_field_translation'})
                     ?
                     $this->objDbConfig->{$table}->{$field}->{'_field_translation'}
                     :

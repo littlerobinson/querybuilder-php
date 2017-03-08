@@ -39,9 +39,16 @@ Vue.component('conditionItem', {
             this.conditions.push($newCondition);
         },
         addRuleRows: function () {
+            this._clearNewCondition();
             for (var $rowName in this.items[this.newRuleTable].rows) {
                 this.rows.push($rowName);
             }
+        },
+        _clearNewCondition: function () {
+            this.newRuleRow = '';
+            this.newOperator = '';
+            this.newValue = '';
+            this.rows = [];
         }
     }
 });

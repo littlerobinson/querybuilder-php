@@ -6,10 +6,10 @@ var databaseConfigJson = $("#databaseConfigJson").val();
 var request = new Vue({
     el: '#app-request',
     data: {
-        databaseConfigJson: databaseConfigJson,
         jsonQuery: {},
-        items: {},
         dbObj: {},
+        items: {},
+        listTables: [],
         checkedTables: [],
         checkedRows: [],
         foreignTables: [],
@@ -23,6 +23,9 @@ var request = new Vue({
         for (var $tableName in this.dbObj) {
             if (this._getTableItems($tableName)) {
                 $items[$tableName] = this._getTableItems($tableName);
+            }
+            if (this.dbObj[$tableName]['_table_visibility'] === true) {
+                this.listTables.push($tableName);
             }
         }
         this.items = Object.assign({}, this.items, $items);
@@ -85,7 +88,15 @@ var request = new Vue({
                 Vue.set(this.items[$firstParent].rows[$parent].rows[$rowKey], 'rows', this.dbObj[$actualFk[0]]);
                 /// Change checkbox status
                 Vue.set(this.items[$firstParent].rows[$parent].rows[$rowKey], 'status', event.target.checked);
+                /// Feed checkedRows value
+                console.log(this.dbObj[$actualFk[0]]);
+                console.log(this.items[$firstParent].rows[$parent]);
+                //this.checkedRows[$table]
             }
+        },
+        search: function () {
+            console.log('search result');
+            this.$http.post('/', [body], [options]).then(successCallback, errorCallback);
         },
         _getTableItems: function ($tableName) {
             if (typeof this.dbObj[$tableName] !== 'object') {

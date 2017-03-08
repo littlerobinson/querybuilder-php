@@ -256,3 +256,21 @@ ORDER BY
 ```
 phpunit --bootstrap vendor/autoload.php  tests/
 ```
+
+### IHM
+
+IHM is cutting in 3 zones :
+- appRequest : It's a parent zone for making the request.
+ It's include 1 other zones :
+    - Condition : Zone to build request conditions
+- Grid : Zone for showing research result with grid table
+
+Javascript Variables list in appRequest :
+- dbObj : object representation of the JSON database configuration
+- checkedTables : List of checked tables for building request 
+- checkedRows : List of checked rows for building request
+- foreignKeys : List of foreign keys for building SQL joins
+- foreignTables : List of foreign tables
+- items : Object representation of selectable table and rows with checked status and traduction name
+- jsonQuery : json query 
+- tableToDisplay : List of selectables tables 
