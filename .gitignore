@@ -18,3 +18,4 @@ ehthumbs.db
 Thumbs.db
 *.db3
 config/
+/web/assets/js/vue/component/select.js

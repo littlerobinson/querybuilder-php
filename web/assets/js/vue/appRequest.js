@@ -19,13 +19,22 @@ var request = new Vue({
         console.log('mounted method in select app');
         this.dbObj = JSON.parse(databaseConfigJson);
         var $items = {};
+        $items.name = "Liste des tables";
+        $items.parent = true;
+        $items.rows = [];
         /// Update database items
         for (var $tableName in this.dbObj) {
-            if (this._getTableItems($tableName)) {
-                $items[$tableName] = this._getTableItems($tableName);
-            }
             if (this.dbObj[$tableName]['_table_visibility'] === true) {
-                this.listTables.push($tableName);
+                $translation = this.dbObj[$tableName]['_table_translation'] !== null
+                    ? this.dbObj[$tableName]['_table_translation']
+                    : null;
+                $items.rows.push({
+                    'name': $tableName,
+                    'table': $tableName,
+                    'translation': $translation,
+                    'status': false,
+                    'parent': false
+                });
             }
         }
         this.items = Object.assign({}, this.items, $items);
@@ -158,7 +167,7 @@ var request = new Vue({
         }
     },
     filter: {
-        getChildren: function (path) {
+        getRows: function (path) {
             return this.items.filter(function (el) {
                 return el.items == path;
             });

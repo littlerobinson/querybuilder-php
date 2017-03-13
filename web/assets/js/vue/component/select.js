@@ -1,36 +1,66 @@
 Vue.component('selectItem', {
+    template: '#select-item',
     props: {
-        'id': {type: String},
-        'rowValue': {
-            type: Object, default: function () {
-                return {}
-            }
-        },
-        'childRowValue': {
-            type: Object, default: function () {
-                return {}
-            }
-        },
-        'childRowKey': {type: String},
-        'childRowIndex': {type: String},
-        'parentKey': {type: String},
-        'rowKey': {type: String}
+        dbObj: Object,
+        model: Object
     },
-    methods: {
-        changeChildRowStatus: function ($key, $childRowKey, $childRowValue, $rowKey) {
-            //this.$set($childRowValue, 'rowValue');
-            this.$parent.changeChildRowStatus($key, $childRowKey, $childRowValue, $rowKey);
-            this.$set($childRowValue, 'rowValue');
+    data: function () {
+        return {
+            selected: false,
+            foreignKeys: []
         }
     },
-    template: '\
-       <div>\
-       <input\
-       type="checkbox"\
-       :id="id"\
-       :value="childRowKey"\
-       @click="changeChildRowStatus(parentKey, childRowKey, childRowValue, rowKey)">\
-       <label :for="id">{{ childRowValue.name }}</label>\
-       </div>\
-   '
+    computed: {
+        object: function () {
+            if (this.model.table === null) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    },
+    methods: {
+        changeStatus: function () {
+            console.log('changeStatus');
+            this.model.status = !this.model.status;
+            if (this.model.status && this.dbObj[this.model.table]) {
+                console.log('add row');
+                this._addRow(this.model.table);
+            } else if (!this.model.status && !this.model.parent) {
+                console.log('delete row');
+                delete this.model.rows;
+            }
+            this.selected = !this.selected;
+        },
+        _addRow: function ($tableName) {
+            /**
+             * Add Foreign Keys and Disable tables with no relation
+             * Add FK if checked
+             */
+            var $fields = this.dbObj[$tableName];
+
+            for (var $field in $fields) {
+                if ($field[0] === '_') {
+                    continue;
+                }
+                var $fkTableName = null;
+
+                if (!this.model.rows) {
+                    Vue.set(this.model, 'rows', []);
+                }
+
+                if ($fields._FK && $fields._FK[$fields[$field].name]) {
+                    console.log('fk find', $field, this.model.rows);
+                    $fkTableName = $fields._FK[$fields[$field].name].tableName;
+                }
+                this.model.rows.push({
+                    'name': $fields[$field].name,
+                    'table': $fkTableName,
+                    'translation': $fields[$field]._field_translation,
+                    'status': false,
+                    'parent': false
+                });
+            }
+        }
+    }
 });

@@ -54,22 +54,24 @@ $jsonQuery = '
 }
 ';
 
-function executeQueryJson($jsonQuery) {
+function executeQueryJson($jsonQuery)
+{
     $db = new DoctrineDatabase();
     $qb = new QueryBuilderDoctrine($db);
     return $qb->executeQueryJson($jsonQuery);
 }
 
-if(isset($_GET['action'])) {
+if (isset($_GET['action'])) {
     $action = $_GET['action'];
-    switch($action) {
+    switch ($action) {
         case 'executeQueryJson':
             executeQueryJson($jsonQuery);
             break;
         default:
             die('Access denied for this function.');
     }
-    var_dump($action); die();
+    var_dump($action);
+    die();
 }
 
 echo '<pre>';
@@ -98,6 +100,24 @@ echo '</pre>';
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+<!-- component for select template -->
+<script type="text/x-template" id="select-item">
+    <div class="checkbox">
+        <input
+                type="checkbox"
+                :class="{bold: object}"
+                @click="changeStatus">
+        <label>{{ model.name }}</label>
+        <div v-show="selected" v-if="object">
+            <select-item
+                    class="item"
+                    v-for="row in model.rows"
+                    :db-obj="dbObj"
+                    :model="row">
+            </select-item>
+        </div>
+    </div>
+</script>
 
 <!-- component for cndition template -->
 <script type="text/x-template" id="condition-item">
@@ -184,46 +204,11 @@ echo '</pre>';
                         <div class="panel-body">
                             <input type="hidden" id="databaseConfigJson"
                                    value="<?php echo htmlentities($databaseConfigJson); ?>">
-                            <div class="checkbox checkbox-danger" v-for="(table, key, index) in items"
-                                 v-if="tableToDisplay.indexOf(key) > -1">
-                                <input
-                                        type="checkbox"
-                                        :id="key"
-                                        :value="key"
-                                        v-model="checkedTables"
-                                        @click="changeTableStatus"
-                                >
-                                <label :for="key">{{ table.name }}</label>
-
-                                <template :id="table.name" v-if="table.status">
-                                    <div class="checkbox checkbox-warning"
-                                         v-for="(rowValue, rowKey, rowIndex) in table.rows"
-                                         :key="rowKey">
-                                        <input
-                                                type="checkbox"
-                                                :id="key + '_' + rowKey"
-                                                :value="rowKey"
-                                                @click="changeParentRowStatus(key, rowKey)"
-                                        >
-                                        <label :for="key + '_' + rowKey">{{ rowValue.name }}</label>
-                                        <div v-if="rowValue.status" :id="rowValue._FK" :folder="key + '_' + rowKey">
-                                            <div class="checkbox checkbox-primary">
-                                                <select-item
-                                                        v-for="(childRowValue, childRowKey, childRowIndex) in rowValue.rows"
-                                                        :parent-key="key"
-                                                        :id="rowValue._FK"
-                                                        :child-row-key="childRowKey"
-                                                        :child-row-value="childRowValue"
-                                                        :row-key="rowKey"
-                                                        :change-child-row-status="changeChildRowStatus"
-                                                >
-                                                </select-item>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </template>
-                            </div>
+                            <select-item
+                                    class="item"
+                                    :db-obj="dbObj"
+                                    :model="items">
+                            </select-item>
                         </div>
                         <div class="panel-footer alert-danger">
                             <strong>Liste des tables séléctionnées : </strong><br>
@@ -242,7 +227,9 @@ echo '</pre>';
                                     :items="items"
                             >
                             </condition-item>
-                            <button type="button" class="btn btn-success pull-right" aria-expanded="false" @click="search">Recherche</button>
+                            <button type="button" class="btn btn-success pull-right" aria-expanded="false"
+                                    @click="search">Recherche
+                            </button>
                         </div>
                     </div>
                 </transition>
