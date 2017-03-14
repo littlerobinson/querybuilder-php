@@ -100,9 +100,10 @@ echo '</pre>';
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+
 <!-- component for select template -->
 <script type="text/x-template" id="select-item">
-    <div class="checkbox">
+    <div class="checkbox" v-if="model.display">
         <input
                 type="checkbox"
                 :class="{bold: object}"
@@ -113,7 +114,8 @@ echo '</pre>';
                     class="item"
                     v-for="row in model.rows"
                     :db-obj="dbObj"
-                    :model="row">
+                    :model="row"
+                    :items="items">
             </select-item>
         </div>
     </div>
@@ -207,7 +209,8 @@ echo '</pre>';
                             <select-item
                                     class="item"
                                     :db-obj="dbObj"
-                                    :model="items">
+                                    :model="items"
+                                    :items="items">
                             </select-item>
                         </div>
                         <div class="panel-footer alert-danger">

@@ -2,7 +2,8 @@ Vue.component('selectItem', {
     template: '#select-item',
     props: {
         dbObj: Object,
-        model: Object
+        model: Object,
+        items: Object
     },
     data: function () {
         return {
@@ -12,7 +13,7 @@ Vue.component('selectItem', {
     },
     computed: {
         object: function () {
-            if (this.model.table === null) {
+            if (this.model && this.model.table === null) {
                 return false;
             } else {
                 return true;
@@ -21,14 +22,12 @@ Vue.component('selectItem', {
     },
     methods: {
         changeStatus: function () {
-            console.log('changeStatus');
             this.model.status = !this.model.status;
             if (this.model.status && this.dbObj[this.model.table]) {
-                console.log('add row');
                 this._addRow(this.model.table);
-            } else if (!this.model.status && !this.model.parent) {
-                console.log('delete row');
+            } else if (!this.model.status) {
                 delete this.model.rows;
+                this._updateDisplaySelect();
             }
             this.selected = !this.selected;
         },
@@ -50,7 +49,6 @@ Vue.component('selectItem', {
                 }
 
                 if ($fields._FK && $fields._FK[$fields[$field].name]) {
-                    console.log('fk find', $field, this.model.rows);
                     $fkTableName = $fields._FK[$fields[$field].name].tableName;
                 }
                 this.model.rows.push({
@@ -58,8 +56,20 @@ Vue.component('selectItem', {
                     'table': $fkTableName,
                     'translation': $fields[$field]._field_translation,
                     'status': false,
+                    'display': true,
                     'parent': false
                 });
+            }
+            this._updateDisplaySelect();
+        },
+        _updateDisplaySelect: function () {
+            if(this.model.parent === false) {return;}
+            $display = (!(event.target.checked === true));
+
+            for (var $index in this.items.rows) {
+                if(this.items.rows[$index].parent === true && this.items.rows[$index].status === false) {
+                    this.items.rows[$index].display = $display;
+                }
             }
         }
     }

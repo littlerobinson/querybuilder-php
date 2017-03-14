@@ -21,6 +21,7 @@ var request = new Vue({
         var $items = {};
         $items.name = "Liste des tables";
         $items.parent = true;
+        $items.display = true;
         $items.rows = [];
         /// Update database items
         for (var $tableName in this.dbObj) {
@@ -32,8 +33,9 @@ var request = new Vue({
                     'name': $tableName,
                     'table': $tableName,
                     'translation': $translation,
+                    'display': true,
                     'status': false,
-                    'parent': false
+                    'parent': true
                 });
             }
         }
