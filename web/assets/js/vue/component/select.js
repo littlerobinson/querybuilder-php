@@ -3,17 +3,18 @@ Vue.component('selectItem', {
     props: {
         dbObj: Object,
         model: Object,
-        items: Object
+        items: Object,
+        foreignKeys: [],
+        foreignTables: []
     },
     data: function () {
         return {
-            selected: false,
-            foreignKeys: []
+            selected: false
         }
     },
     computed: {
         object: function () {
-            if (this.model && this.model.table === null) {
+            if (this.model && this.model.isFK === false) {
                 return false;
             } else {
                 return true;
@@ -23,7 +24,9 @@ Vue.component('selectItem', {
     methods: {
         changeStatus: function () {
             this.model.status = !this.model.status;
+            console.log(this.model.table);
             if (this.model.status && this.dbObj[this.model.table]) {
+                this.foreignTables.push(this.model.table);
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
                 delete this.model.rows;
@@ -32,42 +35,45 @@ Vue.component('selectItem', {
             this.selected = !this.selected;
         },
         _addRow: function ($tableName) {
-            /**
-             * Add Foreign Keys and Disable tables with no relation
-             * Add FK if checked
-             */
             var $fields = this.dbObj[$tableName];
 
             for (var $field in $fields) {
                 if ($field[0] === '_') {
                     continue;
                 }
-                var $fkTableName = null;
+                var $table = this.model.table;
+                var $isFK = false;
 
                 if (!this.model.rows) {
                     Vue.set(this.model, 'rows', []);
                 }
 
                 if ($fields._FK && $fields._FK[$fields[$field].name]) {
-                    $fkTableName = $fields._FK[$fields[$field].name].tableName;
+                    $table = $fields._FK[$fields[$field].name].tableName;
+                    $isFK = true;
                 }
+
                 this.model.rows.push({
                     'name': $fields[$field].name,
-                    'table': $fkTableName,
+                    'table': $table,
+                    'isFK': $isFK,
                     'translation': $fields[$field]._field_translation,
                     'status': false,
                     'display': true,
-                    'parent': false
+                    'firstParent': false
                 });
             }
             this._updateDisplaySelect();
         },
         _updateDisplaySelect: function () {
-            if(this.model.parent === false) {return;}
+            if (this.model.firstParent === false) {
+                return
+            }
             $display = (!(event.target.checked === true));
 
             for (var $index in this.items.rows) {
-                if(this.items.rows[$index].parent === true && this.items.rows[$index].status === false) {
+                console.log(this.items.rows[$index]);
+                if (this.items.rows[$index].firstParent === true && this.items.rows[$index].status === false) {
                     this.items.rows[$index].display = $display;
                 }
             }

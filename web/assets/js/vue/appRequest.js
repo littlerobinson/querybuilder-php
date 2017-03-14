@@ -20,7 +20,7 @@ var request = new Vue({
         this.dbObj = JSON.parse(databaseConfigJson);
         var $items = {};
         $items.name = "Liste des tables";
-        $items.parent = true;
+        $items.firstParent = true;
         $items.display = true;
         $items.rows = [];
         /// Update database items
@@ -35,7 +35,7 @@ var request = new Vue({
                     'translation': $translation,
                     'display': true,
                     'status': false,
-                    'parent': true
+                    'firstParent': true
                 });
             }
         }
