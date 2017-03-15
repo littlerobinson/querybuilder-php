@@ -26,7 +26,6 @@ Vue.component('selectItem', {
             this.model.status = !this.model.status;
             console.log(this.model.table);
             if (this.model.status && this.dbObj[this.model.table]) {
-                this.foreignTables.push(this.model.table);
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
                 delete this.model.rows;
