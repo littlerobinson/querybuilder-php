@@ -4,8 +4,24 @@ Vue.component('selectItem', {
         dbObj: Object,
         model: Object,
         items: Object,
-        foreignKeys: [],
-        foreignTables: []
+        checkedTables: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        },
+        foreignKeys: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        },
+        foreignTables: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        }
     },
     data: function () {
         return {
@@ -24,10 +40,15 @@ Vue.component('selectItem', {
     methods: {
         changeStatus: function () {
             this.model.status = !this.model.status;
-            console.log(this.model.table);
             if (this.model.status && this.dbObj[this.model.table]) {
+                if(this.checkedTables.indexOf(this.model.table) === -1) {
+                    this.checkedTables.push(this.model.table);
+                }
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
+                if(this.checkedTables.indexOf(this.model.table) > -1) {
+                    this.checkedTables.splice(this.checkedTables.indexOf(this.model.table), 1);
+                }
                 delete this.model.rows;
                 this._updateDisplaySelect();
             }
@@ -37,7 +58,7 @@ Vue.component('selectItem', {
             var $fields = this.dbObj[$tableName];
 
             for (var $field in $fields) {
-                if ($field[0] === '_') {
+                if ($field[0] === '_' || $fields[$field]._field_visibility === false) {
                     continue;
                 }
                 var $table = this.model.table;
@@ -71,7 +92,6 @@ Vue.component('selectItem', {
             $display = (!(event.target.checked === true));
 
             for (var $index in this.items.rows) {
-                console.log(this.items.rows[$index]);
                 if (this.items.rows[$index].firstParent === true && this.items.rows[$index].status === false) {
                     this.items.rows[$index].display = $display;
                 }

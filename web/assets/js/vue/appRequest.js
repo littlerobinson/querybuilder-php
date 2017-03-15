@@ -154,20 +154,6 @@ var request = new Vue({
             return $items[$tableName];
         }
     },
-    computed: {
-        tableToDisplay: function () {
-            if (this.checkedTables.length > 0) {
-                //return this.checkedTables.concat(this.foreignTables);
-                return this.checkedTables;
-            } else {
-                var $tableList = [];
-                for (var index in this.items) {
-                    $tableList.push(index);
-                }
-                return $tableList;
-            }
-        }
-    },
     filter: {
         getRows: function (path) {
             return this.items.filter(function (el) {

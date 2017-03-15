@@ -40,8 +40,18 @@ Vue.component('conditionItem', {
         },
         addRuleRows: function () {
             this._clearNewCondition();
-            for (var $rowName in this.items[this.newRuleTable].rows) {
-                this.rows.push($rowName);
+            var $newRuleTable = this.newRuleTable;
+
+            /// Get table fields
+            var $selectItem = this.items.rows.filter(function (item, index) {
+                if (item.name === $newRuleTable) {
+                    return String(index);
+                }
+            })[0];
+            console.log($selectItem);
+            for (var $rowName in $selectItem.rows) {
+                console.log($selectItem.rows[$rowName].name);
+                this.rows.push($selectItem.rows[$rowName].name);
             }
         },
         _clearNewCondition: function () {
