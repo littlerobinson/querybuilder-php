@@ -41,12 +41,12 @@ Vue.component('selectItem', {
         changeStatus: function () {
             this.model.status = !this.model.status;
             if (this.model.status && this.dbObj[this.model.table]) {
-                if(this.checkedTables.indexOf(this.model.table) === -1) {
+                if(this.checkedTables.indexOf(this.model.table) === -1 && this.object) {
                     this.checkedTables.push(this.model.table);
                 }
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
-                if(this.checkedTables.indexOf(this.model.table) > -1) {
+                if(this.checkedTables.indexOf(this.model.table) > -1 && this.object) {
                     this.checkedTables.splice(this.checkedTables.indexOf(this.model.table), 1);
                 }
                 delete this.model.rows;
