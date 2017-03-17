@@ -115,6 +115,7 @@ echo '</pre>';
                     v-for="row in model.rows"
                     :db-obj="dbObj"
                     :checked-tables="checkedTables"
+                    :checked-rows="checkedRows"
                     :model="row"
                     :items="items">
             </select-item>
@@ -211,6 +212,7 @@ echo '</pre>';
                                     class="item"
                                     :db-obj="dbObj"
                                     :checked-tables="checkedTables"
+                                    :checked-rows="checkedRows"
                                     :model="items"
                                     :items="items">
                             </select-item>

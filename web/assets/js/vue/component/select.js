@@ -10,6 +10,12 @@ Vue.component('selectItem', {
                 return []
             }
         },
+        checkedRows: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        },
         foreignKeys: {
             type: Array,
             default: function () {
@@ -53,6 +59,12 @@ Vue.component('selectItem', {
                 this._updateDisplaySelect();
             }
             this.selected = !this.selected;
+            /// Push/Delete in checkedRows array
+            if(this.selected && !this.object) {
+                this.checkedRows.push(this.model.table + '.' + this.model.name);
+            }else {
+                this.checkedRows.splice(this.checkedRows.indexOf(this.model.table + '.' + this.model.name), 1);
+            }
         },
         _addRow: function ($tableName) {
             var $fields = this.dbObj[$tableName];
