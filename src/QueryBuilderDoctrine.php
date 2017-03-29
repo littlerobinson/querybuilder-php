@@ -1,4 +1,5 @@
 <?php
+
 namespace Littlerobinson\QueryBuilder;
 
 /**
@@ -19,7 +20,7 @@ class QueryBuilderDoctrine
 
     private $orderBy;
 
-    private $fkList;
+    private $fkFrom;
 
     private $fields;
 
@@ -39,13 +40,14 @@ class QueryBuilderDoctrine
 
     /**
      * Return an array with all foreign keys in show config file
-     * @param $fromObject
+     * @param $fromObject : If null get all FK
      * @throws \Exception
      * @return array
      */
-    private function getFKList($fromObject): array
+    private function getFKList($fromObject = null): array
     {
-        $fkList = [];
+        $fkList     = [];
+        $fromObject = $fromObject ?? $this->objDbConfig;
         foreach ($fromObject as $table => $fields) {
             if (!isset($this->objDbConfig->{$table})) {
                 http_response_code(400);
@@ -67,19 +69,23 @@ class QueryBuilderDoctrine
      */
     private function addQuerySelect($fkList, $fromTable, $select)
     {
+        $fromColumnsAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'primary_key'};
         foreach ($select as $key => $field) {
-            if (is_object($field)) {
+            if (is_object($select) && is_object($field)) {
                 /// Add joins
-                foreach ($field as $fkName => $object) {
-                    if (!isset($fkList[$fromTable]->{$fkName}->{'tableName'})) {
+                if (is_object($field)) {
+                    //if (!isset($fkList[$fromTable]->{$fkName}->{'tableName'})) {
+                    if (!isset($fkList[$fromTable]->{$key}->{'tableName'})) {
                         http_response_code(400);
-                        throw new \Exception('This foreign key not exist : ' . $fkName . '.');
+                        throw new \Exception('This foreign key not exist : ' . $key . '.');
                     }
-                    $newFromTable = $fkList[$fromTable]->{$fkName}->{'tableName'};
-                    $newFrom      = array($newFromTable => $field->{$fkName});
-                    $newfkList    = $this->getFKList($newFrom);
-                    $this->queryBuilder->leftJoin($newFromTable, $newFromTable, 'ON', $newFromTable . ' . ' . $fkList[$fromTable]->{$fkName}->{'foreignColumns'} . ' = ' . $fromTable . ' . ' . $fkName);
-                    $this->addQuerySelect($newfkList, $newFromTable, $object);
+                    $newFromTable        = $fkList[$fromTable]->{$key}->{'tableName'};
+                    $newFrom             = array($newFromTable => $field);
+                    $newfkList           = $this->getFKList($newFrom);
+                    $columnsAlias        = $fkList[$fromTable]->{$key}->{'columns'};
+                    $foreignColumnsAlias = $fromTable . '_' . $fkList[$fromTable]->{$key}->{'foreignColumns'};
+                    $this->queryBuilder->leftJoin($newFromTable, $columnsAlias, 'ON', $columnsAlias . ' . ' . $fkList[$fromTable]->{$key}->{'foreignColumns'} . ' = ' . $foreignColumnsAlias . ' . ' . $fkList[$fromTable]->{$key}->{'columns'});
+                    $this->addQuerySelect($newfkList, $newFromTable, $field);
                 }
             } else {
                 /// Exit if there is no visibility on the table in config file
@@ -100,7 +106,7 @@ class QueryBuilderDoctrine
                 $this->fields[$fromTable][] = $field;
 
                 $this->queryBuilder->addSelect(
-                    $fromTable . ' . ' .
+                    $fromColumnsAlias . ' . ' .
                     $field . ' AS ' .
                     $fromTable . '_' .
                     $field);
@@ -120,6 +126,7 @@ class QueryBuilderDoctrine
             foreach ($request as $condition => $value) {
                 //if (property_exists($objDbConfig->{$table}, '_FK')) {
                 $arrRequest = explode('.', $condition);
+
                 if (!isset($this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type)) {
                     http_response_code(400);
                     throw new \Exception('This field not exist : ' . $arrRequest[0] . '.' . $arrRequest[1]);
@@ -131,16 +138,16 @@ class QueryBuilderDoctrine
 
                 switch ($logicalOperator) {
                     case 'AND':
-                        $this->queryBuilder->andWhere($condition . ' = ' . '\'' . $value . '\'');
+                        $this->queryBuilder->andWhere($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
                         break;
                     case 'OR':
-                        $this->queryBuilder->orWhere($condition . ' = ' . '\'' . $value . '\'');
+                        $this->queryBuilder->orWhere($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
                         break;
                     case 'AND_HAVING':
-                        $this->queryBuilder->andHaving($condition . ' = ' . '\'' . $value . '\'');
+                        $this->queryBuilder->andHaving($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
                         break;
                     case 'OR_HAVING':
-                        $this->queryBuilder->orHaving($condition . ' = ' . '\'' . $value . '\'');
+                        $this->queryBuilder->orHaving($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
                         break;
                     default:
                         break;
@@ -170,7 +177,7 @@ class QueryBuilderDoctrine
         /// Get orderBy
         $this->orderBy = (property_exists($queryObj, 'orderBy')) ? (array)$queryObj->orderBy : null;
         /// Create FK array
-        $this->fkList = (property_exists($queryObj, 'from')) ? $this->getFKList($this->from) : null;
+        $this->fkFrom = (property_exists($queryObj, 'from')) ? $this->getFKList($this->from) : null;
     }
 
     /**
@@ -187,10 +194,12 @@ class QueryBuilderDoctrine
 
         /// Loop on tables
         foreach ($this->from as $fromTable => $select) {
+            /// Create From Alias
+            $fromAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'primary_key'};
             /// Add From
-            $this->queryBuilder->from($fromTable, $fromTable);
+            $this->queryBuilder->from($fromTable, $fromAlias);
             /// Add Select
-            $this->addQuerySelect($this->fkList, $fromTable, $select);
+            $this->addQuerySelect($this->fkFrom, $fromTable, $select);
         }
 
         /// Adding query conditions

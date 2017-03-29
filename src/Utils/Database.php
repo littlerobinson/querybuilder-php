@@ -20,4 +20,15 @@ class Database
         'password' => '123456',
         'dbname'   => 'eductive_registrant'
     );
+
+/*
+    public static $params = array(
+        'driver'   => 'pdo_mysql',
+        'host'     => '127.0.0.1',
+        'port'     => 3306,
+        'user'     => 'root',
+        'password' => 'root',
+        'dbname'   => 'eductive_registrant'
+    );
+*/
 }

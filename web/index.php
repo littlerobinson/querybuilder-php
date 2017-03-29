@@ -5,50 +5,41 @@ use Littlerobinson\QueryBuilder\DoctrineDatabase;
 use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
 
 $jsonQuery = '
-{
-   "from":{
-      "registration":{
-         "0": "treatment_date",
-         "1": {
-            "registrant_id": {
-                 "0":"id",
-                 "1":"first_name",
-                 "2":"last_name",
-                 "3": {
-                     "civility_id":{
-                        "0": "name"
-                     }
-                 },
-                 "4": {
-                    "country_id":{
-                        "0": "name",
-                        "1": "calling_codes"
-                     }
-                 }
-             }
-         },
-        "2": {
-            "user_id": {
-                "0": "id",
-                "1": "first_name"
+{  
+   "from":{  
+      "registration":{  
+         "treatment_date":"treatment_date",
+         "registrant_id":{  
+            "id":"id",
+            "first_name":"first_name",
+            "last_name":"last_name",
+            "civility_id":{  
+               "name":"name"
+            },
+            "country_id":{  
+               "calling_codes":"calling_codes"
             }
-        },
-         "3": "created_at"
+         },
+         "user_id":{  
+            "id":"id",
+            "first_name":"first_name",
+            "last_name":"last_name"
+         },
+         "created_at":"created_at"
       }
    },
-   "where": {
-      "AND": {
-          "civility.name": {
-              "EQUAL": ["Monsieur"]            
-          },
-          "registrant.first_name": {
-              "EQUAL": ["Alexandre"]            
-          }
-      }
-   },
-   "orderBy": {
-      "asc": {
-        "post": ["name", "id"]
+   "where":{  
+      "AND":{  
+         "registrant.civility_id.name":{  
+            "EQUAL":[  
+               "Monsieur"
+            ]
+         },
+         "registration.registrant_id.first_name":{  
+            "EQUAL":[  
+               "Alexandre"
+            ]
+         }
       }
    }
 }
@@ -61,8 +52,10 @@ function executeQueryJson($jsonQuery)
     return $qb->executeQueryJson($jsonQuery);
 }
 
-if (isset($_GET['action'])) {
-    $action = $_GET['action'];
+if (isset($_POST['action'])) {
+    var_dump($_POST['action']);
+    die();
+    $action = $_POST['action'];
     switch ($action) {
         case 'executeQueryJson':
             executeQueryJson($jsonQuery);
@@ -70,15 +63,13 @@ if (isset($_GET['action'])) {
         default:
             die('Access denied for this function.');
     }
-    var_dump($action);
-    die();
 }
 
 echo '<pre>';
 $db = new DoctrineDatabase();
 $qb = new QueryBuilderDoctrine($db);
 
-//$db->writeDatabaseYamlConfig();
+$db->writeDatabaseYamlConfig();
 $jsonResponse       = $qb->executeQueryJson($jsonQuery);
 $sqlRequest         = $qb->getSQLRequest();
 $data               = json_decode($jsonResponse);
@@ -114,8 +105,10 @@ echo '</pre>';
                     class="item"
                     v-for="row in model.rows"
                     :db-obj="dbObj"
+                    :from="from"
                     :checked-tables="checkedTables"
                     :checked-rows="checkedRows"
+                    :depth="depth"
                     :model="row"
                     :items="items">
             </select-item>
@@ -204,15 +197,17 @@ echo '</pre>';
             <div id="select" class="col-xs-3">
                 <transition name="fade" appear hidden>
                     <div class="panel panel-default">
-                        <div class="panel-heading"><strong>{{ 'Liste des tables' | capitalize }}</strong></div>
+                        <div class="panel-heading"><strong>{{ 'Sélection' | capitalize }}</strong></div>
                         <div class="panel-body">
                             <input type="hidden" id="databaseConfigJson"
                                    value="<?php echo htmlentities($databaseConfigJson); ?>">
                             <select-item
                                     class="item"
                                     :db-obj="dbObj"
+                                    :from="from"
                                     :checked-tables="checkedTables"
                                     :checked-rows="checkedRows"
+                                    :depth="depth"
                                     :model="items"
                                     :items="items">
                             </select-item>

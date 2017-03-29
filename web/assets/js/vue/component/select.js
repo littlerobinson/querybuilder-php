@@ -4,34 +4,16 @@ Vue.component('selectItem', {
         dbObj: Object,
         model: Object,
         items: Object,
-        checkedTables: {
-            type: Array,
-            default: function () {
-                return []
-            }
-        },
-        checkedRows: {
-            type: Array,
-            default: function () {
-                return []
-            }
-        },
-        foreignKeys: {
-            type: Array,
-            default: function () {
-                return []
-            }
-        },
-        foreignTables: {
-            type: Array,
-            default: function () {
-                return []
-            }
-        }
+        from: Object,
+        checkedTables: Array,
+        checkedRows: Array,
+        foreignKeys: Array,
+        foreignTables: Array
     },
     data: function () {
         return {
-            selected: false
+            selected: false,
+            depth: ''
         }
     },
     computed: {
@@ -46,13 +28,16 @@ Vue.component('selectItem', {
     methods: {
         changeStatus: function () {
             this.model.status = !this.model.status;
-            if (this.model.status && this.dbObj[this.model.table]) {
-                if(this.checkedTables.indexOf(this.model.table) === -1 && this.object) {
+            /// Case adding table
+            if (this.model.status && this.dbObj[this.model.table] && this.object) {
+                if (this.checkedTables.indexOf(this.model.table) === -1) {
                     this.checkedTables.push(this.model.table);
                 }
+                /// Create From variable with select data
+                this._addFrom();
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
-                if(this.checkedTables.indexOf(this.model.table) > -1 && this.object) {
+                if (this.checkedTables.indexOf(this.model.table) > -1 && this.object) {
                     this.checkedTables.splice(this.checkedTables.indexOf(this.model.table), 1);
                 }
                 delete this.model.rows;
@@ -60,9 +45,10 @@ Vue.component('selectItem', {
             }
             this.selected = !this.selected;
             /// Push/Delete in checkedRows array
-            if(this.selected && !this.object) {
+            if (this.selected && !this.object) {
+                this._addFrom();
                 this.checkedRows.push(this.model.table + '.' + this.model.name);
-            }else {
+            } else {
                 this.checkedRows.splice(this.checkedRows.indexOf(this.model.table + '.' + this.model.name), 1);
             }
         },
@@ -70,10 +56,12 @@ Vue.component('selectItem', {
             var $fields = this.dbObj[$tableName];
 
             for (var $field in $fields) {
+                /// add table visibility condition
                 if ($field[0] === '_' || $fields[$field]._field_visibility === false) {
                     continue;
                 }
                 var $table = this.model.table;
+                var $parentName = this.model.name;
                 var $isFK = false;
 
                 if (!this.model.rows) {
@@ -92,7 +80,8 @@ Vue.component('selectItem', {
                     'translation': $fields[$field]._field_translation,
                     'status': false,
                     'display': true,
-                    'firstParent': false
+                    'firstParent': false,
+                    'parentName': $parentName
                 });
             }
             this._updateDisplaySelect();
@@ -106,6 +95,29 @@ Vue.component('selectItem', {
             for (var $index in this.items.rows) {
                 if (this.items.rows[$index].firstParent === true && this.items.rows[$index].status === false) {
                     this.items.rows[$index].display = $display;
+                }
+            }
+        },
+        _addFrom: function () {
+            this.depth = this.$parent.depth !== '' ? this.$parent.depth + '.' + this.model.name : this.model.name; /// Add depth info
+            var $listDepth = this.depth.split('.');
+            var $tmpDepth = {};
+            if ($listDepth.length === 1) {
+                this.from[$listDepth[0]] = {};
+            } else {
+                var $i = 0;
+                for (var $index in $listDepth) {
+                    if ($index === '0') { /// First loop
+                        $tmpDepth = this.from[$listDepth[$index]];
+                    } else if ($index != ($listDepth.length - 1)) { /// Middle loops
+                        $tmpDepth = $tmpDepth[$listDepth[$index]];
+                    } else { /// Last loop
+                        if(this.object) {
+                            $tmpDepth[$listDepth[$index]] = {};
+                        }else {
+                            $tmpDepth[$listDepth[$index]] = $listDepth[$index];
+                        }
+                    }
                 }
             }
         }
