@@ -155,11 +155,11 @@ class DoctrineDatabase
     {
         $response   = [];
         $columns    = $this->schemaManager->listTableColumns($table);
-        $primaryKey = $this->schemaManager->listTableDetails($table)->getPrimaryKeyColumns()[0];
+        $primaryKey = $this->getPrimaryKey($table)[0];
         foreach ($columns as $key => $column) {
             $response['_table_translation']       = null;
             $response['_table_visibility']        = true;
-            $response['primary_key']              = $primaryKey;
+            $response['_primary_key']              = $primaryKey;
             $response[$key]['name']               = $column->getName();
             $response[$key]['_field_translation'] = null;
             $response[$key]['_field_visibility']  = true;
