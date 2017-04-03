@@ -3,8 +3,12 @@ var databaseConfigJson = $("#databaseConfigJson").val();
 /* *********************************************************************************** */
 /* ******************************* Bootstrap REQUEST ************************************* */
 /* *********************************************************************************** */
-var request = new Vue({
+let request = new Vue({
     el: '#app-request',
+    http: {
+        emulateJSON: true,
+        emulateHTTP: true
+    },
     data: {
         dbObj: {},
         items: {},
@@ -14,18 +18,20 @@ var request = new Vue({
         checkedRows: [],
         foreignTables: [],
         foreignKeys: [],
+        data: [],
+        columns: [],
         depth: 0
     },
     mounted: function () {
         console.log('mounted method in select app');
         this.dbObj = JSON.parse(databaseConfigJson);
-        var $items = {};
+        let $items = {};
         $items.name = "Liste des tables";
         $items.firstParent = true;
         $items.display = true;
         $items.rows = [];
         /// Update database items
-        for (var $tableName in this.dbObj) {
+        for (let $tableName in this.dbObj) {
             if (this.dbObj[$tableName]['_table_visibility'] === true) {
                 $translation = this.dbObj[$tableName]['_table_translation'] !== null
                     ? this.dbObj[$tableName]['_table_translation']
@@ -44,18 +50,30 @@ var request = new Vue({
     },
     computed: {
         jsonQuery: function () {
-            var $query = {};
+            let $query = {};
             $query.from = this.from;
             return JSON.stringify($query);
         }
     },
     methods: {
         search: function () {
-            console.log('search result', this.jsonQuery);
-            //this.$http.post('/', this.jsonQuery).then(successCallback, errorCallback);
-            this.$http.post('/', this.jsonQuery).then((response) => {
-                console.log(response);
-            });
+            this.$http.post('/query.php', {action: 'execute_query_json', json_query: this.jsonQuery}).then(
+                response => {
+                    this.data = response.body.items;
+                    this.columns = response.body.columns;
+                    /// Display result
+                    let research = new Vue({
+                        el: '#app-result-research',
+                        data: {
+                            searchQuery: '',
+                            gridColumns: request.columns,
+                            gridData: request.data
+                        }
+                    });
+                }, response => {
+                    console.log('response callback', response)
+                }
+            );
         }
     },
     filter: {
@@ -66,3 +84,4 @@ var request = new Vue({
         }
     }
 });
+

@@ -6,10 +6,10 @@ var webpackConfig = {
     alias: alias
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
-        loader: 'babel',
+        loader: 'babel-loader',
         exclude: /node_modules/
       }
     ]
@@ -19,8 +19,8 @@ var webpackConfig = {
       __WEEX__: false,
       'process.env': {
         NODE_ENV: '"development"',
-        TRANSITION_DURATION: process.env.SAUCE ? 500 : 50,
-        TRANSITION_BUFFER: process.env.SAUCE ? 50 : 10
+        TRANSITION_DURATION: 50,
+        TRANSITION_BUFFER: 10
       }
     })
   ],
@@ -39,5 +39,11 @@ module.exports = {
   webpack: webpackConfig,
   webpackMiddleware: {
     noInfo: true
-  }
+  },
+  plugins: [
+    'karma-jasmine',
+    'karma-mocha-reporter',
+    'karma-sourcemap-loader',
+    'karma-webpack'
+  ]
 }

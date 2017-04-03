@@ -12,6 +12,7 @@ class Database
     public static $configPath = __DIR__ . '/../../config/database-config.yml';
 
     // the connection configuration
+/*
     public static $params = array(
         'driver'   => 'pdo_mysql',
         'host'     => '172.19.24.6',
@@ -20,8 +21,8 @@ class Database
         'password' => '123456',
         'dbname'   => 'eductive_registrant'
     );
+*/
 
-/*
     public static $params = array(
         'driver'   => 'pdo_mysql',
         'host'     => '127.0.0.1',
@@ -30,5 +31,5 @@ class Database
         'password' => 'root',
         'dbname'   => 'eductive_registrant'
     );
-*/
+
 }

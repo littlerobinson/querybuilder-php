@@ -1,4 +1,17 @@
+var webpack = require('webpack')
 var base = require('./karma.base.config.js')
+
+base.webpack.plugins = [
+  new webpack.DefinePlugin({
+    __WEEX__: false,
+    'process.env': {
+      NODE_ENV: '"development"',
+      // sauce lab vms are slow!
+      TRANSITION_DURATION: 500,
+      TRANSITION_BUFFER: 50
+    }
+  })
+]
 
 /**
  * Having too many tests running concurrently on saucelabs
@@ -95,6 +108,9 @@ module.exports = function (config) {
     },
     // mobile emulators are really slow
     captureTimeout: 300000,
-    browserNoActivityTimeout: 300000
+    browserNoActivityTimeout: 300000,
+    plugins: base.plugins.concat([
+      'karma-sauce-launcher'
+    ])
   }))
 }

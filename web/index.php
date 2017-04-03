@@ -1,82 +1,6 @@
 <?php
 require "../bootstrap.php";
-
-use Littlerobinson\QueryBuilder\DoctrineDatabase;
-use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
-
-$jsonQuery = '
-{  
-   "from":{  
-      "registration":{  
-         "treatment_date":"treatment_date",
-         "registrant_id":{  
-            "id":"id",
-            "first_name":"first_name",
-            "last_name":"last_name",
-            "civility_id":{  
-               "name":"name"
-            },
-            "country_id":{  
-               "calling_codes":"calling_codes"
-            }
-         },
-         "user_id":{  
-            "id":"id",
-            "first_name":"first_name",
-            "last_name":"last_name"
-         },
-         "created_at":"created_at"
-      }
-   },
-   "where":{  
-      "AND":{  
-         "registrant.civility_id.name":{  
-            "EQUAL":[  
-               "Monsieur"
-            ]
-         },
-         "registration.registrant_id.first_name":{  
-            "EQUAL":[  
-               "Alexandre"
-            ]
-         }
-      }
-   }
-}
-';
-
-function executeQueryJson($jsonQuery)
-{
-    $db = new DoctrineDatabase();
-    $qb = new QueryBuilderDoctrine($db);
-    return $qb->executeQueryJson($jsonQuery);
-}
-
-if (isset($_POST['action'])) {
-    var_dump($_POST['action']);
-    die();
-    $action = $_POST['action'];
-    switch ($action) {
-        case 'executeQueryJson':
-            executeQueryJson($jsonQuery);
-            break;
-        default:
-            die('Access denied for this function.');
-    }
-}
-
-echo '<pre>';
-$db = new DoctrineDatabase();
-$qb = new QueryBuilderDoctrine($db);
-
-$db->writeDatabaseYamlConfig();
-$jsonResponse       = $qb->executeQueryJson($jsonQuery);
-$sqlRequest         = $qb->getSQLRequest();
-$data               = json_decode($jsonResponse);
-$databaseConfig     = $db->getDatabaseYamlConfig();
-$databaseConfigJson = $db->getDatabaseYamlConfig(true);
-$jsonQueryColumns   = $qb->getJsonQueryColumns(false);
-echo '</pre>';
+require_once "query.php";
 ?>
 
 <!DOCTYPE html>
@@ -291,16 +215,5 @@ echo '</pre>';
 <script src="assets/js/vue/filter.js"></script>
 <script src="assets/js/vue/appRequest.js"></script>
 
-<script>
-    // bootstrap the research
-    var research = new Vue({
-        el: '#app-result-research',
-        data: {
-            searchQuery: '',
-            gridColumns: <?php echo $jsonQueryColumns; ?>,
-            gridData: <?php echo json_encode($data->items); ?>
-        }
-    });
-</script>
 </body>
 </html>

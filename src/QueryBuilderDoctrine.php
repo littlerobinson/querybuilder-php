@@ -65,11 +65,12 @@ class QueryBuilderDoctrine
      * @param $fkList
      * @param $fromTable
      * @param $select
+     * @param $fromAlias
      * @throws \Exception
      */
-    private function addQuerySelect($fkList, $fromTable, $select)
+    private function addQuerySelect($fkList, $fromTable, $select, $fromAlias = null)
     {
-        $fromColumnsAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'primary_key'};
+        $fromAlias = $fromAlias ?? $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
         foreach ($select as $key => $field) {
             if (is_object($select) && is_object($field)) {
                 /// Add joins
@@ -79,13 +80,13 @@ class QueryBuilderDoctrine
                         http_response_code(400);
                         throw new \Exception('This foreign key not exist : ' . $key . '.');
                     }
-                    $newFromTable        = $fkList[$fromTable]->{$key}->{'tableName'};
-                    $newFrom             = array($newFromTable => $field);
-                    $newfkList           = $this->getFKList($newFrom);
-                    $columnsAlias        = $fkList[$fromTable]->{$key}->{'columns'};
-                    $foreignColumnsAlias = $fromTable . '_' . $fkList[$fromTable]->{$key}->{'foreignColumns'};
-                    $this->queryBuilder->leftJoin($newFromTable, $columnsAlias, 'ON', $columnsAlias . ' . ' . $fkList[$fromTable]->{$key}->{'foreignColumns'} . ' = ' . $foreignColumnsAlias . ' . ' . $fkList[$fromTable]->{$key}->{'columns'});
-                    $this->addQuerySelect($newfkList, $newFromTable, $field);
+                    $newFromTable   = $fkList[$fromTable]->{$key}->{'tableName'};
+                    $newFrom        = array($newFromTable => $field);
+                    $newfkList      = $this->getFKList($newFrom);
+                    $columns        = $fkList[$fromTable]->{$key}->{'columns'};
+                    $foreignColumns = $fkList[$fromTable]->{$key}->{'foreignColumns'};
+                    $this->queryBuilder->leftJoin($newFromTable, $columns, 'ON', $columns . ' . ' . $foreignColumns . ' = ' . $fromAlias . ' . ' . $columns);
+                    $this->addQuerySelect($newfkList, $newFromTable, $field, $key);
                 }
             } else {
                 /// Exit if there is no visibility on the table in config file
@@ -106,9 +107,9 @@ class QueryBuilderDoctrine
                 $this->fields[$fromTable][] = $field;
 
                 $this->queryBuilder->addSelect(
-                    $fromColumnsAlias . ' . ' .
+                    $fromAlias . ' . ' .
                     $field . ' AS ' .
-                    $fromTable . '_' .
+                    $fromAlias . '_' .
                     $field);
             }
         }
@@ -195,7 +196,7 @@ class QueryBuilderDoctrine
         /// Loop on tables
         foreach ($this->from as $fromTable => $select) {
             /// Create From Alias
-            $fromAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'primary_key'};
+            $fromAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
             /// Add From
             $this->queryBuilder->from($fromTable, $fromAlias);
             /// Add Select
@@ -220,8 +221,13 @@ class QueryBuilderDoctrine
     public function executeQueryJson(string $jsonQuery): string
     {
         $result            = $this->executeQuery($jsonQuery);
+        $columns           = [];
+        foreach ($result[0] as $key => $value) {
+            $columns[] = $key;
+        }
         $response['total'] = sizeof($result);
         $response['items'] = $result;
+        $response['columns'] = $columns;
 
         return json_encode($response);
     }
