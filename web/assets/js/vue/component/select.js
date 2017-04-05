@@ -18,11 +18,7 @@ Vue.component('selectItem', {
     },
     computed: {
         object: function () {
-            if (this.model && this.model.isFK === false) {
-                return false;
-            } else {
-                return true;
-            }
+            return !(this.model && this.model.isFK === false);
         }
     },
     methods: {
@@ -37,8 +33,9 @@ Vue.component('selectItem', {
                 this._addFrom();
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
-                if (this.checkedTables.indexOf(this.model.table) > -1 && this.object) {
+                if (this.checkedTables.indexOf(this.model.table) > -1 && this.object) { /// Case uncheck table
                     this.checkedTables.splice(this.checkedTables.indexOf(this.model.table), 1);
+                    delete this.from[this.model.table];
                 }
                 delete this.model.rows;
                 this._updateDisplaySelect();
@@ -48,21 +45,22 @@ Vue.component('selectItem', {
             if (this.selected && !this.object) {
                 this._addFrom();
                 this.checkedRows.push(this.model.table + '.' + this.model.name);
-            } else {
+            } else if (!this.selected && !this.object) { /// Case uncheck row
                 this.checkedRows.splice(this.checkedRows.indexOf(this.model.table + '.' + this.model.name), 1);
+                delete this.from[this.model.table][this.model.name];
             }
         },
         _addRow: function ($tableName) {
-            var $fields = this.dbObj[$tableName];
+            let $fields = this.dbObj[$tableName];
 
-            for (var $field in $fields) {
+            for (let $field in $fields) {
                 /// add table visibility condition
                 if ($field[0] === '_' || $fields[$field]._field_visibility === false) {
                     continue;
                 }
-                var $table = this.model.table;
-                var $parentName = this.model.name;
-                var $isFK = false;
+                let $table = this.model.table;
+                let $parentName = this.model.name;
+                let $isFK = false;
 
                 if (!this.model.rows) {
                     Vue.set(this.model, 'rows', []);
@@ -92,7 +90,7 @@ Vue.component('selectItem', {
             }
             $display = (!(event.target.checked === true));
 
-            for (var $index in this.items.rows) {
+            for (let $index in this.items.rows) {
                 if (this.items.rows[$index].firstParent === true && this.items.rows[$index].status === false) {
                     this.items.rows[$index].display = $display;
                 }
@@ -100,13 +98,12 @@ Vue.component('selectItem', {
         },
         _addFrom: function () {
             this.depth = this.$parent.depth !== '' ? this.$parent.depth + '.' + this.model.name : this.model.name; /// Add depth info
-            var $listDepth = this.depth.split('.');
-            var $tmpDepth = {};
+            let $listDepth = this.depth.split('.');
+            let $tmpDepth = {};
             if ($listDepth.length === 1) {
                 this.from[$listDepth[0]] = {};
             } else {
-                var $i = 0;
-                for (var $index in $listDepth) {
+                for (let $index in $listDepth) {
                     if ($index === '0') { /// First loop
                         $tmpDepth = this.from[$listDepth[$index]];
                     } else if ($index != ($listDepth.length - 1)) { /// Middle loops

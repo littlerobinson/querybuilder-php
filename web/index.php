@@ -28,6 +28,7 @@ require_once "query.php";
             <select-item
                     class="item"
                     v-for="row in model.rows"
+                    :key="row.name"
                     :db-obj="dbObj"
                     :from="from"
                     :checked-tables="checkedTables"
@@ -42,55 +43,55 @@ require_once "query.php";
 
 <!-- component for cndition template -->
 <script type="text/x-template" id="condition-item">
-    <div class="row">
-        <div class="col-md-12">
-            <select v-model="newRuleTable" @change="addRuleRows">
+    <div>
+        <div class="row container">
+            <select v-model="newRuleTable" @change="addRuleRows" class="col-md-2">
                 <option value="">-- Sélectionner une table --</option>
                 <option v-if="checkedTables.length > 0" v-for="(table, index) in checkedTables">
                     {{ table }}
                 </option>
             </select>
-            <select v-model="newRuleRow">
+            <select v-model="newRuleRow" class="col-md-3">
                 <option value="">-- Sélectionner un champs --</option>
                 <option v-if="newRuleTable != ''" v-for="(row, index) in rows">
                     {{ row }}
                 </option>
             </select>
-            <select v-model="newOperator">
+            <select v-model="newOperator" class="col-md-2">
                 <option value="">-- Sélectionner une condition --</option>
                 <option v-for="(operator, key) in operatorList" :value="operator.value">
                     {{ operator.name }}
                 </option>
             </select>
-            <input type="text" v-model="newValue" placeholder="Condition">
-            <input type="button" value="Ajouter une condition" @click="addCondition">
-            <hr>
-            <table class="table table-responsive" v-if="conditions.length > 0">
-                <thead>
-                <tr>
-                    <th>Donnée</th>
-                    <th>Opérateur</th>
-                    <th>Valeur</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
-                        v-for="(conditionValue, conditionKey, conditionIndex) in conditions"
-                        :key="conditionKey"
-                >
-                    <td>{{ conditionValue.rule }}</td>
-                    <td>{{ conditionValue.operator }}</td>
-                    <td>{{ conditionValue.value }}</td>
-                    <td><i class="fa fa-minus-circle fa-lg text-danger" aria-hidden="true"></i></td>
-                </tr>
-                </tbody>
-            </table>
+            <input type="text" v-model="newValue" class="col-md-3" placeholder="Condition">
+            <input type="button" value="Ajouter une condition" class="col-md-2" @click="addCondition">
         </div>
+        <hr>
+        <table class="table table-responsive" v-if="conditions.length > 0">
+            <thead>
+            <tr>
+                <th>Donnée</th>
+                <th>Opérateur</th>
+                <th>Valeur</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+                    v-for="(conditionValue, conditionKey, conditionIndex) in conditions"
+                    :key="conditionKey"
+            >
+                <td>{{ conditionValue.rule }}</td>
+                <td>{{ conditionValue.operator }}</td>
+                <td>{{ conditionValue.value }}</td>
+                <td><i class="fa fa-minus-circle fa-lg text-danger" aria-hidden="true"></i></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </script>
 
-<!-- component grid result template -->
-<script type="text/x-template" id="grid-template">
+<!-- component spreadsheet result template -->
+<script type="text/x-template" id="spreadsheet-template">
     <table class="table table-bordered">
         <thead>
         <tr>
@@ -160,30 +161,30 @@ require_once "query.php";
                     </div>
                 </transition>
             </div>
-        </div>
 
-        <!-- result -->
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><strong>Résultat</strong></div>
-                    <div class="panel-body">
-                        <table class="table">
-                            <thead></thead>
-                            <tbody id="tbody-response">
-                            </tbody>
-                        </table>
+            <!-- result -->
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Résultat</strong></div>
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead></thead>
+                                <tbody id="tbody-response">
+                                </tbody>
+                            </table>
 
-                        <!-- research root element -->
-                        <div id="app-result-research">
-                            <form id="search">
-                                Recherche <input name="query" v-model="searchQuery">
-                            </form>
-                            <grid
-                                    :data="gridData"
-                                    :columns="gridColumns"
-                                    :filter-key="searchQuery">
-                            </grid>
+                            <!-- research root element -->
+                            <div id="app-result-research">
+                                <form id="search">
+                                    Recherche <input name="query" v-model="searchQuery">
+                                </form>
+                                <spreadsheet
+                                        :data="data"
+                                        :columns="columns"
+                                        :filter-key="searchQuery">
+                                </spreadsheet>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -209,7 +210,7 @@ require_once "query.php";
 <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
 <script src="assets/vendor/vue/dist/vue.js"></script>
 <script src="assets/vendor/vue-resource/dist/vue-resource.min.js"></script>
-<script src="assets/js/vue/component/grid.js"></script>
+<script src="assets/js/vue/component/spreadsheet.js"></script>
 <script src="assets/js/vue/component/select.js"></script>
 <script src="assets/js/vue/component/condition.js"></script>
 <script src="assets/js/vue/filter.js"></script>

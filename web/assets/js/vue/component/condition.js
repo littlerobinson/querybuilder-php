@@ -31,7 +31,7 @@ Vue.component('conditionItem', {
     },
     methods: {
         addCondition: function () {
-            var $newCondition = {
+            let $newCondition = {
                 rule: this.newRuleRow + ' (' + this.newRuleTable + ')',
                 operator: this.newOperator,
                 value: this.newValue
@@ -40,16 +40,16 @@ Vue.component('conditionItem', {
         },
         addRuleRows: function () {
             this._clearNewCondition();
-            var $newRuleTable = this.newRuleTable;
+            let $newRuleTable = this.newRuleTable;
 
             /// Get table fields
-            var $selectItem = this.items.rows.filter(function (item, index) {
+            let $selectItem = this.items.rows.filter(function (item, index) {
                 if (item.name === $newRuleTable) {
                     return String(index);
                 }
             })[0];
             console.log($selectItem);
-            for (var $rowName in $selectItem.rows) {
+            for (let $rowName in $selectItem.rows) {
                 console.log($selectItem.rows[$rowName].name);
                 this.rows.push($selectItem.rows[$rowName].name);
             }

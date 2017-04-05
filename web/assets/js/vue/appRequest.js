@@ -18,9 +18,10 @@ let request = new Vue({
         checkedRows: [],
         foreignTables: [],
         foreignKeys: [],
+        depth: 0,
         data: [],
         columns: [],
-        depth: 0
+        searchQuery: ''
     },
     mounted: function () {
         console.log('mounted method in select app');
@@ -48,28 +49,16 @@ let request = new Vue({
         }
         this.items = Object.assign({}, this.items, $items);
     },
-    computed: {
-        jsonQuery: function () {
-            let $query = {};
-            $query.from = this.from;
-            return JSON.stringify($query);
-        }
-    },
     methods: {
         search: function () {
-            this.$http.post('/query.php', {action: 'execute_query_json', json_query: this.jsonQuery}).then(
+            /// create json query with from attribute
+            let $query = {};
+            $query.from = this.from;
+            let jsonQuery = JSON.stringify($query);
+            this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
                 response => {
                     this.data = response.body.items;
                     this.columns = response.body.columns;
-                    /// Display result
-                    let research = new Vue({
-                        el: '#app-result-research',
-                        data: {
-                            searchQuery: '',
-                            gridColumns: request.columns,
-                            gridData: request.data
-                        }
-                    });
                 }, response => {
                     console.log('response callback', response)
                 }
@@ -84,4 +73,5 @@ let request = new Vue({
         }
     }
 });
+
 

@@ -19,8 +19,10 @@ $databaseConfig     = $db->getDatabaseYamlConfig();
 $databaseConfigJson = $db->getDatabaseYamlConfig(true);
 $jsonQueryColumns   = $qb->getJsonSelectQueryList(true);
 */
-function executeQueryJson(QueryBuilderDoctrine $qb, string $jsonQuery)
+function executeQueryJson(string $jsonQuery)
 {
+    $db = new DoctrineDatabase();
+    $qb = new QueryBuilderDoctrine($db);
     echo $qb->executeQueryJson($jsonQuery);
 }
 
@@ -36,7 +38,7 @@ if (isset($_POST['action'])) {
     switch ($action) {
         case 'execute_query_json':
             $jsonQuery = isset($_POST['json_query']) ? $_POST['json_query'] : '';
-            executeQueryJson($qb, $jsonQuery);
+            executeQueryJson($jsonQuery);
             break;
         case 'get_sql_request':
             getSQLRequest($qb);

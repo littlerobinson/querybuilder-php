@@ -1,12 +1,12 @@
-Vue.component('grid', {
-    template: '#grid-template',
+Vue.component('spreadsheet', {
+    template: '#spreadsheet-template',
     props: {
         data: Array,
         columns: Array,
         filterKey: String
     },
     data: function () {
-        var sortOrders = {};
+        let sortOrders = {};
         this.columns.forEach(function (key) {
             sortOrders[key] = 1;
         });
@@ -17,10 +17,10 @@ Vue.component('grid', {
     },
     computed: {
         filteredData: function () {
-            var sortKey = this.sortKey;
-            var filterKey = this.filterKey && this.filterKey.toLowerCase();
-            var order = this.sortOrders[sortKey] || 1;
-            var data = this.data;
+            let sortKey = this.sortKey;
+            let filterKey = this.filterKey && this.filterKey.toLowerCase();
+            let order = this.sortOrders[sortKey] || 1;
+            let data = this.data;
             if (filterKey) {
                 data = data.filter(function (row) {
                     return Object.keys(row).some(function (key) {
@@ -47,6 +47,10 @@ Vue.component('grid', {
         sortBy: function (key) {
             this.sortKey = key;
             this.sortOrders[key] = this.sortOrders[key] * -1;
-        }
+        },
+        setPropertyIfEmpty: function(obj, prop, value) {
+            if(!obj[prop]) Vue.set(obj, prop, value);
+            return true;
+        },
     }
 });
