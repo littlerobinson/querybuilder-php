@@ -3,7 +3,7 @@ namespace Littlerobinson\QueryBuilder\Tests;
 
 use Littlerobinson\QueryBuilder\Utils\Yaml\YamlParser;
 
-class YamlParserTest extends \PHPUnit_Framework_TestCase
+class YamlParserTest extends \PHPUnit\Framework\TestCase
 {
     private $yamlParser;
 

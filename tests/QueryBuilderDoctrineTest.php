@@ -4,7 +4,7 @@ namespace Littlerobinson\QueryBuilder\Tests;
 use Littlerobinson\QueryBuilder\DoctrineDatabase;
 use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
 
-class QueryBuilderDoctrineTest extends \PHPUnit_Framework_TestCase
+class QueryBuilderDoctrineTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var DoctrineDatabase
