@@ -228,6 +228,7 @@ class QueryBuilderDoctrine
         $response['total'] = sizeof($result);
         $response['items'] = $result;
         $response['columns'] = $columns;
+        $response['request'] = $this->getSQLRequest();
 
         return json_encode($response);
     }

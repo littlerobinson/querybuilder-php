@@ -20,5 +20,22 @@
       },
       "created_at":"created_at"
     }
+  },
+  "where": {
+    "AND": {
+      "civility.name": {
+        "EQUAL": [
+          "Monsieur"
+        ]
+      }
+    }
+  },
+  "orderBy": {
+    "asc": {
+      "post": [
+        "name",
+        "id"
+      ]
+    }
   }
 }

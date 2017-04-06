@@ -120,14 +120,11 @@ require_once "query.php";
     <hr>
     <div class="row">
         <div id="app-request">
-            <input type="hidden" v-model="checkedTables">
             <div id="select" class="col-xs-3">
                 <transition name="fade" appear hidden>
                     <div class="panel panel-default">
                         <div class="panel-heading"><strong>{{ 'Sélection' | capitalize }}</strong></div>
                         <div class="panel-body">
-                            <input type="hidden" id="databaseConfigJson"
-                                   value="<?php echo htmlentities($databaseConfigJson); ?>">
                             <select-item
                                     class="item"
                                     :db-obj="dbObj"
@@ -192,19 +189,18 @@ require_once "query.php";
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading"><strong>Requête SQL</strong></div>
-                <div class="panel-body">
-                    <?php
-                    echo $sqlRequest;
-                    ?>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><strong>Requête SQL</strong></div>
+                        <div class="panel-body">
+                            <span>{{ sqlRequest }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 

@@ -21,33 +21,36 @@ let request = new Vue({
         depth: 0,
         data: [],
         columns: [],
-        searchQuery: ''
+        searchQuery: '',
+        sqlRequest: ''
     },
-    mounted: function () {
+    mounted () {
         console.log('mounted method in select app');
-        this.dbObj = JSON.parse(databaseConfigJson);
-        let $items = {};
-        $items.name = "Logiciel des inscrits";
-        $items.firstParent = true;
-        $items.display = true;
-        $items.rows = [];
-        /// Update database items
-        for (let $tableName in this.dbObj) {
-            if (this.dbObj[$tableName]['_table_visibility'] === true) {
-                $translation = this.dbObj[$tableName]['_table_translation'] !== null
-                    ? this.dbObj[$tableName]['_table_translation']
-                    : null;
-                $items.rows.push({
-                    'name': $tableName,
-                    'table': $tableName,
-                    'translation': $translation,
-                    'display': true,
-                    'status': false,
-                    'firstParent': true
-                });
+        let self = this;
+        this._getDbObject(function () {
+            let $items = {};
+            $items.name = "Logiciel des inscrits";
+            $items.firstParent = true;
+            $items.display = true;
+            $items.rows = [];
+            /// Update database items
+            for (let $tableName in self.dbObj) {
+                if (self.dbObj[$tableName]['_table_visibility'] === true) {
+                    $translation = self.dbObj[$tableName]['_table_translation'] !== null
+                        ? self.dbObj[$tableName]['_table_translation']
+                        : null;
+                    $items.rows.push({
+                        'name': $tableName,
+                        'table': $tableName,
+                        'translation': $translation,
+                        'display': true,
+                        'status': false,
+                        'firstParent': true
+                    });
+                }
             }
-        }
-        this.items = Object.assign({}, this.items, $items);
+            self.items = Object.assign({}, self.items, $items);
+        });
     },
     methods: {
         search: function () {
@@ -60,11 +63,22 @@ let request = new Vue({
                 response => {
                     this.data = response.body.items;
                     this.columns = response.body.columns;
+                    this.sqlRequest = response.body.request;
                 }, response => {
                     console.log('response callback', response)
                 }
             );
-        }
+        },
+        _getDbObject: function (callback) {
+            this.$http.post('/query.php', {action: 'get_db_object'}).then(
+                response => {
+                    this.dbObj = response.body;
+                    callback();
+                }, response => {
+                    console.log('response callback', response)
+                }
+            );
+        },
     },
     filter: {
         getRows: function (path) {
