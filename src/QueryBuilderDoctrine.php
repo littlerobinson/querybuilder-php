@@ -20,6 +20,10 @@ class QueryBuilderDoctrine
 
     private $orderBy;
 
+    private $limit;
+
+    private $offset;
+
     private $fkFrom;
 
     private $fields;
@@ -177,6 +181,10 @@ class QueryBuilderDoctrine
         $this->where = (property_exists($queryObj, 'where')) ? (array)$queryObj->where : null;
         /// Get orderBy
         $this->orderBy = (property_exists($queryObj, 'orderBy')) ? (array)$queryObj->orderBy : null;
+        /// Get limit
+        $this->limit = (property_exists($queryObj, 'limit')) ? (int)$queryObj->limit : null;
+        /// Get offset
+        $this->offset = (property_exists($queryObj, 'offset')) ? (int)$queryObj->offset : null;
         /// Create FK array
         $this->fkFrom = (property_exists($queryObj, 'from')) ? $this->getFKList($this->from) : null;
     }
@@ -206,8 +214,13 @@ class QueryBuilderDoctrine
         /// Adding query conditions
         $this->addQueryCondition();
 
+        /// TODO : Adding limit and offset
+        $limit  = $this->limit ?? '';
+        $offset = $this->offset ?? '';
+
         /// Execute query and fetch result
-        $result            = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
+        $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
+
         $this->queryResult = $result->fetchAll(\PDO::FETCH_ASSOC);
 
         return $this->queryResult;
@@ -220,15 +233,22 @@ class QueryBuilderDoctrine
      */
     public function executeQueryJson(string $jsonQuery): string
     {
-        $result            = $this->executeQuery($jsonQuery);
-        $columns           = [];
-        foreach ($result[0] as $key => $value) {
-            $columns[] = $key;
+        $result = $this->executeQuery($jsonQuery);
+        if (count($result) > 0) {
+            $columns = [];
+            foreach ($result[0] as $key => $value) {
+                $columns[] = $key;
+            }
+            $response['total']   = sizeof($result);
+            $response['items']   = $result;
+            $response['columns'] = $columns;
+            $response['request'] = $this->getSQLRequest();
+        } else {
+            $response['total']   = 0;
+            $response['items']   = [];
+            $response['columns'] = [];
+            $response['request'] = '';
         }
-        $response['total'] = sizeof($result);
-        $response['items'] = $result;
-        $response['columns'] = $columns;
-        $response['request'] = $this->getSQLRequest();
 
         return json_encode($response);
     }

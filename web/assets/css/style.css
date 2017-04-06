@@ -101,7 +101,7 @@ th.active .arrow {
     border-top: 4px solid #ffffff;
 }
 
-#app-select .panel-body {
+#app-request .panel-body {
     max-height: 600px;
     overflow: auto;
 }

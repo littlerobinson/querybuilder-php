@@ -57,8 +57,11 @@ let request = new Vue({
             /// create json query with from attribute
             let $query = {};
             $query.from = this.from;
+            /*
+            $query.limit = null;
+            $query.offset = null;
+            */
             let jsonQuery = JSON.stringify($query);
-            console.log(jsonQuery);
             this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
                 response => {
                     this.data = response.body.items;
