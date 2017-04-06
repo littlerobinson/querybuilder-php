@@ -12,6 +12,12 @@ Vue.component('conditionItem', {
             default: function () {
                 return {}
             }
+        },
+        dbObj: {
+            type: Object,
+            default: function () {
+                return {}
+            }
         }
     },
     data: function () {
@@ -42,16 +48,15 @@ Vue.component('conditionItem', {
             this._clearNewCondition();
             let $newRuleTable = this.newRuleTable;
 
-            /// Get table fields
-            let $selectItem = this.items.rows.filter(function (item, index) {
-                if (item.name === $newRuleTable) {
-                    return String(index);
+            for (let $tableName in this.dbObj[$newRuleTable]) {
+                if('_' === $tableName.substring(0, 1) || !this.dbObj[$newRuleTable][$tableName]._field_visibility) {
+                    continue;
                 }
-            })[0];
-            console.log($selectItem);
-            for (let $rowName in $selectItem.rows) {
-                console.log($selectItem.rows[$rowName].name);
-                this.rows.push($selectItem.rows[$rowName].name);
+                $translation = this.dbObj[$newRuleTable][$tableName]._field_translation !== null
+                    ? this.dbObj[$newRuleTable][$tableName]._field_translation
+                    : this.dbObj[$newRuleTable][$tableName].name;
+
+                this.rows.push($translation);
             }
         },
         _clearNewCondition: function () {

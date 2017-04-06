@@ -1,43 +1,24 @@
 {
-  "from": {
-    "registration": {
-      "0": "treatment_date",
-      "1": {
-        "registrant_id": {
-          "0": "badselect",
-          "1": "first_name",
-          "2": "last_name",
-          "3": {
-            "civility_id": {
-              "0": "name"
-            }
-          },
-          "4": {
-            "country_id": {
-              "0": "name",
-              "1": "calling_codes"
-            }
-          }
+  "from":{
+    "registration":{
+      "treatment_date":"treatment_date",
+      "registrant_id":{
+        "badselect":"badselect",
+        "last_name":"last_name",
+        "first_name":"first_name",
+        "civility_id":{
+          "name":"name"
+        },
+        "country_id":{
+          "name":"name",
+          "calling_codes":"calling_codes"
         }
       },
-      "2": "created_at"
-    }
-  },
-  "where": {
-    "AND": {
-      "civility.name": {
-        "EQUAL": [
-          "Monsieur"
-        ]
-      }
-    }
-  },
-  "orderBy": {
-    "asc": {
-      "post": [
-        "name",
-        "id"
-      ]
+      "user_id":{
+        "id":"id",
+        "first_name":"first_name"
+      },
+      "created_at":"created_at"
     }
   }
 }

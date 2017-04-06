@@ -27,7 +27,7 @@ let request = new Vue({
         console.log('mounted method in select app');
         this.dbObj = JSON.parse(databaseConfigJson);
         let $items = {};
-        $items.name = "Liste des tables";
+        $items.name = "Logiciel des inscrits";
         $items.firstParent = true;
         $items.display = true;
         $items.rows = [];
@@ -55,6 +55,7 @@ let request = new Vue({
             let $query = {};
             $query.from = this.from;
             let jsonQuery = JSON.stringify($query);
+            console.log(jsonQuery);
             this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
                 response => {
                     this.data = response.body.items;

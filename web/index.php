@@ -23,7 +23,8 @@ require_once "query.php";
                 type="checkbox"
                 :class="{bold: object}"
                 @click="changeStatus">
-        <label>{{ model.name }}</label>
+        <label v-if="model.translation">{{ model.translation }}</label>
+        <label v-else>{{ model.name }}</label>
         <div v-show="selected" v-if="object">
             <select-item
                     class="item"
@@ -41,14 +42,15 @@ require_once "query.php";
     </div>
 </script>
 
-<!-- component for cndition template -->
+<!-- component for condition template -->
 <script type="text/x-template" id="condition-item">
     <div>
         <div class="row container">
             <select v-model="newRuleTable" @change="addRuleRows" class="col-md-2">
                 <option value="">-- Sélectionner une table --</option>
-                <option v-if="checkedTables.length > 0" v-for="(table, index) in checkedTables">
-                    {{ table }}
+                <option v-if="checkedTables.length > 0" v-for="(table, index) in checkedTables" :value="table">
+                    <span v-if="dbObj[table]._table_translation">{{ dbObj[table]._table_translation }}</span>
+                    <span v-else>{{ table }}</span>
                 </option>
             </select>
             <select v-model="newRuleRow" class="col-md-3">
@@ -152,6 +154,7 @@ require_once "query.php";
                             <condition-item
                                     :checked-tables="checkedTables"
                                     :items="items"
+                                    :db-obj="dbObj"
                             >
                             </condition-item>
                             <button type="button" class="btn btn-success pull-right" aria-expanded="false"
