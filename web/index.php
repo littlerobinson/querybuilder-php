@@ -34,6 +34,7 @@ require_once "query.php";
                     :from="from"
                     :checked-tables="checkedTables"
                     :checked-rows="checkedRows"
+                    :tables="tables"
                     :depth="depth"
                     :model="row"
                     :items="items">
@@ -46,35 +47,42 @@ require_once "query.php";
 <script type="text/x-template" id="condition-item">
     <div>
         <div class="row container">
-            <select v-model="newRuleTable" @change="addRuleRows" class="col-md-2">
+            <select v-model="newLogicalOperator" class="col-md-1">
+                <option v-for="(operator, key) in logicalOperators" :value="operator.value">
+                    {{ operator.name }}
+                </option>
+            </select>
+            <select v-model="newRuleTable" @change="addRuleRows" class="col-md-3">
                 <option value="">-- Sélectionner une table --</option>
-                <option v-if="checkedTables.length > 0" v-for="(table, index) in checkedTables" :value="table">
-                    <span v-if="dbObj[table]._table_translation">{{ dbObj[table]._table_translation }}</span>
-                    <span v-else>{{ table }}</span>
+                <option v-for="(table, fk) in tables" :value="table">
+                    <span v-if="dbObj[table]._table_translation">{{ dbObj[table]._table_translation }} ( {{ fk }} )</span>
+                    <span v-else>{{ table}} ( {{ fk }} )</span>
                 </option>
             </select>
             <select v-model="newRuleRow" class="col-md-3">
                 <option value="">-- Sélectionner un champs --</option>
-                <option v-if="newRuleTable != ''" v-for="(row, index) in rows">
+                <option v-if="newRuleTable != ''" v-for="(row, index) in rows" :value="index">
                     {{ row }}
                 </option>
             </select>
-            <select v-model="newOperator" class="col-md-2">
+            <select v-model="newRuleOperator" class="col-md-2">
                 <option value="">-- Sélectionner une condition --</option>
-                <option v-for="(operator, key) in operatorList" :value="operator.value">
+                <option v-for="(operator, key) in ruleOperators" :value="operator.value">
                     {{ operator.name }}
                 </option>
             </select>
-            <input type="text" v-model="newValue" class="col-md-3" placeholder="Condition">
-            <input type="button" value="Ajouter une condition" class="col-md-2" @click="addCondition">
+            <input type="text" v-model="newValue" class="col-md-2" placeholder="Condition">
+            <input type="button" value="Ajouter" class="col-md-1" @click="addCondition">
         </div>
         <hr>
         <table class="table table-responsive" v-if="conditions.length > 0">
             <thead>
             <tr>
+                <th>Opérateur logique</th>
                 <th>Donnée</th>
-                <th>Opérateur</th>
+                <th>Règle</th>
                 <th>Valeur</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -82,8 +90,9 @@ require_once "query.php";
                     v-for="(conditionValue, conditionKey, conditionIndex) in conditions"
                     :key="conditionKey"
             >
-                <td>{{ conditionValue.rule }}</td>
-                <td>{{ conditionValue.operator }}</td>
+                <td>{{ conditionValue.logicalOperator }}</td>
+                <td>{{ conditionValue.field }}</td>
+                <td>{{ conditionValue.ruleOperator }}</td>
                 <td>{{ conditionValue.value }}</td>
                 <td><i class="fa fa-minus-circle fa-lg text-danger" aria-hidden="true"></i></td>
             </tr>
@@ -131,6 +140,7 @@ require_once "query.php";
                                     :from="from"
                                     :checked-tables="checkedTables"
                                     :checked-rows="checkedRows"
+                                    :tables="tables"
                                     :depth="depth"
                                     :model="items"
                                     :items="items">
@@ -150,7 +160,9 @@ require_once "query.php";
                         <div class="panel-body">
                             <condition-item
                                     :checked-tables="checkedTables"
+                                    :tables="tables"
                                     :items="items"
+                                    :conditions="conditions"
                                     :db-obj="dbObj"
                             >
                             </condition-item>
@@ -179,6 +191,7 @@ require_once "query.php";
                                 <form id="search">
                                     Recherche <input name="query" v-model="searchQuery">
                                 </form>
+                                <hr>
                                 <spreadsheet
                                         :data="data"
                                         :columns="columns"

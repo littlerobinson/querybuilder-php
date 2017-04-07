@@ -127,35 +127,40 @@ class QueryBuilderDoctrine
         if (null === $this->where) {
             return;
         }
-        foreach ($this->where as $logicalOperator => $request) {
-            foreach ($request as $condition => $value) {
-                //if (property_exists($objDbConfig->{$table}, '_FK')) {
-                $arrRequest = explode('.', $condition);
+        foreach ($this->where as $key => $condition) {
+            foreach ($condition as $logicalOperator => $request) {
+                foreach ($request as $row => $equality) {
+                    $arrRequest = explode('.', $row);
 
-                if (!isset($this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type)) {
-                    http_response_code(400);
-                    throw new \Exception('This field not exist : ' . $arrRequest[0] . '.' . $arrRequest[1]);
-                }
-                /// Get field type
-                $fieldType = $this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type;
-                /// Add comma if not boolean or integer
-                $value = ($fieldType === 'integer' || $fieldType === 'boolean') ? implode(',', $value->EQUAL) : implode(',', $value->EQUAL);
+                    if (!isset($this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type)) {
+                        http_response_code(400);
+                        throw new \Exception('This field not exist : ' . $arrRequest[0] . '.' . $arrRequest[1]);
+                    }
+                    /// Get field type
+                    $fieldType = $this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type;
+                    /// Get primary key
+                    $primaryKey = $this->objDbConfig->{$arrRequest[0]}->_primary_key;
+                    /// Get select alias
+                    $alias = $arrRequest[0] . '_' . $primaryKey . '.' . $arrRequest[1];
+                    /// Add comma if not boolean or integer
+                    $value = ($fieldType === 'integer' || $fieldType === 'boolean') ? implode(',', $equality->EQUAL) : implode(',', $equality->EQUAL);
 
-                switch ($logicalOperator) {
-                    case 'AND':
-                        $this->queryBuilder->andWhere($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
-                        break;
-                    case 'OR':
-                        $this->queryBuilder->orWhere($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
-                        break;
-                    case 'AND_HAVING':
-                        $this->queryBuilder->andHaving($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
-                        break;
-                    case 'OR_HAVING':
-                        $this->queryBuilder->orHaving($arrRequest[1] . '.' . $arrRequest[2] . ' = ' . '\'' . $value . '\'');
-                        break;
-                    default:
-                        break;
+                    switch ($logicalOperator) {
+                        case 'AND':
+                            $this->queryBuilder->andWhere($alias . ' = ' . '\'' . $value . '\'');
+                            break;
+                        case 'OR':
+                            $this->queryBuilder->orWhere($alias . ' = ' . '\'' . $value . '\'');
+                            break;
+                        case 'AND_HAVING':
+                            $this->queryBuilder->andHaving($alias . ' = ' . '\'' . $value . '\'');
+                            break;
+                        case 'OR_HAVING':
+                            $this->queryBuilder->orHaving($alias . ' = ' . '\'' . $value . '\'');
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -213,6 +218,9 @@ class QueryBuilderDoctrine
 
         /// Adding query conditions
         $this->addQueryCondition();
+
+        /// TODO : Try get SQL for limitation
+        //var_dump($this->queryBuilder->getQuery()->getSQL());
 
         /// TODO : Adding limit and offset
         $limit  = $this->limit ?? '';

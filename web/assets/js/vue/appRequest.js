@@ -11,13 +11,13 @@ let request = new Vue({
     },
     data: {
         dbObj: {},
+        tables: {},
         items: {},
         from: {},
-        listTables: [],
+        where: [],
+        conditions: [],
         checkedTables: [],
         checkedRows: [],
-        foreignTables: [],
-        foreignKeys: [],
         depth: 0,
         data: [],
         columns: [],
@@ -57,10 +57,14 @@ let request = new Vue({
             /// create json query with from attribute
             let $query = {};
             $query.from = this.from;
+            /// Add conditions to query (feed this.where)
+            this.where = [];
+            this.__addQueryConditions();
+            $query.where = this.where;
             /*
-            $query.limit = null;
-            $query.offset = null;
-            */
+             $query.limit = null;
+             $query.offset = null;
+             */
             let jsonQuery = JSON.stringify($query);
             this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
                 response => {
@@ -82,6 +86,22 @@ let request = new Vue({
                 }
             );
         },
+        __addQueryConditions: function () {
+            for (let $condition in this.conditions) {
+                let $where = {};
+                let $logicalOperator = this.conditions[$condition].logicalOperator;
+                let $field = this.conditions[$condition].field;
+                let $ruleOperator = this.conditions[$condition].ruleOperator;
+                let $value = this.conditions[$condition].value;
+
+                $where[$logicalOperator] = {};
+                $where[$logicalOperator][$field] = {};
+                $where[$logicalOperator][$field][$ruleOperator] = [];
+                $where[$logicalOperator][$field][$ruleOperator].push($value);
+
+                this.where.push($where);
+            }
+        }
     },
     filter: {
         getRows: function (path) {

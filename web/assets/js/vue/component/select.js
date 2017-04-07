@@ -2,13 +2,12 @@ Vue.component('selectItem', {
     template: '#select-item',
     props: {
         dbObj: Object,
+        tables: Object,
         model: Object,
         items: Object,
         from: Object,
         checkedTables: Array,
-        checkedRows: Array,
-        foreignKeys: Array,
-        foreignTables: Array
+        checkedRows: Array
     },
     data: function () {
         return {
@@ -102,6 +101,8 @@ Vue.component('selectItem', {
             let $tmpDepth = {};
             if ($listDepth.length === 1) {
                 this.from[$listDepth[0]] = {};
+                /// Add to list of Table
+                this.tables[$listDepth[0]] = $listDepth[0];
             } else {
                 for (let $index in $listDepth) {
                     if ($index === '0') { /// First loop
@@ -111,6 +112,8 @@ Vue.component('selectItem', {
                     } else { /// Last loop
                         if(this.object) {
                             $tmpDepth[$listDepth[$index]] = {};
+                            /// Add list of Table
+                            this.tables[$listDepth[$index]] = this.model.table;
                         }else {
                             $tmpDepth[$listDepth[$index]] = $listDepth[$index];
                         }

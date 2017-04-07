@@ -7,7 +7,19 @@ Vue.component('conditionItem', {
                 return []
             }
         },
+        conditions: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        },
         items: {
+            type: Object,
+            default: function () {
+                return {}
+            }
+        },
+        tables: {
             type: Object,
             default: function () {
                 return {}
@@ -22,24 +34,29 @@ Vue.component('conditionItem', {
     },
     data: function () {
         return {
-            conditions: [],
-            rows: [],
+            rows: {},
+            newLogicalOperator: '',
             newRuleTable: '',
             newRuleRow: '',
-            newOperator: '',
+            newRuleOperator: '',
             newValue: '',
             newCondition: [],
-            operatorList: [
+            ruleOperators: [
                 {value: 'EQUAL', name: 'Est égal à'},
                 {value: 'LIKE', name: 'Contient'}
+            ],
+            logicalOperators: [
+                {value: 'AND', name: 'ET'},
+                {value: 'OR', name: 'OU'}
             ]
         }
     },
     methods: {
         addCondition: function () {
             let $newCondition = {
-                rule: this.newRuleRow + ' (' + this.newRuleTable + ')',
-                operator: this.newOperator,
+                logicalOperator: this.newLogicalOperator,
+                field: this.newRuleTable + '.' + this.newRuleRow,
+                ruleOperator: this.newRuleOperator,
                 value: this.newValue
             };
             this.conditions.push($newCondition);
@@ -49,21 +66,21 @@ Vue.component('conditionItem', {
             let $newRuleTable = this.newRuleTable;
 
             for (let $tableName in this.dbObj[$newRuleTable]) {
-                if('_' === $tableName.substring(0, 1) || !this.dbObj[$newRuleTable][$tableName]._field_visibility) {
+                if ('_' === $tableName.substring(0, 1) || !this.dbObj[$newRuleTable][$tableName]._field_visibility) {
                     continue;
                 }
                 $translation = this.dbObj[$newRuleTable][$tableName]._field_translation !== null
                     ? this.dbObj[$newRuleTable][$tableName]._field_translation
                     : this.dbObj[$newRuleTable][$tableName].name;
 
-                this.rows.push($translation);
+                this.rows[this.dbObj[$newRuleTable][$tableName].name] = $translation;
             }
         },
         _clearNewCondition: function () {
             this.newRuleRow = '';
-            this.newOperator = '';
+            this.newRuleOperator = '';
             this.newValue = '';
-            this.rows = [];
+            this.rows = {};
         }
     }
 });
