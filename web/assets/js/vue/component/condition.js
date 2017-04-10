@@ -1,12 +1,6 @@
 Vue.component('conditionItem', {
     template: '#condition-item',
     props: {
-        checkedTables: {
-            type: Array,
-            default: function () {
-                return []
-            }
-        },
         conditions: {
             type: Array,
             default: function () {
@@ -19,7 +13,7 @@ Vue.component('conditionItem', {
                 return {}
             }
         },
-        tables: {
+        selectTables: {
             type: Object,
             default: function () {
                 return {}

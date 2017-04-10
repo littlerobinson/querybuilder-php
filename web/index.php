@@ -31,9 +31,8 @@ require_once "query.php";
                     :key="row.name"
                     :db-obj="dbObj"
                     :from="from"
-                    :checked-tables="checkedTables"
                     :checked-rows="checkedRows"
-                    :tables="tables"
+                    :select-tables="selectTables"
                     :depth="depth"
                     :model="row"
                     :items="items">
@@ -53,9 +52,9 @@ require_once "query.php";
             </select>
             <select v-model="newRuleTable" @change="addRuleRows" class="col-md-3">
                 <option value="">-- Sélectionner une table --</option>
-                <option v-for="(table, field) in tables" :value="{ parentTable: table.parentName, table: table.table, field: table.name }">
-                    <span v-if="dbObj[table.table]._table_translation">{{ dbObj[table.table]._table_translation }} ( {{ field }} )</span>
-                    <span v-else>{{ table.parentName}} {{ table.table }} ( {{ field }} )</span>
+                <option v-for="(objTable, field) in selectTables" :value="{ parentTable: objTable.parentName, table: objTable.table, field: objTable.name }">
+                    <span v-if="dbObj[objTable.table]._table_translation">{{ dbObj[objTable.table]._table_translation }} ( {{ field }} )</span>
+                    <span v-else>{{ objTable.parentName}} {{ objTable.table }} ( {{ field }} )</span>
                 </option>
             </select>
             <select v-model="newRuleRow" class="col-md-3">
@@ -137,9 +136,8 @@ require_once "query.php";
                                     class="item"
                                     :db-obj="dbObj"
                                     :from="from"
-                                    :checked-tables="checkedTables"
                                     :checked-rows="checkedRows"
-                                    :tables="tables"
+                                    :select-tables="selectTables"
                                     :depth="depth"
                                     :model="items"
                                     :items="items">
@@ -147,7 +145,7 @@ require_once "query.php";
                         </div>
                         <div class="panel-footer alert-danger">
                             <strong>Liste des tables séléctionnées : </strong><br>
-                            {{ checkedTables }}
+
                         </div>
                     </div>
                 </transition>
@@ -158,8 +156,7 @@ require_once "query.php";
                         <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
                         <div class="panel-body">
                             <condition-item
-                                    :checked-tables="checkedTables"
-                                    :tables="tables"
+                                    :select-tables="selectTables"
                                     :items="items"
                                     :conditions="conditions"
                                     :db-obj="dbObj"

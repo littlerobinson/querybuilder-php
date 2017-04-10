@@ -2,11 +2,10 @@ Vue.component('selectItem', {
     template: '#select-item',
     props: {
         dbObj: Object,
-        tables: Object,
+        selectTables: Object,
         model: Object,
         items: Object,
         from: Object,
-        checkedTables: Array,
         checkedRows: Array
     },
     data: function () {
@@ -25,16 +24,13 @@ Vue.component('selectItem', {
             this.model.status = !this.model.status;
             /// Case adding table
             if (this.model.status && this.dbObj[this.model.table] && this.object) {
-                if (this.checkedTables.indexOf(this.model.table) === -1) {
-                    this.checkedTables.push(this.model.table);
-                }
                 /// Create From variable with select data
                 this._addFrom();
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
-                if (this.checkedTables.indexOf(this.model.table) > -1 && this.object) { /// Case uncheck table
-                    this.checkedTables.splice(this.checkedTables.indexOf(this.model.table), 1);
-                    delete this.from[this.model.table];
+                if (this.object) { /// Case uncheck table
+                    delete this.from[this.model.name];
+                    delete this.selectTables[this.model.name];
                 }
                 delete this.model.rows;
                 this._updateDisplaySelect();
@@ -46,7 +42,6 @@ Vue.component('selectItem', {
                 this.checkedRows.push(this.model.table + '.' + this.model.name);
             } else if (!this.selected && !this.object) { /// Case uncheck row
                 this.checkedRows.splice(this.checkedRows.indexOf(this.model.table + '.' + this.model.name), 1);
-                delete this.from[this.model.table][this.model.name];
             }
         },
         _addRow: function ($tableName) {
@@ -102,10 +97,10 @@ Vue.component('selectItem', {
             if ($listDepth.length === 1) {
                 this.from[$listDepth[0]] = {};
                 /// Add to list of Table
-                this.tables[$listDepth[0]] = {};
-                this.tables[$listDepth[0]].parentName = null;
-                this.tables[$listDepth[0]].table = $listDepth[0];
-                this.tables[$listDepth[0]].name = $listDepth[0];
+                this.selectTables[$listDepth[0]] = {};
+                this.selectTables[$listDepth[0]].parentName = null;
+                this.selectTables[$listDepth[0]].table = $listDepth[0];
+                this.selectTables[$listDepth[0]].name = $listDepth[0];
             } else {
                 for (let $index in $listDepth) {
                     if ($index === '0') { /// First loop
@@ -116,10 +111,10 @@ Vue.component('selectItem', {
                         if (this.object) {
                             $tmpDepth[$listDepth[$index]] = {};
                             /// Add list of Table
-                            this.tables[$listDepth[$index]] = {};
-                            this.tables[$listDepth[$index]].parentName = this.tables[this.model.parentName].table;
-                            this.tables[$listDepth[$index]].name = this.model.name;
-                            this.tables[$listDepth[$index]].table = this.model.table;
+                            this.selectTables[$listDepth[$index]] = {};
+                            this.selectTables[$listDepth[$index]].parentName = this.selectTables[this.model.parentName].table;
+                            this.selectTables[$listDepth[$index]].name = this.model.name;
+                            this.selectTables[$listDepth[$index]].table = this.model.table;
                         } else {
                             $tmpDepth[$listDepth[$index]] = $listDepth[$index];
                         }

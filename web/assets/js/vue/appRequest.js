@@ -11,12 +11,11 @@ let request = new Vue({
     },
     data: {
         dbObj: {},
-        tables: {},
+        selectTables: {},
         items: {},
         from: {},
         where: [],
         conditions: [],
-        checkedTables: [],
         checkedRows: [],
         depth: 0,
         data: [],
