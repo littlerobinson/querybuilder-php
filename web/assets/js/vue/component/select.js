@@ -102,7 +102,10 @@ Vue.component('selectItem', {
             if ($listDepth.length === 1) {
                 this.from[$listDepth[0]] = {};
                 /// Add to list of Table
-                this.tables[$listDepth[0]] = $listDepth[0];
+                this.tables[$listDepth[0]] = {};
+                this.tables[$listDepth[0]].parentName = null;
+                this.tables[$listDepth[0]].table = $listDepth[0];
+                this.tables[$listDepth[0]].name = $listDepth[0];
             } else {
                 for (let $index in $listDepth) {
                     if ($index === '0') { /// First loop
@@ -110,11 +113,14 @@ Vue.component('selectItem', {
                     } else if ($index != ($listDepth.length - 1)) { /// Middle loops
                         $tmpDepth = $tmpDepth[$listDepth[$index]];
                     } else { /// Last loop
-                        if(this.object) {
+                        if (this.object) {
                             $tmpDepth[$listDepth[$index]] = {};
                             /// Add list of Table
-                            this.tables[$listDepth[$index]] = this.model.table;
-                        }else {
+                            this.tables[$listDepth[$index]] = {};
+                            this.tables[$listDepth[$index]].parentName = this.tables[this.model.parentName].table;
+                            this.tables[$listDepth[$index]].name = this.model.name;
+                            this.tables[$listDepth[$index]].table = this.model.table;
+                        } else {
                             $tmpDepth[$listDepth[$index]] = $listDepth[$index];
                         }
                     }

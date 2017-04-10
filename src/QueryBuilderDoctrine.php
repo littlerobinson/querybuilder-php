@@ -136,6 +136,7 @@ class QueryBuilderDoctrine
                         http_response_code(400);
                         throw new \Exception('This field not exist : ' . $arrRequest[0] . '.' . $arrRequest[1]);
                     }
+
                     /// Get field type
                     $fieldType = $this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type;
                     /// Get primary key
@@ -257,7 +258,6 @@ class QueryBuilderDoctrine
             $response['columns'] = [];
             $response['request'] = '';
         }
-
         return json_encode($response);
     }
 

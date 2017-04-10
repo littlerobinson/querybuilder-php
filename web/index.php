@@ -15,7 +15,6 @@ require_once "query.php";
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-
 <!-- component for select template -->
 <script type="text/x-template" id="select-item">
     <div class="checkbox" v-if="model.display">
@@ -54,9 +53,9 @@ require_once "query.php";
             </select>
             <select v-model="newRuleTable" @change="addRuleRows" class="col-md-3">
                 <option value="">-- Sélectionner une table --</option>
-                <option v-for="(table, fk) in tables" :value="table">
-                    <span v-if="dbObj[table]._table_translation">{{ dbObj[table]._table_translation }} ( {{ fk }} )</span>
-                    <span v-else>{{ table}} ( {{ fk }} )</span>
+                <option v-for="(table, field) in tables" :value="{ parentTable: table.parentName, table: table.table, field: table.name }">
+                    <span v-if="dbObj[table.table]._table_translation">{{ dbObj[table.table]._table_translation }} ( {{ field }} )</span>
+                    <span v-else>{{ table.parentName}} {{ table.table }} ( {{ field }} )</span>
                 </option>
             </select>
             <select v-model="newRuleRow" class="col-md-3">

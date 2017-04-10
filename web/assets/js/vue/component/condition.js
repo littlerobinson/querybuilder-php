@@ -36,7 +36,7 @@ Vue.component('conditionItem', {
         return {
             rows: {},
             newLogicalOperator: '',
-            newRuleTable: '',
+            newRuleTable: {},
             newRuleRow: '',
             newRuleOperator: '',
             newValue: '',
@@ -53,9 +53,12 @@ Vue.component('conditionItem', {
     },
     methods: {
         addCondition: function () {
+            /// Case parent or not
+            let $field = (this.newRuleTable.parentTable) ? this.newRuleTable.parentTable + '.' + this.newRuleTable.field : this.newRuleTable.table + '.' + this.newRuleRow;
+            /// Create condition
             let $newCondition = {
                 logicalOperator: this.newLogicalOperator,
-                field: this.newRuleTable + '.' + this.newRuleRow,
+                field: $field,
                 ruleOperator: this.newRuleOperator,
                 value: this.newValue
             };
@@ -65,15 +68,15 @@ Vue.component('conditionItem', {
             this._clearNewCondition();
             let $newRuleTable = this.newRuleTable;
 
-            for (let $tableName in this.dbObj[$newRuleTable]) {
-                if ('_' === $tableName.substring(0, 1) || !this.dbObj[$newRuleTable][$tableName]._field_visibility) {
+            for (let $tableName in this.dbObj[$newRuleTable.table]) {
+                if ('_' === $tableName.substring(0, 1) || !this.dbObj[$newRuleTable.table][$tableName]._field_visibility) {
                     continue;
                 }
-                $translation = this.dbObj[$newRuleTable][$tableName]._field_translation !== null
-                    ? this.dbObj[$newRuleTable][$tableName]._field_translation
-                    : this.dbObj[$newRuleTable][$tableName].name;
+                $translation = this.dbObj[$newRuleTable.table][$tableName]._field_translation !== null
+                    ? this.dbObj[$newRuleTable.table][$tableName]._field_translation
+                    : this.dbObj[$newRuleTable.table][$tableName].name;
 
-                this.rows[this.dbObj[$newRuleTable][$tableName].name] = $translation;
+                this.rows[this.dbObj[$newRuleTable.table][$tableName].name] = $translation;
             }
         },
         _clearNewCondition: function () {
