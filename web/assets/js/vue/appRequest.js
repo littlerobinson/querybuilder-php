@@ -16,7 +16,6 @@ let request = new Vue({
         from: {},
         where: [],
         conditions: [],
-        checkedRows: [],
         depth: 0,
         data: [],
         columns: [],

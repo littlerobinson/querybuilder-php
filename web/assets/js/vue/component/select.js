@@ -6,7 +6,6 @@ Vue.component('selectItem', {
         model: Object,
         items: Object,
         from: Object,
-        checkedRows: Array
     },
     data: function () {
         return {
@@ -36,12 +35,11 @@ Vue.component('selectItem', {
                 this._updateDisplaySelect();
             }
             this.selected = !this.selected;
-            /// Push/Delete in checkedRows array
+            /// Add delete in from row
             if (this.selected && !this.object) {
                 this._addFrom();
-                this.checkedRows.push(this.model.table + '.' + this.model.name);
-            } else if (!this.selected && !this.object) { /// Case uncheck row
-                this.checkedRows.splice(this.checkedRows.indexOf(this.model.table + '.' + this.model.name), 1);
+            } else if (!this.selected && !this.object) {
+
             }
         },
         _addRow: function ($tableName) {
