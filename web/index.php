@@ -13,6 +13,8 @@ require_once "query.php";
     <link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/vendor/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/spinner-image.css">
+    <link rel="stylesheet" href="assets/css/spinner-text.css">
 </head>
 <body>
 <!-- component for select template -->
@@ -123,16 +125,24 @@ require_once "query.php";
 </script>
 
 <div class="container well">
-    <h1>Requêteur</h1>
-    <hr>
     <div class="row">
         <div id="app-request">
-            <div v-show="loading" class="spinner-loading">
-                <div class="circle"></div>
-                <div class="circle"></div>
-                <div class="circle"></div>
+
+            <div v-show="loading" id="spinner-loading">
+                <div class="cssload-container">
+                    <div class="cssload-sphere cssload-s-gold"></div>
+                    <div class="cssload-sphere cssload-s-5"></div>
+                    <div class="cssload-sphere cssload-s-4"></div>
+                    <div class="cssload-sphere cssload-s-3"></div>
+                    <div class="cssload-sphere cssload-s-2"></div>
+                    <div class="cssload-sphere cssload-s-1"></div>
+                </div>
+                <div id="spinner-text" class="cssload-loader">Chargement...</div>
             </div>
+
             <div v-show="!loading">
+                <h1>Requêteur</h1>
+                <hr>
                 <div id="select" class="col-xs-3">
                     <transition name="fade" appear hidden>
                         <div class="panel panel-default">

@@ -1,0 +1,180 @@
+#spinner-loading {
+    position: fixed; /* or absolute */
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -100px;
+}
+
+.cssload-container {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    animation: cssload-rotate linear 3.68s infinite;
+    -o-animation: cssload-rotate linear 3.68s infinite;
+    -ms-animation: cssload-rotate linear 3.68s infinite;
+    -webkit-animation: cssload-rotate linear 3.68s infinite;
+    -moz-animation: cssload-rotate linear 3.68s infinite;
+}
+
+.cssload-sphere {
+    position: absolute;
+}
+.cssload-sphere:before,
+.cssload-sphere:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    background: rgb(255,99,71);
+}
+.cssload-sphere:before {
+    top: 0;
+    border-radius: 974px 974px 0 0;
+    animation: cssload-top ease 0.92s alternate infinite;
+    -o-animation: cssload-top ease 0.92s alternate infinite;
+    -ms-animation: cssload-top ease 0.92s alternate infinite;
+    -webkit-animation: cssload-top ease 0.92s alternate infinite;
+    -moz-animation: cssload-top ease 0.92s alternate infinite;
+}
+.cssload-sphere:after {
+    bottom: 0;
+    border-radius: 0 0 974px 974px;
+    animation: cssload-bottom ease 0.92s alternate infinite;
+    -o-animation: cssload-bottom ease 0.92s alternate infinite;
+    -ms-animation: cssload-bottom ease 0.92s alternate infinite;
+    -webkit-animation: cssload-bottom ease 0.92s alternate infinite;
+    -moz-animation: cssload-bottom ease 0.92s alternate infinite;
+    background: rgb(135,206,235);
+}
+
+.cssload-s-1 { top:0; right:0; bottom:0; left:0; }
+.cssload-s-2 { top:10px; right:10px; bottom:10px; left:10px; }
+.cssload-s-3 { top:19px; right:19px; bottom:19px; left:19px; }
+.cssload-s-4 { top:29px; right:29px; bottom:29px; left:29px; }
+.cssload-s-5 { top:39px; right:39px; bottom:39px; left:39px; }
+.cssload-s-gold { top:49px; right:49px; bottom:49px; left:49px; }
+
+.cssload-s-2:before,
+.cssload-s-2:after {
+    background: rgb(250,235,215);
+    animation-delay: 57.5ms;
+    -o-animation-delay: 57.5ms;
+    -ms-animation-delay: 57.5ms;
+    -webkit-animation-delay: 57.5ms;
+    -moz-animation-delay: 57.5ms;
+}
+.cssload-s-3:before,
+.cssload-s-3:after {
+    animation-delay: 115ms;
+    -o-animation-delay: 115ms;
+    -ms-animation-delay: 115ms;
+    -webkit-animation-delay: 115ms;
+    -moz-animation-delay: 115ms;
+}
+.cssload-s-4:before,
+.cssload-s-4:after {
+    background: rgb(250,235,215);
+    animation-delay: 172.5ms;
+    -o-animation-delay: 172.5ms;
+    -ms-animation-delay: 172.5ms;
+    -webkit-animation-delay: 172.5ms;
+    -moz-animation-delay: 172.5ms;
+}
+.cssload-s-5:before,
+.cssload-s-5:after {
+    animation-delay: 230ms;
+    -o-animation-delay: 230ms;
+    -ms-animation-delay: 230ms;
+    -webkit-animation-delay: 230ms;
+    -moz-animation-delay: 230ms;
+}
+.cssload-s-gold:before,
+.cssload-s-gold:after {
+    background: rgb(255,215,0);
+    box-shadow: 0 0 49px rgb(255,215,0);
+    animation: none;
+    -o-animation: none;
+    -ms-animation: none;
+    -webkit-animation: none;
+    -moz-animation: none;
+}
+
+
+
+
+
+@keyframes cssload-rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+@-o-keyframes cssload-rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+@-ms-keyframes cssload-rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+@-webkit-keyframes cssload-rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+@-moz-keyframes cssload-rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+@keyframes cssload-top {
+    from {top:0;}
+    to {top:-60%;}
+}
+
+@-o-keyframes cssload-top {
+    from {top:0;}
+    to {top:-60%;}
+}
+
+@-ms-keyframes cssload-top {
+    from {top:0;}
+    to {top:-60%;}
+}
+
+@-webkit-keyframes cssload-top {
+    from {top:0;}
+    to {top:-60%;}
+}
+
+@-moz-keyframes cssload-top {
+    from {top:0;}
+    to {top:-60%;}
+}
+
+@keyframes cssload-bottom {
+    from {bottom:0;}
+    to {bottom:-60%;}
+}
+
+@-o-keyframes cssload-bottom {
+    from {bottom:0;}
+    to {bottom:-60%;}
+}
+
+@-ms-keyframes cssload-bottom {
+    from {bottom:0;}
+    to {bottom:-60%;}
+}
+
+@-webkit-keyframes cssload-bottom {
+    from {bottom:0;}
+    to {bottom:-60%;}
+}
+
+@-moz-keyframes cssload-bottom {
+    from {bottom:0;}
+    to {bottom:-60%;}
+}
