@@ -28,7 +28,7 @@ Vue.component('selectItem', {
                 this._addRow(this.model.table);
             } else if (!this.model.status) {
                 if (this.object) { /// Case uncheck table
-                    delete this.from[this.model.name];
+                    this._deleteInObject(this.from, this.model.name);
                     delete this.selectTables[this.model.name];
                 }
                 delete this.model.rows;
@@ -116,6 +116,19 @@ Vue.component('selectItem', {
                         } else {
                             $tmpDepth[$listDepth[$index]] = $listDepth[$index];
                         }
+                    }
+                }
+            }
+        },
+        _deleteInObject: function ($obj, $index) {
+            for (let $property in $obj) {
+                if ($obj.hasOwnProperty($property)) {
+                    if (typeof $obj[$property] === "object") {
+                        if($property === $index) {
+                            delete $obj[$property];
+                            return;
+                        }
+                        this._deleteInObject($obj[$property], $index);
                     }
                 }
             }
