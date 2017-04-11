@@ -101,11 +101,6 @@ th.active .arrow {
     border-top: 4px solid #ffffff;
 }
 
-#app-request .panel-body {
-    max-height: 600px;
-    overflow: auto;
-}
-
 .checkbox-table {
     color: #ac2925;
 }
@@ -114,6 +109,47 @@ th.active .arrow {
     margin-left: 10%;
     color: #555555;
 }
+
+#app-request .panel-body {
+    max-height: 600px;
+    overflow: auto;
+}
+
+/* SPINNER LOADING */
+.circle {
+    animation: spin 3s linear infinite both;
+    background: #bada55;
+    border-radius: 100vmax;
+    /* margin:calc(50vh - 5vmin) calc(50vw - 1vmin); */
+    /* Half the longest viewport width minus half the width/height of the circle. */
+    margin: 20vh calc(50vw - 1vmin);
+    height: 6vmin;
+    position: absolute;
+    width: 6vmin;
+}
+
+.circle + .circle {
+    animation: spin 3s linear 1s infinite both;
+    background: #10aded;
+}
+
+.circle + .circle + .circle {
+    animation: spin 3s linear 2s infinite both;
+    background: #a991e5;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(360deg) translate(0vmax, -7vmax);
+    }
+    50% {
+        transform: rotate(180deg) translate(0vmax, 0vmax);
+    }
+    100% {
+        transform: rotate(0deg) translate(0vmax, -7vmax);
+    }
+}
+
 
 /* ++++++++++++++++++++++++++++++ */
 /* ++++++++++ VUEJS +++++++++++++ */

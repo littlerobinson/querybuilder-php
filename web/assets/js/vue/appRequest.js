@@ -20,7 +20,8 @@ let request = new Vue({
         data: [],
         columns: [],
         searchQuery: '',
-        sqlRequest: ''
+        sqlRequest: '',
+        loading: false
     },
     mounted () {
         console.log('mounted method in select app');
@@ -52,6 +53,7 @@ let request = new Vue({
     },
     methods: {
         search: function () {
+            this.loading = true;
             /// create json query with from attribute
             let $query = {};
             $query.from = this.from;
@@ -66,10 +68,12 @@ let request = new Vue({
             let jsonQuery = JSON.stringify($query);
             this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
                 response => {
+                    this.loading = false;
                     this.data = response.body.items;
                     this.columns = response.body.columns;
                     this.sqlRequest = response.body.request;
                 }, response => {
+                    this.loading = false;
                     console.log('response callback', response)
                 }
             );

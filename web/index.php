@@ -51,7 +51,8 @@ require_once "query.php";
             </select>
             <select v-model="newRuleTable" @change="addRuleRows" class="col-md-3">
                 <option value="">-- Sélectionner une table --</option>
-                <option v-for="(objTable, field) in selectTables" :value="{ parentTable: objTable.parentName, table: objTable.table, field: objTable.name }">
+                <option v-for="(objTable, field) in selectTables"
+                        :value="{ parentTable: objTable.parentName, table: objTable.table, field: objTable.name }">
                     <span v-if="dbObj[objTable.table]._table_translation">{{ dbObj[objTable.table]._table_translation }} ( {{ field }} )</span>
                     <span v-else>{{ objTable.parentName}} {{ objTable.table }} ( {{ field }} )</span>
                 </option>
@@ -126,88 +127,95 @@ require_once "query.php";
     <hr>
     <div class="row">
         <div id="app-request">
-            <div id="select" class="col-xs-3">
-                <transition name="fade" appear hidden>
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><strong>{{ 'Sélection' | capitalize }}</strong></div>
-                        <div class="panel-body">
-                            <select-item
-                                    class="item"
-                                    :db-obj="dbObj"
-                                    :from="from"
-                                    :select-tables="selectTables"
-                                    :depth="depth"
-                                    :model="items"
-                                    :items="items">
-                            </select-item>
-                        </div>
-                        <div class="panel-footer alert-danger">
-                            <strong>Liste des tables séléctionnées : </strong><br>
-
-                        </div>
-                    </div>
-                </transition>
+            <div v-show="loading" class="spinner-loading">
+                <div class="circle"></div>
+                <div class="circle"></div>
+                <div class="circle"></div>
             </div>
-            <div id="condition" class="col-xs-9">
-                <transition name="fade" appear hidden>
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
-                        <div class="panel-body">
-                            <condition-item
-                                    :select-tables="selectTables"
-                                    :items="items"
-                                    :conditions="conditions"
-                                    :db-obj="dbObj"
-                            >
-                            </condition-item>
-                            <button type="button" class="btn btn-success pull-right" aria-expanded="false"
-                                    @click="search">Recherche
-                            </button>
+            <div v-show="!loading">
+                <div id="select" class="col-xs-3">
+                    <transition name="fade" appear hidden>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>{{ 'Sélection' | capitalize }}</strong></div>
+                            <div class="panel-body">
+                                <select-item
+                                        class="item"
+                                        :db-obj="dbObj"
+                                        :from="from"
+                                        :select-tables="selectTables"
+                                        :depth="depth"
+                                        :model="items"
+                                        :items="items">
+                                </select-item>
+                            </div>
+                            <div class="panel-footer alert-danger">
+                                <strong>Liste des tables séléctionnées : </strong><br>
+
+                            </div>
                         </div>
-                    </div>
-                </transition>
-            </div>
+                    </transition>
+                </div>
+                <div id="condition" class="col-xs-9">
+                    <transition name="fade" appear hidden>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
+                            <div class="panel-body">
+                                <condition-item
+                                        :select-tables="selectTables"
+                                        :items="items"
+                                        :conditions="conditions"
+                                        :db-obj="dbObj"
+                                >
+                                </condition-item>
+                                <button type="button" class="btn btn-success pull-right" aria-expanded="false"
+                                        @click="search">Recherche
+                                </button>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
 
-            <!-- result -->
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><strong>Résultat</strong></div>
-                        <div class="panel-body">
-                            <table class="table">
-                                <thead></thead>
-                                <tbody id="tbody-response">
-                                </tbody>
-                            </table>
+                <!-- result -->
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>Résultat</strong></div>
+                            <div class="panel-body">
+                                <table class="table">
+                                    <thead></thead>
+                                    <tbody id="tbody-response">
+                                    </tbody>
+                                </table>
 
-                            <!-- research root element -->
-                            <div id="app-result-research">
-                                <form id="search">
-                                    Recherche <input name="query" v-model="searchQuery">
-                                </form>
-                                <hr>
-                                <spreadsheet
-                                        :data="data"
-                                        :columns="columns"
-                                        :filter-key="searchQuery">
-                                </spreadsheet>
+                                <!-- research root element -->
+                                <div id="app-result-research">
+                                    <form id="search">
+                                        Recherche <input name="query" v-model="searchQuery">
+                                    </form>
+                                    <hr>
+                                    <spreadsheet
+                                            :data="data"
+                                            :columns="columns"
+                                            :filter-key="searchQuery">
+                                    </spreadsheet>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><strong>Requête SQL</strong></div>
-                        <div class="panel-body">
-                            <span>{{ sqlRequest }}</span>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>Requête SQL</strong></div>
+                            <div class="panel-body">
+                                <span>{{ sqlRequest }}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
 
