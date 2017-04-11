@@ -44,35 +44,48 @@ require_once "query.php";
 
 <!-- component for condition template -->
 <script type="text/x-template" id="condition-item">
-    <div>
-        <div class="row container">
-            <select v-model="newLogicalOperator" class="col-md-1">
-                <option v-for="(operator, key) in logicalOperators" :value="operator.value">
-                    {{ operator.name }}
-                </option>
-            </select>
-            <select v-model="newRuleTable" @change="addRuleRows" class="col-md-3">
-                <option value="">-- Sélectionner une table --</option>
-                <option v-for="(objTable, field) in selectTables"
-                        :value="{ parentTable: objTable.parentName, table: objTable.table, field: objTable.name }">
-                    <span v-if="dbObj[objTable.table]._table_translation">{{ dbObj[objTable.table]._table_translation }} ( {{ field }} )</span>
-                    <span v-else>{{ objTable.parentName}} {{ objTable.table }} ( {{ field }} )</span>
-                </option>
-            </select>
-            <select v-model="newRuleRow" class="col-md-3">
-                <option value="">-- Sélectionner un champs --</option>
-                <option v-if="newRuleTable != ''" v-for="(row, index) in rows" :value="index">
-                    {{ row }}
-                </option>
-            </select>
-            <select v-model="newRuleOperator" class="col-md-2">
-                <option value="">-- Sélectionner une condition --</option>
-                <option v-for="(operator, key) in ruleOperators" :value="operator.value">
-                    {{ operator.name }}
-                </option>
-            </select>
-            <input type="text" v-model="newValue" class="col-md-2" placeholder="Condition">
-            <input type="button" value="Ajouter" class="col-md-1" @click="addCondition">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <select v-model="newLogicalOperator" class="form-control">
+                    <option value="">-- Opérateur --</option>
+                    <option v-for="(operator, key) in logicalOperators" :value="operator.value">
+                        {{ operator.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select v-model="newRuleTable" @change="addRuleRows" class="form-control">
+                    <option value="">-- Sélectionner une table --</option>
+                    <option v-for="(objTable, field) in selectTables"
+                            :value="{ parentTable: objTable.parentName, table: objTable.table, field: objTable.name }">
+                        <span v-if="dbObj[objTable.table]._table_translation">{{ dbObj[objTable.table]._table_translation }} ( {{ field }} )</span>
+                        <span v-else>{{ objTable.parentName}} {{ objTable.table }} ( {{ field }} )</span>
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select v-model="newRuleRow" class="form-control">
+                    <option value="">-- Sélectionner un champs --</option>
+                    <option v-if="newRuleTable != ''" v-for="(row, index) in rows" :value="index">
+                        {{ row }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select v-model="newRuleOperator" class="form-control">
+                    <option value="">-- Sélectionner une condition --</option>
+                    <option v-for="(operator, key) in ruleOperators" :value="operator.value">
+                        {{ operator.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="text" v-model="newValue" class="form-control" placeholder="Condition">
+            </div>
+            <div class="form-group col-md-1">
+                <input type="button" value="Ajouter" class="form-control" @click="addCondition">
+            </div>
         </div>
         <hr>
         <table class="table table-responsive" v-if="conditions.length > 0">

@@ -110,6 +110,10 @@ th.active .arrow {
     color: #555555;
 }
 
+.form-control {
+    font-size: inherit;
+}
+
 #app-request .panel-body {
     max-height: 600px;
     overflow: auto;

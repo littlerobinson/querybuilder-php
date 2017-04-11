@@ -30,7 +30,7 @@ Vue.component('conditionItem', {
         return {
             rows: {},
             newLogicalOperator: '',
-            newRuleTable: {},
+            newRuleTable: '',
             newRuleRow: '',
             newRuleOperator: '',
             newValue: '',
