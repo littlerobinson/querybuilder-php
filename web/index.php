@@ -143,14 +143,9 @@ require_once "query.php";
 
             <div v-show="loading" id="spinner-loading">
                 <div class="cssload-container">
-                    <div class="cssload-sphere cssload-s-gold"></div>
-                    <div class="cssload-sphere cssload-s-5"></div>
-                    <div class="cssload-sphere cssload-s-4"></div>
-                    <div class="cssload-sphere cssload-s-3"></div>
-                    <div class="cssload-sphere cssload-s-2"></div>
-                    <div class="cssload-sphere cssload-s-1"></div>
+                    <div class="cssload-loading"><i></i><i></i></div>
                 </div>
-                <div id="spinner-text" class="cssload-loader">Chargement...</div>
+                <div id="spinner-text" class="cssload-text-loader">Chargement...</div>
             </div>
 
             <div v-show="!loading">

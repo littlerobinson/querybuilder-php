@@ -7,7 +7,7 @@
 }
 
 
-.cssload-loader {
+.cssload-text-loader {
     width: 244px;
     height: 49px;
     line-height: 49px;
@@ -26,29 +26,29 @@
     color: rgb(206,66,51);
     letter-spacing: 0.2em;
 }
-.cssload-loader::before, .cssload-loader::after {
+.cssload-text-loader::before, .cssload-text-loader::after {
     content: "";
     display: block;
     width: 15px;
     height: 15px;
     background: rgb(206,66,51);
     position: absolute;
-    animation: cssload-load 0.81s infinite alternate ease-in-out;
-    -o-animation: cssload-load 0.81s infinite alternate ease-in-out;
-    -ms-animation: cssload-load 0.81s infinite alternate ease-in-out;
-    -webkit-animation: cssload-load 0.81s infinite alternate ease-in-out;
-    -moz-animation: cssload-load 0.81s infinite alternate ease-in-out;
+    animation: cssload-text-load 0.81s infinite alternate ease-in-out;
+    -o-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
+    -ms-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
+    -webkit-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
+    -moz-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
 }
-.cssload-loader::before {
+.cssload-text-loader::before {
     top: 0;
 }
-.cssload-loader::after {
+.cssload-text-loader::after {
     bottom: 0;
 }
 
 
 
-@keyframes cssload-load {
+@keyframes cssload-text-load {
     0% {
         left: 0;
         height: 29px;
@@ -65,7 +65,7 @@
     }
 }
 
-@-o-keyframes cssload-load {
+@-o-keyframes cssload-text-load {
     0% {
         left: 0;
         height: 29px;
@@ -82,7 +82,7 @@
     }
 }
 
-@-ms-keyframes cssload-load {
+@-ms-keyframes cssload-text-load {
     0% {
         left: 0;
         height: 29px;
@@ -99,7 +99,7 @@
     }
 }
 
-@-webkit-keyframes cssload-load {
+@-webkit-keyframes cssload-text-load {
     0% {
         left: 0;
         height: 29px;
@@ -116,7 +116,7 @@
     }
 }
 
-@-moz-keyframes cssload-load {
+@-moz-keyframes cssload-text-load {
     0% {
         left: 0;
         height: 29px;

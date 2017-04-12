@@ -19,20 +19,20 @@ Vue.component('selectItem', {
         }
     },
     methods: {
-        changeStatus: function () {
+        changeStatus: function (event) {
             this.model.status = !this.model.status;
             /// Case adding table
             if (this.model.status && this.dbObj[this.model.table] && this.object) {
                 /// Create From variable with select data
                 this._addFrom();
-                this._addRow(this.model.table);
+                this._addRow(this.model.table, event);
             } else if (!this.model.status) {
                 if (this.object) { /// Case uncheck table
                     this._deleteInObject(this.from, this.model.name);
                     delete this.selectTables[this.model.name];
                 }
                 delete this.model.rows;
-                this._updateDisplaySelect();
+                this._updateDisplaySelect(event);
             }
             this.selected = !this.selected;
             /// Add delete in from row
@@ -42,7 +42,7 @@ Vue.component('selectItem', {
 
             }
         },
-        _addRow: function ($tableName) {
+        _addRow: function ($tableName, event) {
             let $fields = this.dbObj[$tableName];
 
             for (let $field in $fields) {
@@ -74,9 +74,9 @@ Vue.component('selectItem', {
                     'parentName': $parentName
                 });
             }
-            this._updateDisplaySelect();
+            this._updateDisplaySelect(event);
         },
-        _updateDisplaySelect: function () {
+        _updateDisplaySelect: function (event) {
             if (this.model.firstParent === false) {
                 return
             }
