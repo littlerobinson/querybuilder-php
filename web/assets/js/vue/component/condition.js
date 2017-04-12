@@ -63,9 +63,15 @@ Vue.component('conditionItem', {
             let $newRuleTable = this.newRuleTable;
 
             for (let $tableName in this.dbObj[$newRuleTable.table]) {
-                if ('_' === $tableName.substring(0, 1) || !this.dbObj[$newRuleTable.table][$tableName]._field_visibility) {
+                /// If is not a row or not visible or FK continue
+                if (
+                    '_' === $tableName.substring(0, 1)
+                    || !this.dbObj[$newRuleTable.table][$tableName]._field_visibility
+                    || this.dbObj[$newRuleTable.table]['_FK'][$tableName]
+                ) {
                     continue;
                 }
+
                 $translation = this.dbObj[$newRuleTable.table][$tableName]._field_translation !== null
                     ? this.dbObj[$newRuleTable.table][$tableName]._field_translation
                     : this.dbObj[$newRuleTable.table][$tableName].name;
