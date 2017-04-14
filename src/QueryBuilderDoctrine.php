@@ -26,6 +26,8 @@ class QueryBuilderDoctrine
 
     private $fkFrom;
 
+    private $fromAliasList;
+
     private $fields;
 
     private $queryResult;
@@ -36,10 +38,12 @@ class QueryBuilderDoctrine
      */
     public function __construct(DoctrineDatabase $doctrineDb)
     {
-        $this->doctrineDb   = $doctrineDb;
-        $this->queryBuilder = $this->doctrineDb->getEntityManager()->createQueryBuilder();
-        $dbConfig           = $this->doctrineDb->getDatabaseYamlConfig(true);
-        $this->objDbConfig  = json_decode($dbConfig);
+        $this->doctrineDb    = $doctrineDb;
+        $this->queryBuilder  = $this->doctrineDb->getEntityManager()->createQueryBuilder();
+        $dbConfig            = $this->doctrineDb->getDatabaseYamlConfig(true);
+        $this->objDbConfig   = json_decode($dbConfig);
+        $this->fromAliasList = [];
+
     }
 
     /**
@@ -106,6 +110,10 @@ class QueryBuilderDoctrine
                 if ($this->objDbConfig->{$fromTable}->{$field}->{'_field_visibility'} === false) {
                     continue;
                 }
+
+                /// Push in From Alias
+                $fieldTranslation = $this->objDbConfig->{$fromTable}->{$field}->{'_field_translation'} ?? $this->objDbConfig->{$fromTable}->{$field}->{'name'};
+                $this->fromAliasList[$fromAlias . '_' . $field] = $fieldTranslation;
 
                 /// Feed $fields
                 $this->fields[$fromTable][] = $field;
@@ -244,18 +252,25 @@ class QueryBuilderDoctrine
     {
         $result = $this->executeQuery($jsonQuery);
         if (count($result) > 0) {
-            $columns = [];
+            $columns      = [];
+            $i            = 0;
             foreach ($result[0] as $key => $value) {
-                $columns[] = $key;
+                $columns[$i]['key'] = $key;
+                $columns[$i]['label'] = $this->fromAliasList[$key];
+                $i++;
             }
             $response['total']   = sizeof($result);
             $response['items']   = $result;
             $response['columns'] = $columns;
+            $response['pages']   = 1;
+            $response['page']    = 1;
             $response['request'] = $this->getSQLRequest();
         } else {
             $response['total']   = 0;
             $response['items']   = [];
             $response['columns'] = [];
+            $response['pages']   = 1;
+            $response['page']    = 1;
             $response['request'] = '';
         }
         return json_encode($response);

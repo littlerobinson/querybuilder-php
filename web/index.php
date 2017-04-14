@@ -119,18 +119,18 @@ require_once "query.php";
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th v-for="key in columns"
-                @click="sortBy(key)"
-                :class="{ active: sortKey == key }">
-                {{ key | capitalize }}
-                <span class="arrow" :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
+            <th v-for="column in columns"
+                @click="sortBy(column.key)"
+                :class="{ active: sortKey == column.key }">
+                {{ column.label | capitalize }}
+                <span class="arrow" :class="sortOrders[column.key] > 0 ? 'asc' : 'dsc'"></span>
             </th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="entry in filteredData">
-            <td v-for="key in columns">
-                {{ entry[key] }}
+            <td v-for="column in columns">
+                {{ entry[column.key] }}
             </td>
         </tr>
         </tbody>

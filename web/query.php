@@ -10,14 +10,6 @@ $sqlRequest = '';
 
 $db->writeDatabaseYamlConfig();
 
-/*
-$jsonResponse       = $qb->executeQueryJson($jsonQuery);
-$sqlRequest         = $qb->getSQLRequest();
-$data               = json_decode($jsonResponse);
-$databaseConfig     = $db->getDatabaseYamlConfig();
-$databaseConfigJson = $db->getDatabaseYamlConfig(true);
-$jsonQueryColumns   = $qb->getJsonSelectQueryList(true);
-*/
 function executeQueryJson(string $jsonQuery)
 {
     $db = new DoctrineDatabase();
