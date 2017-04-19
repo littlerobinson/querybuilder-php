@@ -34,7 +34,6 @@ require_once "query.php";
                     :db-obj="dbObj"
                     :from="from"
                     :select-tables="selectTables"
-                    :depth="depth"
                     :model="row"
                     :items="items">
             </select-item>
@@ -85,6 +84,17 @@ require_once "query.php";
             </div>
             <div class="form-group col-md-1">
                 <input type="button" value="Ajouter" class="form-control" @click="addCondition">
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="selectedLimit">Limite</label>
+                <select v-model="selectedLimit" class="form-control" id="selectedLimit">
+                    <option v-for="limit in limits" :value="limit.value">
+                        {{ limit.name }}
+                    </option>
+                </select>
             </div>
         </div>
         <hr>
@@ -161,7 +171,6 @@ require_once "query.php";
                                         :db-obj="dbObj"
                                         :from="from"
                                         :select-tables="selectTables"
-                                        :depth="depth"
                                         :model="items"
                                         :items="items">
                                 </select-item>
@@ -186,7 +195,10 @@ require_once "query.php";
                                 >
                                 </condition-item>
                                 <button type="button" class="btn btn-success pull-right" aria-expanded="false"
-                                        @click="search">Recherche
+                                        @click="search"
+                                        v-if="searchable"
+                                >
+                                    Recherche
                                 </button>
                             </div>
                         </div>

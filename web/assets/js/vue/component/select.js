@@ -16,6 +16,11 @@ Vue.component('selectItem', {
     computed: {
         object: function () {
             return !(this.model && this.model.isFK === false);
+        },
+    },
+    watch: {
+        selected: function () {
+            request.searchable = (Object.keys(this.selectTables).length > 0);
         }
     },
     methods: {
@@ -35,11 +40,9 @@ Vue.component('selectItem', {
                 this._updateDisplaySelect(event);
             }
             this.selected = !this.selected;
-            /// Add delete in from row
+            /// Add in from row
             if (this.selected && !this.object) {
                 this._addFrom();
-            } else if (!this.selected && !this.object) {
-
             }
         },
         _addRow: function ($tableName, event) {
@@ -124,7 +127,7 @@ Vue.component('selectItem', {
             for (let $property in $obj) {
                 if ($obj.hasOwnProperty($property)) {
                     if (typeof $obj[$property] === "object") {
-                        if($property === $index) {
+                        if ($property === $index) {
                             delete $obj[$property];
                             return;
                         }

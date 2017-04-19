@@ -16,15 +16,16 @@ let request = new Vue({
         from: {},
         where: [],
         conditions: [],
-        depth: 0,
+        limit: 0,
+        offset: 0,
         data: [],
         columns: [],
         searchQuery: '',
         sqlRequest: '',
-        loading: false
+        loading: false,
+        searchable: false
     },
     mounted () {
-        console.log('mounted method in select app');
         let self = this;
         this._getDbObject(function () {
             let $items = {};
@@ -61,10 +62,8 @@ let request = new Vue({
             this.where = [];
             this.__addQueryConditions();
             $query.where = this.where;
-            /*
-             $query.limit = null;
-             $query.offset = null;
-             */
+            $query.limit = this.limit;
+            $query.offset = this.offset;
             let jsonQuery = JSON.stringify($query);
             this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
                 response => {

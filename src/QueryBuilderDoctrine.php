@@ -20,7 +20,7 @@ class QueryBuilderDoctrine
 
     private $orderBy;
 
-    private $limit;
+    private $limit = 10;
 
     private $offset;
 
@@ -112,7 +112,7 @@ class QueryBuilderDoctrine
                 }
 
                 /// Push in From Alias
-                $fieldTranslation = $this->objDbConfig->{$fromTable}->{$field}->{'_field_translation'} ?? $this->objDbConfig->{$fromTable}->{$field}->{'name'};
+                $fieldTranslation                               = $this->objDbConfig->{$fromTable}->{$field}->{'_field_translation'} ?? $this->objDbConfig->{$fromTable}->{$field}->{'name'};
                 $this->fromAliasList[$fromAlias . '_' . $field] = $fieldTranslation;
 
                 /// Feed $fields
@@ -228,18 +228,13 @@ class QueryBuilderDoctrine
         /// Adding query conditions
         $this->addQueryCondition();
 
-        /// TODO : Try get SQL for limitation
-        //var_dump($this->queryBuilder->getQuery()->getSQL());
-
-        /// TODO : Adding limit and offset
-        $limit  = $this->limit ?? '';
-        $offset = $this->offset ?? '';
-
         /// Execute query and fetch result
-        $result = $this->doctrineDb->getConnection()->executeQuery($this->queryBuilder->getDQL());
-
-        $this->queryResult = $result->fetchAll(\PDO::FETCH_ASSOC);
-
+        try {
+            $result            = $this->doctrineDb->getConnection()->executeQuery($this->getSQLRequest());
+            $this->queryResult = $result->fetchAll(\PDO::FETCH_ASSOC);
+        } catch (\Doctrine\DBAL\DBALException $e) {
+            echo $e->getMessage();
+        }
         return $this->queryResult;
     }
 
@@ -252,10 +247,10 @@ class QueryBuilderDoctrine
     {
         $result = $this->executeQuery($jsonQuery);
         if (count($result) > 0) {
-            $columns      = [];
-            $i            = 0;
+            $columns = [];
+            $i       = 0;
             foreach ($result[0] as $key => $value) {
-                $columns[$i]['key'] = $key;
+                $columns[$i]['key']   = $key;
                 $columns[$i]['label'] = $this->fromAliasList[$key];
                 $i++;
             }
@@ -311,12 +306,15 @@ class QueryBuilderDoctrine
     }
 
     /**
-     * Return the SQL request
+     * Adding extra DQL and return the SQL request
      * @return string
      */
     public function getSQLRequest(): string
     {
-        return $this->queryBuilder->getDQL();
+        $sqlRequest = $this->queryBuilder->getDQL();
+        $sqlRequest = null !== $this->limit && 0 !== $this->limit ? $sqlRequest . ' LIMIT ' . $this->limit : $sqlRequest;
+        $sqlRequest = null !== $this->offset && 0 !== $this->limit ? $sqlRequest . ' OFFSET ' . $this->offset : $sqlRequest;
+        return $sqlRequest;
     }
 
     /**

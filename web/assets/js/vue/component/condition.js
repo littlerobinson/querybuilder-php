@@ -42,7 +42,23 @@ Vue.component('conditionItem', {
             logicalOperators: [
                 {value: 'AND', name: 'ET'},
                 {value: 'OR', name: 'OU'}
+            ],
+            selectedLimit: 50,
+            limits: [
+                {value: 1, name: 1},
+                {value: 10, name: 10},
+                {value: 25, name: 25},
+                {value: 50, name: 50},
+                {value: 100, name: 100},
+                {value: 250, name: 250},
+                {value: 500, name: 500},
+                {value: -1, name: 'Aucune'},
             ]
+        }
+    },
+    watch: {
+        selectedLimit: function () {
+            request.limit = this.selectedLimit;
         }
     },
     methods: {
