@@ -119,12 +119,35 @@ th.active .arrow {
     overflow: auto;
 }
 
+#search {
+    text-align: right;
+    font-size: larger;
+    font-weight: bold;
+}
+
+#search input {
+    margin: 0 10px;
+    padding: 4px;
+    font-weight: normal;
+    border: solid 2px #c9c9c9;
+    transition: border 0.3s;
+    color: #3c3c3c;
+}
+
+#search input:focus,
+#search input.focus {
+    background-color: #e5e5e5;
+    border: solid 2px #969696;
+    outline: none;
+}
+
 /* ++++++++++++++++++++++++++++++ */
 /* ++++++++++ VUEJS +++++++++++++ */
 /* ++++++++++++++++++++++++++++++ */
 .fade-enter-active, .fade-leave-active {
-     transition: opacity 1s, transform 1s;
- }
+    transition: opacity 1s, transform 1s;
+}
+
 .fade-enter, .fade-leave-active {
     opacity: 0;
     transform: translateX(20px);
@@ -133,6 +156,7 @@ th.active .arrow {
 .fade-row-enter-active, .fade-row-leave-active {
     transition: opacity 1s, transform 1s;
 }
+
 .fade-row-enter, .fade-row-leave-active {
     opacity: 0;
     transform: translateX(20px);

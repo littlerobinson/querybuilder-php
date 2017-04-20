@@ -2,6 +2,8 @@
 
 namespace Littlerobinson\QueryBuilder;
 
+use Littlerobinson\QueryBuilder\Utils\Spreadsheet;
+
 /**
  * Class QueryBuilderDoctrine
  * @package Littlerobinson\QueryBuilder
@@ -323,5 +325,17 @@ class QueryBuilderDoctrine
     private function resetSQLRequest()
     {
         $this->queryBuilder->resetDQLParts();
+    }
+
+    /**
+     * Extract in XLS spreadsheet
+     *
+     * @param array $columns
+     * @param array $data
+     */
+    public function spreadsheet(array $columns, array $data)
+    {
+        $spreadsheet = new Spreadsheet($columns, $data);
+        $spreadsheet->generate('Excel5', 'test alex');
     }
 }

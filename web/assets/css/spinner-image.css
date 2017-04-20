@@ -8,12 +8,12 @@
 
 .cssload-container{
     display: block;
-    width:97px;
+    width:50px;
 }
 
 .cssload-loading i{
-    width: 49px;
-    height: 49px;
+    width: 24px;
+    height: 24px;
     display: inline-block;
     background: rgb(255,89,84);
     border-radius: 50%;

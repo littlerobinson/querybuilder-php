@@ -83,7 +83,12 @@ require_once "query.php";
                 <input type="text" v-model="newValue" class="form-control" placeholder="Condition">
             </div>
             <div class="form-group col-md-1">
-                <input type="button" value="Ajouter" class="form-control" @click="addCondition">
+                <div v-if="adding">
+                    <input type="button" value="Ajouter" class="form-control" @click="addCondition">
+                </div>
+                <div v-else>
+                    <input type="button" value="Ajouter" disabled="disabled" class="form-control">
+                </div>
             </div>
         </div>
         <hr>
@@ -147,7 +152,7 @@ require_once "query.php";
     </table>
 </script>
 
-<div class="container well">
+<div class="container">
     <div class="row">
         <div id="app-request">
 
@@ -177,7 +182,6 @@ require_once "query.php";
                             </div>
                             <div class="panel-footer alert-danger">
                                 <strong>Liste des tables séléctionnées : </strong><br>
-
                             </div>
                         </div>
                     </transition>
@@ -196,10 +200,16 @@ require_once "query.php";
                                 </condition-item>
                                 <button type="button" class="btn btn-success pull-right" aria-expanded="false"
                                         @click="search"
-                                        v-if="searchable"
+                                        :disabled="!searchable"
                                 >
                                     Recherche
                                 </button>
+                                <form method="post" action="query.php">
+                                    <input type="hidden" name="action" value="spreadsheet">
+                                    <input type="hidden" name="columns" v-model="JSON.stringify(columns)">
+                                    <input type="hidden" name="data" v-model="JSON.stringify(data)">
+                                    <input type="submit" value="Extraire" class="btn btn-info pull-right" :disabled="(data.length > 0) ? false : true" >
+                                </form>
                             </div>
                         </div>
                     </transition>
@@ -220,7 +230,7 @@ require_once "query.php";
                                 <!-- research root element -->
                                 <div id="app-result-research">
                                     <form id="search">
-                                        Recherche <input name="query" v-model="searchQuery">
+                                        Recherche <input type="text" name="query" v-model="searchQuery">
                                     </form>
                                     <hr>
                                     <spreadsheet

@@ -22,8 +22,8 @@ let request = new Vue({
         columns: [],
         searchQuery: '',
         sqlRequest: '',
+        searchable: false,
         loading: false,
-        searchable: false
     },
     mounted () {
         let self = this;
@@ -73,6 +73,16 @@ let request = new Vue({
                     this.sqlRequest = response.body.request;
                 }, response => {
                     this.loading = false;
+                    console.log('response callback', response)
+                }
+            );
+        },
+        spreadsheet: function () {
+            this.$http.post('/query.php', {action: 'spreadsheet', columns: this.columns, data: this.data}).then(
+                response => {
+                    console.log(response);
+                    window.open("data:application/vnd.ms-excel, " + response.body);
+                }, response => {
                     console.log('response callback', response)
                 }
             );

@@ -2,8 +2,8 @@
 
 #spinner-text {
     position:absolute;
-    top: 210px;
-    font-size: 18px;
+    top: 80px;
+    font-size: 14px;
 }
 
 
@@ -19,116 +19,10 @@
     -ms-transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
-    font-family: helvetica, arial, sans-serif;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
     text-transform: uppercase;
     font-weight: 900;
     font-size:18px;
     color: rgb(206,66,51);
     letter-spacing: 0.2em;
-}
-.cssload-text-loader::before, .cssload-text-loader::after {
-    content: "";
-    display: block;
-    width: 15px;
-    height: 15px;
-    background: rgb(206,66,51);
-    position: absolute;
-    animation: cssload-text-load 0.81s infinite alternate ease-in-out;
-    -o-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
-    -ms-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
-    -webkit-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
-    -moz-animation: cssload-text-load 0.81s infinite alternate ease-in-out;
-}
-.cssload-text-loader::before {
-    top: 0;
-}
-.cssload-text-loader::after {
-    bottom: 0;
-}
-
-
-
-@keyframes cssload-text-load {
-    0% {
-        left: 0;
-        height: 29px;
-        width: 15px;
-    }
-    50% {
-        height: 8px;
-        width: 39px;
-    }
-    100% {
-        left: 229px;
-        height: 29px;
-        width: 15px;
-    }
-}
-
-@-o-keyframes cssload-text-load {
-    0% {
-        left: 0;
-        height: 29px;
-        width: 15px;
-    }
-    50% {
-        height: 8px;
-        width: 39px;
-    }
-    100% {
-        left: 229px;
-        height: 29px;
-        width: 15px;
-    }
-}
-
-@-ms-keyframes cssload-text-load {
-    0% {
-        left: 0;
-        height: 29px;
-        width: 15px;
-    }
-    50% {
-        height: 8px;
-        width: 39px;
-    }
-    100% {
-        left: 229px;
-        height: 29px;
-        width: 15px;
-    }
-}
-
-@-webkit-keyframes cssload-text-load {
-    0% {
-        left: 0;
-        height: 29px;
-        width: 15px;
-    }
-    50% {
-        height: 8px;
-        width: 39px;
-    }
-    100% {
-        left: 229px;
-        height: 29px;
-        width: 15px;
-    }
-}
-
-@-moz-keyframes cssload-text-load {
-    0% {
-        left: 0;
-        height: 29px;
-        width: 15px;
-    }
-    50% {
-        height: 8px;
-        width: 39px;
-    }
-    100% {
-        left: 229px;
-        height: 29px;
-        width: 15px;
-    }
 }

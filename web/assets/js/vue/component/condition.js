@@ -43,7 +43,7 @@ Vue.component('conditionItem', {
                 {value: 'AND', name: 'ET'},
                 {value: 'OR', name: 'OU'}
             ],
-            selectedLimit: 50,
+            selectedLimit: -1,
             limits: [
                 {value: 1, name: 1},
                 {value: 10, name: 10},
@@ -52,9 +52,18 @@ Vue.component('conditionItem', {
                 {value: 100, name: 100},
                 {value: 250, name: 250},
                 {value: 500, name: 500},
-                {value: -1, name: 'Aucune'},
+                {value: -1, name: '-- Aucune --'},
             ]
         }
+    },
+    computed: {
+        adding: function () {
+            return (this.newLogicalOperator !== ''
+            && this.newRuleTable !== ''
+            && this.newRuleRow !== ''
+            && this.newRuleOperator !== ''
+            && this.newValue !== '');
+        },
     },
     watch: {
         selectedLimit: function () {

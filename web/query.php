@@ -23,9 +23,14 @@ function getDbObject()
     echo $db->getDatabaseYamlConfig(true);
 }
 
+function getSpreadsheet(array $columns, array $data)
+{
+    $db = new DoctrineDatabase();
+    $qb = new QueryBuilderDoctrine($db);
+    $qb->spreadsheet($columns, $data);
+}
+
 if (isset($_POST['action'])) {
-    $db     = new DoctrineDatabase();
-    $qb     = new QueryBuilderDoctrine($db);
     $action = $_POST['action'];
     switch ($action) {
         case 'get_db_object':
@@ -35,7 +40,14 @@ if (isset($_POST['action'])) {
             $jsonQuery = isset($_POST['json_query']) ? $_POST['json_query'] : '';
             executeQueryJson($jsonQuery);
             break;
+        case 'spreadsheet':
+            $columns = isset($_POST['columns']) ? json_decode($_POST['columns']) : [];
+            $data    = isset($_POST['data']) ? json_decode($_POST['data']) : [];
+            getSpreadsheet($columns, $data);
+            break;
         default:
             die('Access denied for this function.');
     }
 }
+
+
