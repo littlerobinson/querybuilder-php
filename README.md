@@ -1,22 +1,32 @@
 # Query Builder SDK
+Generates queries dynamically on a database.
+The tool allows to set up the configuration of a database in a YML file.
 
-Permet de générer des requête dynamiquement sur une base de données.
-L'outil permet de mettre la configuration d'une base de données dans un fichier YML.
+A developer can modify certain values ​​in the configuration file to, for example, translate fields from a table.
 
-Un développeur peut modifier certaines valeurs de ce fichier de configuration pour par exemple mettre des traductions des champs d'une table.
+The applicant Builder takes as input a json file with the fields to request as well as the conditions.
+From this file it will construct the query, execute it and return the result.
 
-Le query builder prend en entrée un fichier json avac les champs sur lequel requeter ainsi que les conditions.
-De ce fichier il va contruire la requête, l'exécuter puis retourner le résultat.
+## Example
 
-## Exemples
+### Configuration file
 
-### Fichier de configuration
+When executing the `writeDatabaseYamlConfig` method it will generate a configuration YAML file with a retro engineering of your database.
+You can change :
+- table name (_table_translation)
+- table visibility (__table_visibility)
+- field name (__field_translation)
+- field visibility (__field_visibility)
+
 ```yaml
 post:
-    _table_traduction: Article
+    _table_translation: Article
+    _table_visibility: true
+    _primary_key: id
     id:
         name: id
-        _field_traduction: 'Identifiant'
+        _field_translation: 'Identifiant'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -24,7 +34,8 @@ post:
         definition: null
     category_id:
         name: category_id
-        _field_traduction: 'Catégorie'
+        _field_translation: 'Catégorie'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -32,7 +43,8 @@ post:
         definition: null
     user_id:
         name: user_id
-        _field_traduction: 'Utilisateur'
+        _field_translation: 'Utilisateur'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -40,7 +52,8 @@ post:
         definition: null
     title:
         name: title
-        _field_traduction: 'Titre'
+        _field_translation: 'Titre'
+        _field_visibility: true
         type: string
         default: null
         length: 50
@@ -61,10 +74,13 @@ post:
             options: { onDelete: null, onUpdate: null }
             
 category:
-    _table_traduction: Catégorie
+    _table_translation: Catégorie
+    _table_visibility: true
+    _primary_key: id
     id:
         name: id
-        _field_traduction: 'Identifiant'
+        _field_translation: 'Identifiant'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -72,7 +88,8 @@ category:
         definition: null
     title:
         name: name
-        _field_traduction: 'Nom'
+        _field_translation: 'Nom'
+        _field_visibility: true
         type: string
         default: null
         length: 100
@@ -80,10 +97,13 @@ category:
         definition: null
         
 user:
-    _table_traduction: Utilisateur
+    _table_translation: Utilisateur
+    _table_visibility: true
+    _primary_key: id
     id:
         name: id
-        _field_traduction: 'Identifiant'
+        _field_translation: 'Identifiant'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -91,7 +111,8 @@ user:
         definition: null
     group_id:
         name: group_id
-        _field_traduction: 'Groupe'
+        _field_translation: 'Groupe'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -99,7 +120,8 @@ user:
         definition: null
     firstname:
         name: firstname
-        _field_traduction: 'Prénom'
+        _field_translation: 'Prénom'
+        _field_visibility: true
         type: string
         default: null
         length: 100
@@ -107,7 +129,8 @@ user:
         definition: null
     lastname:
         name: lastname
-        _field_traduction: 'Nom'
+        _field_translation: 'Nom'
+        _field_visibility: true
         type: string
         default: null
         length: 100
@@ -122,10 +145,13 @@ user:
             options: { onDelete: null, onUpdate: null }
     
 group:
-    _table_traduction: Groupe
+    _table_translation: Groupe
+    _table_visibility: true
+    _primary_key: id
     id:
         name: id
-        _field_traduction: 'Identifiant'
+        _field_translation: 'Identifiant'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -133,7 +159,8 @@ group:
         definition: null
     name:
         name: name
-        _field_traduction: 'Nom du groupe'
+        _field_translation: 'Nom du groupe'
+        _field_visibility: true
         type: string
         default: null
         length: 50
@@ -141,10 +168,13 @@ group:
         definition: null
             
 comment:
-    _table_traduction: Commentaire
+    _table_translation: Commentaire
+    _table_visibility: true
+    _primary_key: id
     id:
         name: id
-        _field_traduction: 'Identifiant'
+        _field_translation: 'Identifiant'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -152,7 +182,8 @@ comment:
         definition: null
     post_id:
         name: post_id
-        _field_traduction: 'Article'
+        _field_translation: 'Article'
+        _field_visibility: true
         type: integer
         default: null
         length: null
@@ -160,7 +191,8 @@ comment:
         definition: null
     content:
         name: content
-        _field_traduction: 'Commentaire'
+        _field_translation: 'Commentaire'
+        _field_visibility: true
         type: string
         default: null
         length: 50
@@ -175,53 +207,44 @@ comment:
             options: { onDelete: null, onUpdate: null }
 ```
 
-### Requête
+### Request
+
+When you execute a request it will generate a json value representing the query.
+
 ```json
-{
-   "from":{
-      "post":{
-         "0":"title",
-         "1":{
-            "category_id":{
-               "0":"id",
-               "1":"name"
-            }
+{  
+   "from":{  
+      "post":{  
+         "title":"title",
+         "category_id":{  
+            "id":"id",
+            "name":"name"
          },
-         "2":{
-            "user_id":{
-               "0":"firstname",
-               "1":"lastname",
-               "3":{
-                  "group_id":{
-                     "0":"name"
-                  }
-               }
-            }
-         },
-         "3":"id"
+         "user_id":{  
+             "firstname":"firstname",
+             "lastname":"lastname",
+             "group_id":{
+                "name":"name"
+             }
+          },
+         "id":"id"
       }
    },
-   "where":{
-      "AND":{
-         "group.name":{
-            "EQUAL":[
-               "ADMIN"
-            ]
-         }
-      }
-   },
-   "orderBy":{
-      "asc":{
-         "user":[
-            "name",
-            "id"
-         ]
-      }
-   }
+   "where":[  
+     {  
+        "AND":{  
+           "group.name":{  
+              "EQUAL":[  
+                 "ADMIN"
+              ]
+           }
+        }
+     }
+  ]
 }
 ```
 
-### Sortie
+### Output
 
 ```mysql
 SELECT 
@@ -247,9 +270,7 @@ LEFT JOIN
 ON
     user.group_id = group.id
 WHERE
-    group.name = 'ADMIN'
-ORDER BY
-    user.name, user.id ASC;
+    group.name = 'ADMIN';
 ```
 
 ### Tests
@@ -261,16 +282,19 @@ phpunit --bootstrap vendor/autoload.php  tests/
 
 IHM is cutting in 3 zones :
 - appRequest : It's a parent zone for making the request.
- It's include 1 other zones :
-    - Condition : Zone to build request conditions
-- Grid : Zone for showing research result with grid table
+ It's include 2 - zones :
+    - SelectItem : zon of selecting table and rows
+    - ConditionItem : Zone to build request conditions
+    - SpreadSheet : Zone for showing research result with grid table
 
 Javascript Variables list in appRequest :
 - dbObj : object representation of the JSON database configuration
-- checkedTables : List of checked tables for building request 
-- checkedRows : List of checked rows for building request
-- foreignKeys : List of foreign keys for building SQL joins
 - foreignTables : List of foreign tables
 - items : Object representation of selectable table and rows with checked status and traduction name
+- from : Object representing from request (for json query)
+- where : Object representing where request (for json query)
+- conditions : Array of objects representing conditions request
+- columns : column result list with translation
+- data : result data 
 - jsonQuery : json query 
-- tableToDisplay : List of selectables tables 
+- sqlRequest : request query

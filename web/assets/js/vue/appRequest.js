@@ -65,6 +65,7 @@ let request = new Vue({
             $query.limit = this.limit;
             $query.offset = this.offset;
             let jsonQuery = JSON.stringify($query);
+            console.log(jsonQuery);
             this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
                 response => {
                     this.loading = false;
