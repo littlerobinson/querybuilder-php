@@ -22,7 +22,7 @@
   "require": {
     "php" : ">=7.0",
     "doctrine/orm": "*",
-    "symfony/yaml": "^3.2",
+    "symfony/yaml": "^2.8",
     "phpoffice/phpexcel": "^1.8"
   },
   "require-dev": {

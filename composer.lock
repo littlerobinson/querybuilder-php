@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "79b1f3d912344c94ab9d684b88dd0423",
+    "content-hash": "d2f4a299f6b31bc172760030f3d144b0",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -891,31 +891,25 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "v3.2.7",
+            "version": "v2.8.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621"
+                "reference": "286d84891690b0e2515874717e49360d1c98a703"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/62b4cdb99d52cb1ff253c465eb1532a80cebb621",
-                "reference": "62b4cdb99d52cb1ff253c465eb1532a80cebb621",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/286d84891690b0e2515874717e49360d1c98a703",
+                "reference": "286d84891690b0e2515874717e49360d1c98a703",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9"
-            },
-            "require-dev": {
-                "symfony/console": "~2.8|~3.0"
-            },
-            "suggest": {
-                "symfony/console": "For validating YAML files using the lint command"
+                "php": ">=5.3.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
@@ -942,7 +936,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-03-20T09:45:15+00:00"
+            "time": "2017-03-20T09:41:44+00:00"
         }
     ],
     "packages-dev": [
@@ -1855,16 +1849,16 @@
         },
         {
             "name": "sebastian/environment",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/environment.git",
-                "reference": "9d38d4afcf391dbcc949fb0ba7b1ae25fe9cef3e"
+                "reference": "11957a4c94283e61e33aa9e74adf6ab457be8fa0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/9d38d4afcf391dbcc949fb0ba7b1ae25fe9cef3e",
-                "reference": "9d38d4afcf391dbcc949fb0ba7b1ae25fe9cef3e",
+                "url": "https://api.github.com/repos/sebastianbergmann/environment/zipball/11957a4c94283e61e33aa9e74adf6ab457be8fa0",
+                "reference": "11957a4c94283e61e33aa9e74adf6ab457be8fa0",
                 "shasum": ""
             },
             "require": {
@@ -1901,7 +1895,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2017-04-21T07:54:19+00:00"
+            "time": "2017-04-21T13:41:28+00:00"
         },
         {
             "name": "sebastian/exporter",
