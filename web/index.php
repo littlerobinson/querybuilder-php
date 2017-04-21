@@ -122,7 +122,9 @@ require_once "query.php";
                 <td>{{ conditionValue.field }}</td>
                 <td>{{ conditionValue.ruleOperator }}</td>
                 <td>{{ conditionValue.value }}</td>
-                <td><i class="fa fa-minus-circle fa-lg text-danger" aria-hidden="true"></i></td>
+                <td>
+                    <a class="btn btn-danger delete-condition" href="#" @click="deleteCondition(conditionKey)"><i class="icon-trash icon-bar"></i> X</a>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -208,7 +210,8 @@ require_once "query.php";
                                     <input type="hidden" name="action" value="spreadsheet">
                                     <input type="hidden" name="columns" v-model="JSON.stringify(columns)">
                                     <input type="hidden" name="data" v-model="JSON.stringify(data)">
-                                    <input type="submit" value="Extraire" class="btn btn-info pull-right" :disabled="(data.length > 0) ? false : true" >
+                                    <input type="submit" value="Extraire" class="btn btn-info pull-right"
+                                           :disabled="(data.length > 0) ? false : true">
                                 </form>
                             </div>
                         </div>

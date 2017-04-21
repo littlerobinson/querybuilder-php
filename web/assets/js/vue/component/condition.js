@@ -83,6 +83,13 @@ Vue.component('conditionItem', {
             };
             this.conditions.push($newCondition);
         },
+        deleteCondition: function ($conditionKey) {
+            if (this.conditions.hasOwnProperty($conditionKey)) {
+                delete this.conditions.splice($conditionKey, 1);
+            } else {
+                console.log('object not exist.');
+            }
+        },
         addRuleRows: function () {
             this._clearNewCondition();
             let $newRuleTable = this.newRuleTable;

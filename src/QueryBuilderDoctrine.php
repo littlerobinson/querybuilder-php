@@ -336,6 +336,10 @@ class QueryBuilderDoctrine
     public function spreadsheet(array $columns, array $data)
     {
         $spreadsheet = new Spreadsheet($columns, $data);
-        $spreadsheet->generate('Excel5', 'test alex');
+        $spreadsheet->setCreator('Eductive GROUP');
+        $spreadsheet->setLastModifiedBy('Eductive GROUP');
+        $spreadsheet->setSubject('Résultat requête');
+        $spreadsheet->setTitle('Requête');
+        $spreadsheet->generate('Excel5', 'resultat_' . date('YmdHis'));
     }
 }

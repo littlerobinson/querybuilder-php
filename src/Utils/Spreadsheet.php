@@ -23,6 +23,11 @@ class Spreadsheet
     private $sheetTitle;
     private $activeSheetIndex;
 
+    /**
+     * Spreadsheet constructor.
+     * @param array $columns
+     * @param array $data
+     */
     public function __construct(array $columns = [], array $data = [])
     {
         $this->columns          = $columns;
@@ -47,6 +52,9 @@ class Spreadsheet
         $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     }
 
+    /**
+     * Set properties method
+     */
     private function setProperties()
     {
         /// Set document properties
@@ -58,6 +66,11 @@ class Spreadsheet
             ->setKeywords($this->getKeywords());
     }
 
+    /**
+     * Generate document method
+     * @param string $fileType
+     * @param string $fileName
+     */
     public function generate(string $fileType, string $fileName)
     {
         switch ($fileType) {
@@ -72,6 +85,10 @@ class Spreadsheet
         }
     }
 
+    /**
+     * Method for generating XLS document
+     * @param $fileName
+     */
     private function generateExcel5($fileName)
     {
         /// Set document properties
@@ -95,8 +112,9 @@ class Spreadsheet
         $obj = new \ArrayObject($this->data);
         $it  = $obj->getIterator();
         while ($it->valid()) {
-            $object = $it->current();
-            foreach ($object as $data) {
+            $currentData = $it->current();
+            /// Loop on columns
+            foreach ($currentData as $data) {
                 $cell = $worksheet->getCell($lastColumn . $lastRow);
                 $cell->setValue($data);
                 $lastColumn++;
@@ -129,6 +147,11 @@ class Spreadsheet
         $writer->save('php://output');
         exit;
     }
+
+
+    /*----------------------------------------------------------------------------------------------------------------*/
+    /*----------------------------------------------- ACCESSORS ------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------------------------------*/
 
     /**
      * @return array

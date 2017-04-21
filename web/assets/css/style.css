@@ -80,6 +80,17 @@ th.active .arrow {
     width: 100%;
 }
 
+.btn {
+    margin: 5px;
+    min-width: 10%;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th,
+.table > tfoot > tr > td, .table > tfoot > tr > th,
+.table > thead > tr > td, .table > thead > tr > th {
+    vertical-align: middle;
+}
+
 .arrow {
     display: inline-block;
     vertical-align: middle;
@@ -112,6 +123,10 @@ th.active .arrow {
 
 .form-control {
     font-size: inherit;
+}
+
+.delete-condition {
+    padding: 0;
 }
 
 #app-request .panel-body {
