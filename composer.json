@@ -1,5 +1,5 @@
 {
-  "name": "littlerobinson/querybuilder-reflection-sdk",
+  "name": "littlerobinson/querybuilder-sdk",
   "description": "SDK for creating query builder with JSON input.",
   "keywords": [
     "querybuilder", "reflection", "sdk", "php", "doctrine"
