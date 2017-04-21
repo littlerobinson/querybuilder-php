@@ -29,20 +29,22 @@ Vue.component('selectItem', {
             /// Case adding table
             if (this.model.status && this.dbObj[this.model.table] && this.object) {
                 /// Create From variable with select data
-                this._addFrom();
+                this._manageFrom();
                 this._addRow(this.model.table, event);
             } else if (!this.model.status) {
                 if (this.object) { /// Case uncheck table
                     this._deleteInObject(this.from, this.model.name);
                     delete this.selectTables[this.model.name];
                 }
-                delete this.model.rows;
+                if (this.model.table) {
+                    delete this.model.rows;
+                }
                 this._updateDisplaySelect(event);
             }
             this.selected = !this.selected;
-            /// Add in from row
-            if (this.selected && !this.object) {
-                this._addFrom();
+            /// Manage from row
+            if (!this.object) {
+                this._manageFrom();
             }
         },
         _addRow: function ($tableName, event) {
@@ -91,7 +93,7 @@ Vue.component('selectItem', {
                 }
             }
         },
-        _addFrom: function () {
+        _manageFrom: function () {
             this.depth = this.$parent.depth !== '' ? this.$parent.depth + '.' + this.model.name : this.model.name; /// Add depth info
             let $listDepth = this.depth.split('.');
             let $tmpDepth = {};
@@ -117,7 +119,11 @@ Vue.component('selectItem', {
                             this.selectTables[$listDepth[$index]].name = this.model.name;
                             this.selectTables[$listDepth[$index]].table = this.model.table;
                         } else {
-                            $tmpDepth[$listDepth[$index]] = $listDepth[$index];
+                            if (this.selected) { /// Case add row
+                                $tmpDepth[$listDepth[$index]] = $listDepth[$index];
+                            } else { /// Case delete row
+                                delete $tmpDepth[$listDepth[$index]];
+                            }
                         }
                     }
                 }

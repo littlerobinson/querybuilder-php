@@ -268,7 +268,7 @@ class QueryBuilderDoctrine
             $response['columns'] = [];
             $response['pages']   = 1;
             $response['page']    = 1;
-            $response['request'] = '';
+            $response['request'] = $this->getSQLRequest();;
         }
         return json_encode($response);
     }
