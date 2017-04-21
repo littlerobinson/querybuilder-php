@@ -11,7 +11,6 @@ class Spreadsheet
 {
     private $columns;
     private $data;
-    private $helper;
     private $spreadsheet;
     private $creator;
     private $lastModifiedBy;
@@ -42,14 +41,8 @@ class Spreadsheet
         $this->sheetTitle       = '';
         $this->activeSheetIndex = 0;
 
-        $this->helper = new \PhpOffice\PhpSpreadsheet\Helper\Sample();
-        if ($this->helper->isCli()) {
-            echo 'This should only be run from a Web Browser' . PHP_EOL;
-            return;
-        }
-
         // Create new Spreadsheet object
-        $this->spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $this->spreadsheet = new \PHPExcel();
     }
 
     /**
@@ -76,9 +69,6 @@ class Spreadsheet
         switch ($fileType) {
             case 'Excel5':
                 $this->generateExcel5($fileName);
-                break;
-            case 'PDF':
-                $this->generatePDF($fileName);
                 break;
             default:
                 $this->generateExcel5($fileName);
@@ -143,11 +133,10 @@ class Spreadsheet
         header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
         header('Pragma: public'); // HTTP/1.0
 
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($this->spreadsheet, 'Excel5');
+        $writer = \PHPExcel_IOFactory::createWriter($this->spreadsheet, 'Excel5');
         $writer->save('php://output');
         exit;
     }
-
 
     /*----------------------------------------------------------------------------------------------------------------*/
     /*----------------------------------------------- ACCESSORS ------------------------------------------------------*/
@@ -186,19 +175,19 @@ class Spreadsheet
     }
 
     /**
-     * @return mixed
+     * @return \PHPExcel
      */
-    public function getFileType()
+    public function getSpreadsheet(): \PHPExcel
     {
-        return $this->fileType;
+        return $this->spreadsheet;
     }
 
     /**
-     * @param mixed $fileType
+     * @param \PHPExcel $spreadsheet
      */
-    public function setFileType($fileType)
+    public function setSpreadsheet(\PHPExcel $spreadsheet)
     {
-        $this->fileType = $fileType;
+        $this->spreadsheet = $spreadsheet;
     }
 
     /**
