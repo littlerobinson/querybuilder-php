@@ -153,21 +153,25 @@ class QueryBuilderDoctrine
                     $primaryKey = $this->objDbConfig->{$arrRequest[0]}->_primary_key;
                     /// Get select alias
                     $alias = $arrRequest[0] . '_' . $primaryKey . '.' . $arrRequest[1];
+                    /// Get operator equality
+                    $operator = key($equality);
                     /// Add comma if not boolean or integer
-                    $value = ($fieldType === 'integer' || $fieldType === 'boolean') ? implode(',', $equality->EQUAL) : implode(',', $equality->EQUAL);
+                    $value = ($fieldType === 'integer' || $fieldType === 'boolean') ? implode(',', $equality->{$operator}) : implode(',', $equality->{$operator});
+                    /// Get the condition
+                    $condition = $this->getCondition($operator, $alias, $value);
 
                     switch ($logicalOperator) {
                         case 'AND':
-                            $this->queryBuilder->andWhere($alias . ' = ' . '\'' . $value . '\'');
+                            $this->queryBuilder->andWhere($condition);
                             break;
                         case 'OR':
-                            $this->queryBuilder->orWhere($alias . ' = ' . '\'' . $value . '\'');
+                            $this->queryBuilder->orWhere($condition);
                             break;
                         case 'AND_HAVING':
-                            $this->queryBuilder->andHaving($alias . ' = ' . '\'' . $value . '\'');
+                            $this->queryBuilder->andHaving($condition);
                             break;
                         case 'OR_HAVING':
-                            $this->queryBuilder->orHaving($alias . ' = ' . '\'' . $value . '\'');
+                            $this->queryBuilder->orHaving($condition);
                             break;
                         default:
                             break;
@@ -175,6 +179,32 @@ class QueryBuilderDoctrine
                 }
             }
         }
+    }
+
+    /**
+     * @param string $operator
+     * @param string $alias
+     * @param string $value
+     * @return null|string
+     */
+    private function getCondition(string $operator, string $alias, string $value)
+    {
+        $condition = null;
+        switch ($operator) {
+            case 'EQUAL':
+                $condition = $alias . ' = ' . '\'' . $value . '\'';
+                break;
+            case 'LIKE':
+                $condition = $alias . ' LIKE ' . '\'%' . $value . '%\'';
+                break;
+            case 'BEGINS_WITH':
+                $condition = $alias . ' LIKE ' . '\'' . $value . '%\'';
+                break;
+            case 'ENDS_WITH':
+                $condition = $alias . ' LIKE ' . '\'%' . $value . '\'';
+                break;
+        }
+        return $condition;
     }
 
     /**

@@ -37,7 +37,9 @@ Vue.component('conditionItem', {
             newCondition: [],
             ruleOperators: [
                 {value: 'EQUAL', name: 'Est égal à'},
-                {value: 'LIKE', name: 'Contient'}
+                {value: 'LIKE', name: 'Contient'},
+                {value: 'BEGINS_WITH', name: 'Commence par'},
+                {value: 'ENDS_WITH', name: 'Fini par'}
             ],
             logicalOperators: [
                 {value: 'AND', name: 'ET'},
