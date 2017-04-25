@@ -1,5 +1,7 @@
 # Parameters
-/config/database-config.yml
+config/
+!/config/config-dist.yml
+
 
 # Managed by Composer
 /bin/*
@@ -17,4 +19,3 @@ Icon?
 ehthumbs.db
 Thumbs.db
 *.db3
-config/

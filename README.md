@@ -207,6 +207,22 @@ comment:
             options: { onDelete: null, onUpdate: null }
 ```
 
+You can also add rules for automatic restrictions.
+Example : you want someone just watch post from a specific user.
+
+```yaml
+post:
+    _table_translation: Article
+    _table_visibility: true
+    _primary_key: id
+    _rules: {
+        user_id: 1
+    }
+    id:
+        name: id
+...
+```
+
 ### Request
 
 When you execute a request it will generate a json value representing the query.

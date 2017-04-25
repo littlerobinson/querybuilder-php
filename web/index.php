@@ -123,7 +123,8 @@ require_once "query.php";
                 <td>{{ conditionValue.ruleOperator }}</td>
                 <td>{{ conditionValue.value }}</td>
                 <td>
-                    <a class="btn btn-danger delete-condition" href="#" @click="deleteCondition(conditionKey)"><i class="icon-trash icon-bar"></i> X</a>
+                    <a class="btn btn-danger delete-condition" href="#" @click="deleteCondition(conditionKey)"><i
+                                class="icon-trash icon-bar"></i> X</a>
                 </td>
             </tr>
             </tbody>

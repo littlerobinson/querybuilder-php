@@ -5,7 +5,6 @@ namespace Littlerobinson\QueryBuilder;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Yaml\Yaml;
-use Littlerobinson\QueryBuilder\Utils\Database;
 
 /**
  * Class DoctrineDatabase
@@ -30,13 +29,13 @@ class DoctrineDatabase
 
     /**
      * DoctrineDatabase constructor.
-     * @param string|null $configPath this value is on the config file by default
      */
-    public function __construct(string $configPath = null)
+    public function __construct()
     {
-        $this->configuration = Setup::createAnnotationMetadataConfiguration(Database::$paths, Database::$isDevMode);
-        $this->configPath    = $configPath ?? Database::$configPath;
-        $this->entityManager = EntityManager::create(Database::$params, $this->configuration);
+        $database            = Yaml::parse(file_get_contents(__DIR__ . '/../config/config.yml'))['database'];
+        $this->configuration = Setup::createAnnotationMetadataConfiguration([], $database['is_dev_mode']);
+        $this->configPath    = __DIR__ . $database['config_path'];
+        $this->entityManager = EntityManager::create($database['params'], $this->configuration);
         $this->connection    = $this->entityManager->getConnection();
         $this->schemaManager = $this->connection->getSchemaManager();
         $this->tables        = $this->schemaManager->listTableNames();
