@@ -169,7 +169,7 @@ require_once "query.php";
             <div v-show="!loading">
                 <h1>Requêteur</h1>
                 <hr>
-                <div id="select" class="col-xs-3">
+                <div id="select" class="col-xs-2">
                     <transition name="fade" appear hidden>
                         <div class="panel panel-default">
                             <div class="panel-heading"><strong>{{ 'Sélection' | capitalize }}</strong></div>
@@ -185,11 +185,17 @@ require_once "query.php";
                             </div>
                             <div class="panel-footer alert-danger">
                                 <strong>Liste des tables séléctionnées : </strong><br>
+                                <ul id="repeat-object">
+                                    <li v-for="value in selectTables">
+                                        {{ value.name }}
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </transition>
                 </div>
-                <div id="condition" class="col-xs-9">
+
+                <div id="condition" class="col-xs-8">
                     <transition name="fade" appear hidden>
                         <div class="panel panel-default">
                             <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
@@ -214,6 +220,17 @@ require_once "query.php";
                                     <input type="submit" value="Extraire" class="btn btn-info pull-right"
                                            :disabled="(data.length > 0) ? false : true">
                                 </form>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+
+                <div id="query" class="col-xs-2">
+                    <transition name="fade" appear hidden>
+                        <div class="panel panel-default">
+                            <div class="panel-heading"><strong>{{ 'Sauvegardes' | capitalize }}</strong></div>
+                            <div class="panel-body">
+
                             </div>
                         </div>
                     </transition>
