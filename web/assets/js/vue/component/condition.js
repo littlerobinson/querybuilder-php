@@ -75,7 +75,7 @@ Vue.component('conditionItem', {
     methods: {
         addCondition: function () {
             /// Case parent or not
-            let $field = (this.newRuleTable.parentTable) ? this.newRuleTable.parentTable + '.' + this.newRuleTable.field : this.newRuleTable.table + '.' + this.newRuleRow;
+            let $field = this.newRuleTable.table + '.' + this.newRuleRow;
             /// Create condition
             let $newCondition = {
                 logicalOperator: this.newLogicalOperator,
