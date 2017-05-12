@@ -1,5 +1,8 @@
 <?php
 require "../bootstrap.php";
+
+setcookie("school_id", 2);
+
 require_once "query.php";
 ?>
 
@@ -158,7 +161,7 @@ require_once "query.php";
 <div class="container">
     <div class="row">
         <div id="app-request">
-
+<!--
             <div v-show="loading" id="spinner-loading">
                 <div class="cssload-container">
                     <div class="cssload-loading"><i></i><i></i></div>
@@ -167,6 +170,8 @@ require_once "query.php";
             </div>
 
             <div v-show="!loading">
+-->
+            <div>
                 <h1>Requêteur</h1>
                 <hr>
                 <div id="select" class="col-xs-2">
@@ -230,7 +235,13 @@ require_once "query.php";
                         <div class="panel panel-default">
                             <div class="panel-heading"><strong>{{ 'Sauvegardes' | capitalize }}</strong></div>
                             <div class="panel-body">
-
+                                <hr>
+                                <button type="button" aria-expanded="false" class="btn btn-info pull-left">
+                                    Charger
+                                </button>
+                                <button type="button" aria-expanded="false" class="btn btn-success pull-right">
+                                    Sauvegarder
+                                </button>
                             </div>
                         </div>
                     </transition>

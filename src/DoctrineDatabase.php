@@ -88,8 +88,9 @@ class DoctrineDatabase
 
                 $datas[$tableKey]['_table_translation'] = $newTableDiff['_table_translation'];
                 $datas[$tableKey]['_table_visibility']  = $newTableDiff['_table_visibility'];
+                $datas[$tableKey]['_rules']             = $newTableDiff['_rules'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
-                    if (!is_array($fieldDiff) || $fieldKey === '_FK') {
+                    if (!is_array($fieldDiff) || $fieldKey === '_FK' || $fieldKey === '_rules') {
                         continue;
                     }
                     try {
@@ -159,6 +160,7 @@ class DoctrineDatabase
             $response['_table_translation']       = null;
             $response['_table_visibility']        = true;
             $response['_primary_key']             = $primaryKey;
+            $response['_rules']                   = null;
             $response[$key]['name']               = $column->getName();
             $response[$key]['_field_translation'] = null;
             $response[$key]['_field_visibility']  = true;

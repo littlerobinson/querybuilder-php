@@ -3,6 +3,7 @@
 namespace Littlerobinson\QueryBuilder;
 
 use Littlerobinson\QueryBuilder\Utils\Spreadsheet;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class QueryBuilderDoctrine
@@ -32,6 +33,8 @@ class QueryBuilderDoctrine
 
     private $fields;
 
+    private $configRules;
+
     private $queryResult;
 
     /**
@@ -45,7 +48,30 @@ class QueryBuilderDoctrine
         $dbConfig            = $this->doctrineDb->getDatabaseYamlConfig(true);
         $this->objDbConfig   = json_decode($dbConfig);
         $this->fromAliasList = [];
+        $this->setConfigRules();
+    }
 
+    /**
+     * Set the configuration rules (example for restriction in the database with a cookie or a session)
+     */
+    private function setConfigRules()
+    {
+        $ymlConfigRules = Yaml::parse(file_get_contents(__DIR__ . '/../config/config.yml'))['rules'];
+        $rules          = [];
+        foreach ($ymlConfigRules as $key => $rule) {
+            switch ($rule['type']) {
+                case 'cookie':
+                    $rules[$key] = !@unserialize($_COOKIE[$key]) ? $_COOKIE[$key] : unserialize($_COOKIE[$key]);
+                    break;
+                case "session":
+                    $rules[$key] = $_SESSION[$key];
+                    break;
+                default:
+                    $rules[$key] = !@unserialize($_COOKIE[$key]) ? $_COOKIE[$key] : unserialize($_COOKIE[$key]);
+                    break;
+            }
+        }
+        $this->configRules = $rules;
     }
 
     /**
@@ -71,6 +97,27 @@ class QueryBuilderDoctrine
     }
 
     /**
+     * return a FK definition object
+     * @param string $fkName
+     * @return \stdClass
+     * @throws \Exception
+     */
+    private function searchFK(string $fkName): \stdClass
+    {
+        $fkObject = new \stdClass();
+        foreach ($this->objDbConfig as $table => $fields) {
+            if (!isset($this->objDbConfig->{$table})) {
+                http_response_code(400);
+                throw new \Exception('This table not exist : ' . $table . '.');
+            }
+            if (property_exists($this->objDbConfig->{$table}, '_FK') && property_exists($this->objDbConfig->{$table}->_FK, $fkName)) {
+                $fkObject = $this->objDbConfig->{$table}->_FK->{$fkName};
+            }
+        }
+        return $fkObject;
+    }
+
+    /**
      * Add query select
      * @param $fkList
      * @param $fromTable
@@ -78,7 +125,7 @@ class QueryBuilderDoctrine
      * @param $fromAlias
      * @throws \Exception
      */
-    private function addQuerySelect($fkList, $fromTable, $select, $fromAlias = null)
+    private function addQuerySelect($fkList, $fromTable, $select, $fromAlias)
     {
         $fromAlias = $fromAlias ?? $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
         foreach ($select as $key => $field) {
@@ -95,7 +142,10 @@ class QueryBuilderDoctrine
                     $newfkList      = $this->getFKList($newFrom);
                     $columns        = $fkList[$fromTable]->{$key}->{'columns'};
                     $foreignColumns = $fkList[$fromTable]->{$key}->{'foreignColumns'};
-                    $this->queryBuilder->leftJoin($newFromTable, $columns, 'ON', $columns . ' . ' . $foreignColumns . ' = ' . $fromAlias . ' . ' . $columns);
+                    /// Check if is an existing join or not : if not add the join
+                    if (!in_array($key, $this->queryBuilder->getAllAliases())) {
+                        $this->queryBuilder->leftJoin($newFromTable, $columns, 'ON', $columns . ' . ' . $foreignColumns . ' = ' . $fromAlias . ' . ' . $columns);
+                    }
                     $this->addQuerySelect($newfkList, $newFromTable, $field, $key);
                 }
             } else {
@@ -182,12 +232,59 @@ class QueryBuilderDoctrine
     }
 
     /**
+     * Add the restrictions rules from rule config file
+     * @param $fromTable
+     */
+    private
+    function addRulesConditions($fromTable)
+    {
+        $fromAlias      = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
+        $rules          = $this->objDbConfig->{$fromTable}->{'_rules'};
+        $fkList         = $this->getFKList();
+        $columns        = null;
+        $foreignColumns = null;
+        $join           = null;
+
+        if (null !== $rules) {
+            foreach ($rules as $keyRule => $rule) {
+                $addWhere = false;
+                $joins    = explode('.', $keyRule);
+                foreach ($joins as $keyJoin => $join) {
+                    /// Case the Fk is in the other table
+                    if (!property_exists($fkList[$fromTable], $join)) {
+                        $fkInverse = $this->searchFK($join);
+                        /// Get primary key (foreignColumns)
+                        $foreignColumns = $this->doctrineDb->getPrimaryKey($fromTable);
+                        $newFromTable   = $fkInverse->{'tableName'};
+                        $columns        = $fkInverse->{'columns'};
+                        $this->queryBuilder->innerJoin($newFromTable, $columns, 'ON', $columns . ' . ' . $fromAlias . ' = ' . $fromAlias . '.' . $foreignColumns[0]);
+                    } else { /// Case FK is in the table
+                        $newFromTable   = $fkList[$fromTable]->{$join}->{'tableName'};
+                        $columns        = $fkList[$fromTable]->{$join}->{'columns'};
+                        $foreignColumns = $fkList[$fromTable]->{$join}->{'foreignColumns'};
+                        $this->queryBuilder->innerJoin($newFromTable, $columns, 'ON', $columns . ' . ' . $foreignColumns . ' = ' . $fromAlias . '.' . $columns);
+                    }
+                    $fromTable = $newFromTable;
+                    $fromAlias = $columns;
+                    $addWhere  = true;
+                }
+                /// Add rule condition
+                if ($addWhere && null !== $join) {
+                    $configCondition = is_array($this->configRules[$join]) ? implode(',', $this->configRules[$join]) : $this->configRules[$join];
+                    $this->queryBuilder->andWhere($columns . ' . ' . $foreignColumns . ' IN (' . $configCondition . ')');
+                }
+            }
+        }
+    }
+
+    /**
      * @param string $operator
      * @param string $alias
      * @param string $value
      * @return null|string
      */
-    private function getCondition(string $operator, string $alias, string $value)
+    private
+    function getCondition(string $operator, string $alias, string $value)
     {
         $condition = null;
         switch ($operator) {
@@ -212,7 +309,8 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @throws \Exception
      */
-    private function prepareJsonQuery(string $jsonQuery)
+    private
+    function prepareJsonQuery(string $jsonQuery)
     {
         /// Try to decode json
         $queryObj = json_decode($jsonQuery);
@@ -240,7 +338,8 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @return array
      */
-    public function executeQuery(string $jsonQuery): array
+    public
+    function executeQuery(string $jsonQuery): array
     {
         /// Reset DQL parts if exist
         $this->resetSQLRequest();
@@ -253,8 +352,10 @@ class QueryBuilderDoctrine
             $fromAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
             /// Add From
             $this->queryBuilder->from($fromTable, $fromAlias);
+            /// Add specifics rules (like restrictions)
+            $this->addRulesConditions($fromTable);
             /// Add Select
-            $this->addQuerySelect($this->fkFrom, $fromTable, $select);
+            $this->addQuerySelect($this->fkFrom, $fromTable, $select, $fromAlias);
         }
 
         /// Adding query conditions
@@ -275,7 +376,8 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @return string
      */
-    public function executeQueryJson(string $jsonQuery): string
+    public
+    function executeQueryJson(string $jsonQuery): string
     {
         $result = $this->executeQuery($jsonQuery);
         if (count($result) > 0) {
@@ -309,7 +411,8 @@ class QueryBuilderDoctrine
      * @return array
      * @throws \Exception
      */
-    public function getQueryColumns(bool $getTranslationName = false): array
+    public
+    function getQueryColumns(bool $getTranslationName = false): array
     {
         if (null === $this->fields) {
             http_response_code(400);
@@ -332,7 +435,8 @@ class QueryBuilderDoctrine
      * @param bool $getTranslationName
      * @return string
      */
-    public function getJsonQueryColumns(bool $getTranslationName = false): string
+    public
+    function getJsonQueryColumns(bool $getTranslationName = false): string
     {
         return json_encode($this->getQueryColumns($getTranslationName));
     }
@@ -341,7 +445,8 @@ class QueryBuilderDoctrine
      * Adding extra DQL and return the SQL request
      * @return string
      */
-    public function getSQLRequest(): string
+    public
+    function getSQLRequest(): string
     {
         $sqlRequest = $this->queryBuilder->getDQL();
         $sqlRequest = null !== $this->limit && 0 !== $this->limit ? $sqlRequest . ' LIMIT ' . $this->limit : $sqlRequest;
@@ -352,7 +457,8 @@ class QueryBuilderDoctrine
     /**
      * Reset DQL parts
      */
-    private function resetSQLRequest()
+    private
+    function resetSQLRequest()
     {
         $this->queryBuilder->resetDQLParts();
     }
@@ -363,7 +469,8 @@ class QueryBuilderDoctrine
      * @param array $columns
      * @param array $data
      */
-    public function spreadsheet(array $columns, array $data)
+    public
+    function spreadsheet(array $columns, array $data)
     {
         $spreadsheet = new Spreadsheet($columns, $data);
         $spreadsheet->setCreator('Eductive GROUP');
