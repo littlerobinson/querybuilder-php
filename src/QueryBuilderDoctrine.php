@@ -17,6 +17,8 @@ class QueryBuilderDoctrine
 
     private $objDbConfig;
 
+    private $configRules;
+
     private $from;
 
     private $where;
@@ -32,8 +34,6 @@ class QueryBuilderDoctrine
     private $fromAliasList;
 
     private $fields;
-
-    private $configRules;
 
     private $queryResult;
 
@@ -53,10 +53,10 @@ class QueryBuilderDoctrine
 
     /**
      * Set the configuration rules (example for restriction in the database with a cookie or a session)
-     * @param string $configPath
      */
-    private function setConfigRules(string $configPath = '/../config/config.yml')
+    private function setConfigRules()
     {
+        $configPath = '/../config/config.yml';
         if (!file_get_contents(__DIR__ . $configPath) || !array_key_exists('rules', Yaml::parse(file_get_contents(__DIR__ . $configPath)))) {
             return;
         }
@@ -249,11 +249,15 @@ class QueryBuilderDoctrine
     function addRulesConditions($fromTable)
     {
         $fromAlias      = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
-        $rules          = $this->objDbConfig->{$fromTable}->{'_rules'};
+        $rules          = null;
         $fkList         = $this->getFKList();
         $columns        = null;
         $foreignColumns = null;
         $join           = null;
+
+        if (array_key_exists($fromTable, $this->doctrineDb->getDatabaseRules())) {
+            $rules = $this->doctrineDb->getDatabaseRules()[$fromTable];
+        }
 
         if (null !== $rules) {
             foreach ($rules as $keyRule => $rule) {

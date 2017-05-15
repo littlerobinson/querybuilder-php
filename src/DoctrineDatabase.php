@@ -29,6 +29,8 @@ class DoctrineDatabase
 
     private $databaseTitle;
 
+    private $databaseRules;
+
     /**
      * DoctrineDatabase constructor.
      */
@@ -36,6 +38,7 @@ class DoctrineDatabase
     {
         $database            = Yaml::parse(file_get_contents(__DIR__ . '/../config/config.yml'))['database'];
         $this->databaseTitle = $database['title'];
+        $this->databaseRules = Yaml::parse(file_get_contents(__DIR__ . '/../config/security.yml'))['database'];
         $this->configuration = Setup::createAnnotationMetadataConfiguration([], $database['is_dev_mode']);
         $this->configPath    = __DIR__ . $database['config_path'];
         $this->entityManager = EntityManager::create($database['params'], $this->configuration);
@@ -91,9 +94,8 @@ class DoctrineDatabase
 
                 $datas[$tableKey]['_table_translation'] = $newTableDiff['_table_translation'];
                 $datas[$tableKey]['_table_visibility']  = $newTableDiff['_table_visibility'];
-                $datas[$tableKey]['_rules']             = $newTableDiff['_rules'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
-                    if (!is_array($fieldDiff) || $fieldKey === '_FK' || $fieldKey === '_rules') {
+                    if (!is_array($fieldDiff) || $fieldKey === '_FK') {
                         continue;
                     }
                     try {
@@ -163,7 +165,6 @@ class DoctrineDatabase
             $response['_table_translation']       = null;
             $response['_table_visibility']        = true;
             $response['_primary_key']             = $primaryKey;
-            $response['_rules']                   = null;
             $response[$key]['name']               = $column->getName();
             $response[$key]['_field_translation'] = null;
             $response[$key]['_field_visibility']  = true;
@@ -274,5 +275,12 @@ class DoctrineDatabase
         return $this->databaseTitle;
     }
 
+    /**
+     * @return array
+     */
+    public function getDatabaseRules(): array
+    {
+        return $this->databaseRules;
+    }
 
 }

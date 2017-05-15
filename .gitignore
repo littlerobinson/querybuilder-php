@@ -1,7 +1,7 @@
 # Parameters
 config/
 !/config/config-dist.yml
-
+!/config/security-dist.yml
 
 # Managed by Composer
 /bin/*

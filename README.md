@@ -222,6 +222,25 @@ post:
         name: id
 ...
 ```
+### Security
+
+You can add security restriction like this in the security.yml file.
+
+```yaml
+database:
+    registration:
+        _rules:
+            user_id: user_id
+...
+```
+
+And this in the config.yml file to tell the program where to find the restriction value.
+
+```yaml
+rules:
+    user_id: { type: cookie }
+...
+```
 
 ### Request
 
