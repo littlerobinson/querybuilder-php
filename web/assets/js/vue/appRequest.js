@@ -11,6 +11,7 @@ let request = new Vue({
     },
     data: {
         dbObj: {},
+        dbTitle: 'Database name',
         selectTables: {},
         items: {},
         from: {},
@@ -27,9 +28,10 @@ let request = new Vue({
     },
     mounted () {
         let self = this;
+        this._getDbTitle();
         this._getDbObject(function () {
             let $items = {};
-            $items.name = "Logiciel des inscrits";
+            $items.name = self.dbTitle;
             $items.firstParent = true;
             $items.display = true;
             $items.rows = [];
@@ -93,6 +95,15 @@ let request = new Vue({
                 response => {
                     this.dbObj = response.body;
                     callback();
+                }, response => {
+                    console.log('response callback', response)
+                }
+            );
+        },
+        _getDbTitle: function () {
+            this.$http.post('/query.php', {action: 'get_db_title'}).then(
+                response => {
+                    this.dbTitle = response.body;
                 }, response => {
                     console.log('response callback', response)
                 }

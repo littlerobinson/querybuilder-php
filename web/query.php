@@ -25,6 +25,12 @@ function getDbObject()
     echo $db->getDatabaseYamlConfig(true);
 }
 
+function getDbTitle()
+{
+    $db = new DoctrineDatabase();
+    echo $db->getDatabaseTitle();
+}
+
 function getSpreadsheet(array $columns, array $data)
 {
     $db = new DoctrineDatabase();
@@ -37,6 +43,9 @@ if (isset($_POST['action'])) {
     switch ($action) {
         case 'get_db_object':
             getDbObject();
+            break;
+        case 'get_db_title':
+            getDbTitle();
             break;
         case 'execute_query_json':
             $jsonQuery = isset($_POST['json_query']) ? $_POST['json_query'] : '';

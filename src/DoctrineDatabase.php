@@ -27,12 +27,15 @@ class DoctrineDatabase
 
     private $tables;
 
+    private $databaseTitle;
+
     /**
      * DoctrineDatabase constructor.
      */
     public function __construct()
     {
         $database            = Yaml::parse(file_get_contents(__DIR__ . '/../config/config.yml'))['database'];
+        $this->databaseTitle = $database['title'];
         $this->configuration = Setup::createAnnotationMetadataConfiguration([], $database['is_dev_mode']);
         $this->configPath    = __DIR__ . $database['config_path'];
         $this->entityManager = EntityManager::create($database['params'], $this->configuration);
@@ -261,6 +264,14 @@ class DoctrineDatabase
     public function getDatabases(): array
     {
         return $this->databases;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDatabaseTitle(): string
+    {
+        return $this->databaseTitle;
     }
 
 
