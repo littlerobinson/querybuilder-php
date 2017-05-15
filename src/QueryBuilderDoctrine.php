@@ -53,12 +53,22 @@ class QueryBuilderDoctrine
 
     /**
      * Set the configuration rules (example for restriction in the database with a cookie or a session)
+     * @param string $configPath
      */
-    private function setConfigRules()
+    private function setConfigRules(string $configPath = '/../config/config.yml')
     {
-        $ymlConfigRules = Yaml::parse(file_get_contents(__DIR__ . '/../config/config.yml'))['rules'];
-        $rules          = [];
+        if (!file_get_contents(__DIR__ . $configPath) || !array_key_exists('rules', Yaml::parse(file_get_contents(__DIR__ . $configPath)))) {
+            return;
+        }
+        $ymlConfigRules = Yaml::parse(file_get_contents(__DIR__ . $configPath))['rules'];
+        if (!is_array($ymlConfigRules)) {
+            return;
+        }
+        $rules = [];
         foreach ($ymlConfigRules as $key => $rule) {
+            if (!array_key_exists($key, $_COOKIE)) {
+                continue;
+            }
             switch ($rule['type']) {
                 case 'cookie':
                     $rules[$key] = !@unserialize($_COOKIE[$key]) ? $_COOKIE[$key] : unserialize($_COOKIE[$key]);

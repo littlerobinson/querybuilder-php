@@ -1,8 +1,5 @@
 <?php
 require "../bootstrap.php";
-
-setcookie("school_id", 2);
-
 require_once "query.php";
 ?>
 
