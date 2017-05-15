@@ -4,7 +4,7 @@ require "../bootstrap.php";
 use Littlerobinson\QueryBuilder\DoctrineDatabase;
 use Littlerobinson\QueryBuilder\QueryBuilderDoctrine;
 
-setcookie("school_id", 2);
+setcookie("school_id", 1);
 
 $db         = new DoctrineDatabase();
 $qb         = new QueryBuilderDoctrine($db);

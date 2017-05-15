@@ -224,21 +224,24 @@ post:
 ```
 ### Security
 
-You can add security restriction like this in the security.yml file.
+Add this in the config.yml file to tell the program where to find the restriction value.
 
 ```yaml
-database:
-    registration:
-        _rules:
-            user_id: user_id
+# config.yml
+rules:
+    user_id: { type: cookie }
 ...
 ```
 
-And this in the config.yml file to tell the program where to find the restriction value.
+You can add security restriction like this in the security.yml file.
 
 ```yaml
-rules:
-    user_id: { type: cookie }
+# security.yml
+database:
+    category:
+        post_id.user_id: user_id
+    tag: # Many to Many relation
+        post_tag.post_id.user_id: user_id
 ...
 ```
 
