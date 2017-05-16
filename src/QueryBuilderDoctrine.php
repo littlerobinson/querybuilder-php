@@ -256,7 +256,6 @@ class QueryBuilderDoctrine
         $fromPK           = $this->objDbConfig->{$fromTable}->{'_primary_key'}[0];
         $fromAlias        = $fromTable . '_' . $fromPK;
         $rules            = null;
-        $fkList           = $this->getFKList();
         $alias            = null;
         $fkForeignColumns = null;
         $join             = null;
