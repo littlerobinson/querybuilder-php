@@ -22,7 +22,8 @@ You can change :
 post:
     _table_translation: Article
     _table_visibility: true
-    _primary_key: id
+    _primary_key: 
+        - id
     id:
         name: id
         _field_translation: 'Identifiant'
@@ -76,7 +77,8 @@ post:
 category:
     _table_translation: Catégorie
     _table_visibility: true
-    _primary_key: id
+    _primary_key: 
+        - id
     id:
         name: id
         _field_translation: 'Identifiant'
@@ -99,7 +101,8 @@ category:
 user:
     _table_translation: Utilisateur
     _table_visibility: true
-    _primary_key: id
+    _primary_key: 
+        - id
     id:
         name: id
         _field_translation: 'Identifiant'
@@ -147,7 +150,8 @@ user:
 group:
     _table_translation: Groupe
     _table_visibility: true
-    _primary_key: id
+    _primary_key: 
+        - id
     id:
         name: id
         _field_translation: 'Identifiant'
@@ -165,12 +169,13 @@ group:
         default: null
         length: 50
         not_null: true
-        definition: null
+        definition: null****
             
 comment:
     _table_translation: Commentaire
     _table_visibility: true
-    _primary_key: id
+    _primary_key: 
+        - id
     id:
         name: id
         _field_translation: 'Identifiant'

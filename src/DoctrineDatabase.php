@@ -95,7 +95,7 @@ class DoctrineDatabase
                 $datas[$tableKey]['_table_translation'] = $newTableDiff['_table_translation'];
                 $datas[$tableKey]['_table_visibility']  = $newTableDiff['_table_visibility'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
-                    if (!is_array($fieldDiff) || $fieldKey === '_FK') {
+                    if (!is_array($fieldDiff) || $fieldKey === '_FK' || $fieldKey === '_primary_key') {
                         continue;
                     }
                     try {
@@ -158,13 +158,13 @@ class DoctrineDatabase
      */
     private function getTableColumns(string $table)
     {
-        $response   = [];
-        $columns    = $this->schemaManager->listTableColumns($table);
-        $primaryKey = $this->getPrimaryKey($table)[0];
+        $response                       = [];
+        $columns                        = $this->schemaManager->listTableColumns($table);
+        $primaryKey                     = $this->getPrimaryKey($table);
+        $response['_table_translation'] = null;
+        $response['_table_visibility']  = true;
+        $response['_primary_key']       = $primaryKey;
         foreach ($columns as $key => $column) {
-            $response['_table_translation']       = null;
-            $response['_table_visibility']        = true;
-            $response['_primary_key']             = $primaryKey;
             $response[$key]['name']               = $column->getName();
             $response[$key]['_field_translation'] = null;
             $response[$key]['_field_visibility']  = true;

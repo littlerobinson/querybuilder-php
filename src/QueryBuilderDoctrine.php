@@ -139,16 +139,16 @@ class QueryBuilderDoctrine
      * @param $fromTable
      * @param $select
      * @param $fromAlias
+     * @param $joinType
      * @throws \Exception
      */
-    private function addQuerySelect($fkList, $fromTable, $select, $fromAlias)
+    private function addQuerySelect($fkList, $fromTable, $select, $fromAlias, $joinType = 'leftJoin')
     {
-        $fromAlias = $fromAlias ?? $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
+        $fromAlias = $fromAlias ?? $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'}[0];
         foreach ($select as $key => $field) {
             if (is_object($select) && is_object($field)) {
                 /// Add joins
                 if (is_object($field)) {
-                    //if (!isset($fkList[$fromTable]->{$fkName}->{'tableName'})) {
                     if (!isset($fkList[$fromTable]->{$key}->{'tableName'})) {
                         http_response_code(400);
                         throw new \Exception('This foreign key not exist : ' . $key . '.');
@@ -160,7 +160,7 @@ class QueryBuilderDoctrine
                     $foreignColumns = $fkList[$fromTable]->{$key}->{'foreignColumns'};
                     /// Check if is an existing join or not : if not add the join
                     if (!in_array($key, $this->queryBuilder->getAllAliases())) {
-                        $this->queryBuilder->leftJoin($newFromTable, $columns, 'ON', $columns . ' . ' . $foreignColumns . ' = ' . $fromAlias . ' . ' . $columns);
+                        $this->queryBuilder->{$joinType}($newFromTable, $columns, 'ON', $columns . ' . ' . $foreignColumns . ' = ' . $fromAlias . ' . ' . $columns);
                     }
                     $this->addQuerySelect($newFKList, $newFromTable, $field, $key);
                 }
@@ -216,7 +216,7 @@ class QueryBuilderDoctrine
                     /// Get field type
                     $fieldType = $this->objDbConfig->{$arrRequest[0]}->{$arrRequest[1]}->type;
                     /// Get primary key
-                    $primaryKey = $this->objDbConfig->{$arrRequest[0]}->_primary_key;
+                    $primaryKey = $this->objDbConfig->{$arrRequest[0]}->_primary_key[0];
                     /// Get select alias
                     $alias = $arrRequest[0] . '_' . $primaryKey . '.' . $arrRequest[1];
                     /// Get operator equality
@@ -253,7 +253,7 @@ class QueryBuilderDoctrine
      */
     private function addRulesConditions($fromTable)
     {
-        $fromPK           = $this->objDbConfig->{$fromTable}->{'_primary_key'};
+        $fromPK           = $this->objDbConfig->{$fromTable}->{'_primary_key'}[0];
         $fromAlias        = $fromTable . '_' . $fromPK;
         $rules            = null;
         $fkList           = $this->getFKList();
@@ -266,50 +266,30 @@ class QueryBuilderDoctrine
         if (array_key_exists($fromTable, $this->doctrineDb->getDatabaseRules())) {
             $rules = $this->doctrineDb->getDatabaseRules()[$fromTable];
         }
-
         if (null !== $rules) {
             foreach ($rules as $keyRule => $rule) {
+                /// Case from table is the same as the table rule
+                if ($keyRule === $fromTable) {
+                    $configCondition = $this->configRules[$fromTable];
+                    if (is_array($configCondition)) {
+                        $this->queryBuilder->andWhere($fromAlias . ' . ' . $fromPK . ' IN (' . implode(',', $configCondition) . ')');
+                    } else {
+                        $this->queryBuilder->andWhere($fromAlias . ' . ' . $fromPK . ' = ' . $configCondition);
+                    }
+                    continue;
+                }
+
                 $addWhere = false;
                 $joins    = explode('.', $keyRule);
                 foreach ($joins as $keyJoin => $join) {
                     $fk = $this->searchFK($fromTable, $join);
-                    if (!array_key_exists($fromTable, $fkList)) { /// Case Many To Many relation
-                        /// Get primary keys (foreignColumns)
-                        $foreignColumnsList = $this->doctrineDb->getPrimaryKey($fromTable);
-                        $newFromTable       = $join;
-                        foreach ($foreignColumnsList as $fkColumn) {
-                            $fkInverse = $this->searchFK($newFromTable);
-                            if (null !== $join && array_key_exists($fromTable, $fkInverse)) {
-                                $fkInverseColumns = $fkInverse[$fromTable]->{'columns'};
-                                $fkForeignColumns = $fkInverse[$fromTable]->{'foreignColumns'};
-                                $alias            = $newFromTable . '_' . $fkInverseColumns;
-                                $condition        = $alias . ' . ' . $fromAlias . ' = ' . $fromAlias . '.' . $fkColumn;
-                                $this->queryBuilder->innerJoin($newFromTable, $alias, 'ON', $condition);
-                                if (array_key_exists($newFromTable, $this->configRules)) {
-                                    $configCondition = $this->configRules[$newFromTable];
-                                } else {
-                                    foreach ($fkInverse as $key => $value) {
-                                        if (array_key_exists($key, $this->configRules)) {
-                                            $configCondition = $this->configRules[$key];
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (is_array($configCondition)) {
-                                    $this->queryBuilder->andWhere($alias . ' . ' . $fkInverseColumns . ' IN (' . implode(',', $configCondition) . ')');
-                                } else {
-                                    $this->queryBuilder->andWhere($alias . ' . ' . $fkInverseColumns . ' = ' . $configCondition);
-                                }
-                                $this->queryBuilder->addGroupBy($fromAlias . '.' . $fkColumn);
-                            }
-
-                        }
-                    } elseif (sizeof($fk) === 0) { /// Case the Fk is in the other table
+                    if (sizeof($fk) === 0) { /// Case the Fk is in the other table
                         $fkInverse               = $this->searchFK($join, $fromTable);
                         $newFromTable            = $join;
                         $fkInverseColumns        = $fkInverse[$fromTable]->{'columns'};
                         $fkInverseForeignColumns = $fkInverse[$fromTable]->{'foreignColumns'};
-                        $alias                   = $join . '_' . $fkForeignColumns;
+                        $fkForeignColumns        = $fkInverseForeignColumns;
+                        $alias                   = $join . '_' . $fkInverseForeignColumns;
                         $condition               = $alias . ' . ' . $fkInverseColumns . ' = ' . $fkInverseColumns . '.' . $fkInverseForeignColumns;
                         $addWhere                = true;
                         $this->queryBuilder->innerJoin($join, $alias, 'ON', $condition);
@@ -411,13 +391,15 @@ class QueryBuilderDoctrine
         /// Loop on tables
         foreach ($this->from as $fromTable => $select) {
             /// Create From Alias
-            $fromAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'};
+            $fromAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'}[0];
             /// Add From
             $this->queryBuilder->from($fromTable, $fromAlias);
             /// Add specifics rules (like restrictions)
             $this->addRulesConditions($fromTable);
-            /// Add Select
-            $this->addQuerySelect($this->fkFrom, $fromTable, $select, $fromAlias);
+
+            /// Add Select (if many to many association add inner join)
+            $joinType = (sizeof($this->objDbConfig->{$fromTable}->{'_primary_key'}) > 1) ? 'innerJoin' : 'leftJoin';
+            $this->addQuerySelect($this->fkFrom, $fromTable, $select, $fromAlias, $joinType);
         }
 
         /// Adding query conditions
