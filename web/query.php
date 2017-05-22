@@ -12,7 +12,7 @@ $db         = new DoctrineDatabase();
 $qb         = new QueryBuilderDoctrine($db);
 $sqlRequest = '';
 
-$db->writeDatabaseYamlConfig();
+//$db->writeDatabaseYamlConfig();
 
 function executeQueryJson(string $jsonQuery)
 {

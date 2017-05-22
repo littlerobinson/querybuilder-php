@@ -21,6 +21,8 @@ class DoctrineDatabase
 
     private $connection;
 
+    private $platform;
+
     private $schemaManager;
 
     private $databases;
@@ -46,6 +48,9 @@ class DoctrineDatabase
         $this->schemaManager = $this->connection->getSchemaManager();
         $this->tables        = $this->schemaManager->listTableNames();
         $this->databases     = $this->schemaManager->listDatabases();
+        $this->platform      = $this->connection->getDatabasePlatform();
+        /// Resolving "unknown database type enum requested"
+        $this->platform->registerDoctrineTypeMapping('enum', 'string');
     }
 
     /**
@@ -212,6 +217,9 @@ class DoctrineDatabase
      */
     public function getPrimaryKey(string $table): array
     {
+        if ($this->getTableDetails($table)->getPrimaryKey() === null) {
+            return [];
+        }
         return $this->getTableDetails($table)->getPrimaryKey()->getColumns();
     }
 
