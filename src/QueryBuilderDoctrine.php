@@ -48,6 +48,7 @@ class QueryBuilderDoctrine
         $dbConfig            = $this->doctrineDb->getDatabaseYamlConfig(true);
         $this->objDbConfig   = json_decode($dbConfig);
         $this->fromAliasList = [];
+        $this->configRules   = [];
         $this->setConfigRules();
     }
 

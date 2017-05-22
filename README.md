@@ -235,6 +235,9 @@ Add this in the config.yml file to tell the program where to find the restrictio
 # config.yml
 user: { name: user, type: cookie }
 association: { name: group, type: cookie }
+
+rules:
+    group: { type: cookie }
 ...
 ```
 
