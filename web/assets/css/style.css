@@ -81,7 +81,7 @@ th.active .arrow {
 }
 
 .btn {
-    margin: 5px;
+    margin: 0 5px !important;
     min-width: 10%;
 }
 
@@ -129,6 +129,12 @@ th.active .arrow {
     padding: 0;
 }
 
+.alert {
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
 #app-request .panel-body {
     max-height: 600px;
     overflow: auto;
@@ -154,6 +160,173 @@ th.active .arrow {
     background-color: #e5e5e5;
     border: solid 2px #969696;
     outline: none;
+}
+
+/* +++++++++++++++++++++++++++++++++++++ */
+/* ++++++++++ CUSTOM LIST ++++++++++++++ */
+/* +++++++++++++++++++++++++++++++++++++ */
+
+ol {
+    counter-reset: li; /* Initiate a counter */
+    list-style: none; /* Remove default numbering */
+    *list-style: decimal; /* Keep using default numbering for IE6/7 */
+    padding: 0;
+    margin-bottom: 4em;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .5);
+}
+
+ol ol {
+    margin: 0 0 0 2em; /* Add some left margin for inner lists */
+}
+
+.rectangle-list i {
+    vertical-align: super;
+}
+/* +++++++++++++++++++++++++++++++++++++ */
+/* ++++++++++ LIST ROUNDED +++++++++++++ */
+/* +++++++++++++++++++++++++++++++++++++ */
+
+.rounded-list a {
+    position: relative;
+    display: block;
+    padding: .4em .4em .4em 2em;
+    margin: .5em 0;
+    background: #ddd;
+    color: #444;
+    text-decoration: none;
+    border-radius: .3em;
+    transition: all .3s ease-out;
+}
+
+.rounded-list a:hover {
+    background: #eee;
+}
+
+.rounded-list a:hover:before {
+    transform: rotate(360deg);
+}
+
+.rounded-list a:before {
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -1.3em;
+    top: 45%;
+    margin-top: -1.3em;
+    background: #87ceeb;
+    height: 3em;
+    width: 3em;
+    line-height: 2em;
+    border: .3em solid #fff;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 2em;
+    transition: all .3s ease-out;
+}
+
+/* +++++++++++++++++++++++++++++++++++++++ */
+/* ++++++++++ LIST RECTANGLE +++++++++++++ */
+/* +++++++++++++++++++++++++++++++++++++++ */
+
+.rectangle-list a {
+    position: relative;
+    display: inline-block;
+    width: 70%;
+    vertical-align: super;
+    padding: .4em .4em .4em .8em;
+    margin: .5em 1.5em .5em 2.5em;
+    background: #ddd;
+    color: #444;
+    text-decoration: none;
+    transition: all .3s ease-out;
+}
+
+.rectangle-list a:hover {
+    background: #eee;
+}
+
+.rectangle-list a:before {
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -2.5em;
+    top: 50%;
+    margin-top: -1em;
+    background: #87ceeb;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+}
+
+.rectangle-list a:after {
+    position: absolute;
+    content: '';
+    border: .5em solid transparent;
+    left: -1em;
+    top: 50%;
+    margin-top: -.5em;
+    transition: all .3s ease-out;
+}
+
+.rectangle-list a:hover:after {
+    left: -.5em;
+    border-left-color: #87ceeb;
+}
+
+/* ++++++++++++++++++++++++++++++ */
+/* ++++++++++ MODAL +++++++++++++ */
+/* ++++++++++++++++++++++++++++++ */
+
+#modal-save-btn {
+    text-align: right;
+}
+
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    transition: opacity .3s ease;
+}
+
+.modal-container {
+    width: 60%;
+    margin: 40px auto 0;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    text-align: center;
+}
+
+.modal-container button {
+    margin: 0;
+}
+
+.modal-header h3 {
+    margin-top: 0;
+    color: #42b983;
+}
+
+.modal-body {
+    margin: 20px 0;
+    padding: 25px;
+}
+
+.modal-enter, .modal-leave {
+    opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 /* ++++++++++++++++++++++++++++++ */

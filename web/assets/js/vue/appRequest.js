@@ -3,7 +3,8 @@ var databaseConfigJson = $("#databaseConfigJson").val();
 /* *********************************************************************************** */
 /* ******************************* Bootstrap REQUEST ************************************* */
 /* *********************************************************************************** */
-let request = new Vue({
+let request;
+request = new Vue({
     el: '#app-request',
     http: {
         emulateJSON: true,
@@ -21,13 +22,23 @@ let request = new Vue({
         offset: 0,
         data: [],
         columns: [],
+        query: {},
         searchQuery: '',
         sqlRequest: '',
+        saveQuery: {},
+        saveTitle: '',
+        message: {},
         searchable: false,
+        showModal: false,
         loading: false,
+        saveStyle: {
+            background: '#000',
+            fontSize: '24px',
+        }
     },
     mounted () {
         let self = this;
+        this.getListQuery();
         this._getDbTitle();
         this._getDbObject(function () {
             let $items = {};
@@ -57,18 +68,15 @@ let request = new Vue({
     methods: {
         search: function () {
             this.loading = true;
-            /// create json query with from attribute
-            let $query = {};
-            $query.from = this.from;
+            this.query.from = this.from;
             /// Add conditions to query (feed this.where)
             this.where = [];
-            this.__addQueryConditions();
-            $query.where = this.where;
-            $query.limit = this.limit;
-            $query.offset = this.offset;
-            let jsonQuery = JSON.stringify($query);
-            console.log(jsonQuery);
-            this.$http.post('/query.php', {action: 'execute_query_json', json_query: jsonQuery}).then(
+            this._addQueryConditions();
+            this.query.where = this.where;
+            this.query.limit = this.limit;
+            this.query.offset = this.offset;
+            let $jsonQuery = JSON.stringify(this.query);
+            this.$http.post('/query.php', {action: 'execute_query_json', json_query: $jsonQuery}).then(
                 response => {
                     this.loading = false;
                     this.data = response.body.items;
@@ -76,7 +84,7 @@ let request = new Vue({
                     this.sqlRequest = response.body.request;
                 }, response => {
                     this.loading = false;
-                    console.log('response callback', response)
+                    this.message.error = 'Echec lors de la recherche';
                 }
             );
         },
@@ -86,9 +94,85 @@ let request = new Vue({
                     console.log(response);
                     window.open("data:application/vnd.ms-excel, " + response.body);
                 }, response => {
-                    console.log('response callback', response)
+                    this.message.error = 'Echec lors de l\'enregistrement du fichier';
                 }
             );
+        },
+        save: function ($isPrivate = 0) {
+            this.loading = true;
+            this.query.from = this.from;
+            /// Add conditions to query (feed this.where)
+            this.where = [];
+            this._addQueryConditions();
+            this.query.where = this.where;
+            this.query.limit = this.limit;
+            this.query.offset = this.offset;
+            this.$http.post('/query.php', {action: 'save_query', query: this.query, title: this.saveTitle, is_private: $isPrivate}).then(
+                response => {
+                    this.showModal = false;
+                    this.loading = false;
+                    this.saveTitle = '';
+                    this.getListQuery();
+                    this.message.success = 'Enregistrement de la requête effectuée avec succès';
+                }, response => {
+                    this.showModal = false;
+                    this.loading = false;
+                    this.saveTitle = '';
+                    this.message.error = 'Echec lors de l\'enregistrement de la requête';
+                }
+            );
+        },
+        loadSave: function ($id) {
+            this.loading = true;
+            this.$http.post('/query.php', {action: 'load_query', query_id: $id}).then(
+                response => {
+                    this.loading = false;
+                    console.log(response.body.value);
+                    console.log(JSON.parse(response.body.value));
+                    let $object = JSON.parse(response.body.value);
+                    this.from = $object.from;
+                    this.where = $object.where;
+                    this.limit = $object.limit;
+                    this.offset = $object.offset;
+                    this.search();
+                    this.message.success = 'Chargement de la requête réussi';
+                }, response => {
+                    this.loading = false;
+                    this.message.error = 'Echec lors du chargement de la requête';
+                }
+            );
+        },
+        deleteSave: function ($id, $index) {
+            this.loading = true;
+            this.$http.post('/query.php', {action: 'delete_query', query_id: $id}).then(
+                response => {
+                    this.saveQuery.splice($index, 1);
+                    this.loading = false;
+                    this.message.success = 'Suppression de la requête réussi';
+                }, response => {
+                    this.loading = false;
+                    this.message.error = 'Echec lors de la suppression de la requête';
+                }
+            );
+        },
+        getListQuery: function () {
+            this.loading = true;
+            this.$http.post('/query.php', {action: 'get_list_query'}).then(
+                response => {
+                    this.showModal = false;
+                    this.loading = false;
+                    this.saveQuery = response.body;
+                }, response => {
+                    this.showModal = false;
+                    this.loading = false;
+                    this.saveQuery = {};
+                    this.message.error = 'Echec lors de la récupération de la base de données';
+                }
+            );
+        },
+        deleteMessage: function ($key) {
+            this.message[$key] = null;
+            delete this.message[$key];
         },
         _getDbObject: function (callback) {
             this.$http.post('/query.php', {action: 'get_db_object'}).then(
@@ -96,6 +180,7 @@ let request = new Vue({
                     this.dbObj = response.body;
                     callback();
                 }, response => {
+                    this.message.error = 'Echec lors de connexion à la base de données';
                     console.log('response callback', response)
                 }
             );
@@ -109,7 +194,7 @@ let request = new Vue({
                 }
             );
         },
-        __addQueryConditions: function () {
+        _addQueryConditions: function () {
             for (let $condition in this.conditions) {
                 let $where = {};
                 let $logicalOperator = this.conditions[$condition].logicalOperator;

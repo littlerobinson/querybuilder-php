@@ -155,10 +155,29 @@ require_once "query.php";
     </table>
 </script>
 
+<!-- template for the modal component -->
+<script type="x/template" id="modal-template">
+    <div class="modal-mask" @click="close" v-show="show" transition="modal">
+        <div class="modal-container" @click.stop>
+            <div class="modal-header">
+                <slot name="header"></slot>
+            </div>
+
+            <div class="modal-body">
+                <slot name="body"></slot>
+            </div>
+
+            <div class="modal-footer text-right">
+                <slot name="footer"></slot>
+            </div>
+        </div>
+    </div>
+</script>
+
 <div class="container">
     <div class="row">
         <div id="app-request">
-<!--
+
             <div v-show="loading" id="spinner-loading">
                 <div class="cssload-container">
                     <div class="cssload-loading"><i></i><i></i></div>
@@ -167,137 +186,226 @@ require_once "query.php";
             </div>
 
             <div v-show="!loading">
--->
-            <div>
-                <h1>Requêteur</h1>
-                <hr>
-                <div id="select" class="col-xs-2">
-                    <transition name="fade" appear hidden>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>{{ 'Sélection' | capitalize }}</strong></div>
-                            <div class="panel-body">
-                                <select-item
-                                        class="item"
-                                        :db-obj="dbObj"
-                                        :from="from"
-                                        :select-tables="selectTables"
-                                        :model="items"
-                                        :items="items">
-                                </select-item>
+                <div>
+                    <h1>Requêteur</h1>
+                    <hr>
+                    <div>
+                        <transition name="fade" appear hidden>
+                            <div v-if="message" v-for="(item, key) in message">
+                                <div v-if="item.length > 0" class="form-group">
+                                    <div v-if="key === 'success'">
+                                        <div class="alert alert-success alert-dismissible fade in" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                                    @click="deleteMessage(key)">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ item }}
+                                        </div>
+                                    </div>
+                                    <div v-else-if="key === 'error'">
+                                        <div class="alert alert-danger alert-dismissible fade in" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                                    @click="deleteMessage(key)">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ item }}
+                                        </div>
+                                    </div>
+                                    <div v-else="key === 'info'">
+                                        <div class="alert alert-info alert-dismissible fade in" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                                                    @click="deleteMessage(key)">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            {{ item }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="panel-footer alert-danger">
-                                <strong>Liste des tables séléctionnées : </strong><br>
-                                <ul id="repeat-object">
-                                    <li v-for="value in selectTables">
-                                        {{ value.name }}
-                                    </li>
-                                </ul>
-                            </div>
+                        </transition>
+
+                        <div id="select" class="col-xs-2">
+                            <transition name="fade" appear hidden>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong>{{ 'Sélection' | capitalize }}</strong></div>
+                                    <div class="panel-body">
+                                        <select-item
+                                                class="item"
+                                                :db-obj="dbObj"
+                                                :from="from"
+                                                :select-tables="selectTables"
+                                                :model="items"
+                                                :items="items">
+                                        </select-item>
+                                    </div>
+                                    <div class="panel-footer alert-danger">
+                                        <strong>Liste des tables séléctionnées : </strong><br>
+                                        <ul id="repeat-object">
+                                            <li v-for="value in selectTables">
+                                                <div v-if="dbObj[value.table]._table_translation">
+                                                    {{ dbObj[value.table]._table_translation }}
+                                                </div>
+                                                <div v-else>
+                                                    {{ value.table }}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </transition>
                         </div>
-                    </transition>
-                </div>
 
-                <div id="condition" class="col-xs-8">
-                    <transition name="fade" appear hidden>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
-                            <div class="panel-body">
-                                <condition-item
-                                        :select-tables="selectTables"
-                                        :items="items"
-                                        :conditions="conditions"
-                                        :db-obj="dbObj"
-                                >
-                                </condition-item>
-                                <button type="button" class="btn btn-success pull-right" aria-expanded="false"
-                                        @click="search"
-                                        :disabled="!searchable"
-                                >
-                                    Recherche
-                                </button>
-                                <form method="post" action="query.php">
-                                    <input type="hidden" name="action" value="spreadsheet">
-                                    <input type="hidden" name="columns" v-model="JSON.stringify(columns)">
-                                    <input type="hidden" name="data" v-model="JSON.stringify(data)">
-                                    <input type="submit" value="Extraire" class="btn btn-info pull-right"
-                                           :disabled="(data.length > 0) ? false : true">
-                                </form>
-                            </div>
+                        <div id="condition" class="col-xs-8">
+                            <transition name="fade" appear hidden>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong>{{ 'Conditions' | capitalize }}</strong></div>
+                                    <div class="panel-body">
+                                        <condition-item
+                                                :select-tables="selectTables"
+                                                :items="items"
+                                                :conditions="conditions"
+                                                :db-obj="dbObj"
+                                        >
+                                        </condition-item>
+                                        <button type="button" class="btn btn-success pull-right" aria-expanded="false"
+                                                @click="search"
+                                                :disabled="!searchable"
+                                        >
+                                            Recherche
+                                        </button>
+                                        <form method="post" action="query.php">
+                                            <input type="hidden" name="action" value="spreadsheet">
+                                            <input type="hidden" name="columns" v-model="JSON.stringify(columns)">
+                                            <input type="hidden" name="data" v-model="JSON.stringify(data)">
+                                            <input type="submit" value="Extraire" class="btn btn-info pull-right"
+                                                   :disabled="(data.length > 0) ? false : true">
+                                        </form>
+                                    </div>
+                                </div>
+                            </transition>
                         </div>
-                    </transition>
-                </div>
 
-                <div id="query" class="col-xs-2">
-                    <transition name="fade" appear hidden>
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>{{ 'Sauvegardes' | capitalize }}</strong></div>
-                            <div class="panel-body">
-                                <hr>
-                                <button type="button" aria-expanded="false" class="btn btn-info pull-left">
-                                    Charger
-                                </button>
-                                <button type="button" aria-expanded="false" class="btn btn-success pull-right">
-                                    Sauvegarder
-                                </button>
-                            </div>
+                        <div id="query" class="col-xs-2">
+                            <transition name="fade" appear hidden>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong>{{ 'Sauvegardes' | capitalize }}</strong></div>
+                                    <div class="panel-body">
+                                        <div>
+                                            <ol id="save-queries" class="rectangle-list">
+                                                <li v-for="(value, index) in saveQuery">
+                                                    <a @click="loadSave(value.id)">
+                                                        {{ value.title }}
+                                                        <span v-if="value.user === null">(public)</span>
+                                                        <span v-else>(privée)</span>
+                                                    </a>
+                                                    <i @click="deleteSave(value.id, index)"
+                                                       class="fa fa-times fa-2x text-danger" aria-hidden="true"></i>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                        <hr>
+                                        <modal :show="showModal" @update:show="val => showModal = val">
+                                            <h3 slot="header">
+                                                SAUVEGARDER LA REQUÊTE
+                                            </h3>
+
+                                            <div slot="body">
+                                                <div class="col-xs-8">
+                                                    <input type="text" class="form-control"
+                                                           placeholder="Titre de la requête"
+                                                           v-model="saveTitle">
+                                                </div>
+                                                <div id="modal-save-btn" class="col-xs-4">
+                                                    <button type="button" class="btn btn-success"
+                                                            :disabled="!saveTitle.length > 0" @click="save(0)">
+                                                        Sauvegarde public
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger"
+                                                            :disabled="!saveTitle.length > 0" @click="save(1)">
+                                                        Sauvegarde privée
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div slot="footer">
+                                                <span v-for="value in selectTables">
+                                                    <div v-if="dbObj[value.table]._table_translation">
+                                                        {{ dbObj[value.table]._table_translation }}
+                                                    </div>
+                                                    <div v-else>
+                                                        {{ value.table }}
+                                                    </div>
+                                                </span>
+                                            </div>
+                                        </modal>
+                                        <button id="show-modal" class="btn btn-success pull-right"
+                                                aria-expanded="false"
+                                                @click="showModal = true"
+                                                :disabled="!searchable"
+                                        >
+                                            Sauvegarde
+                                        </button>
+                                    </div>
+                                </div>
+                            </transition>
                         </div>
-                    </transition>
-                </div>
 
-                <!-- result -->
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>Résultat</strong></div>
-                            <div class="panel-body">
-                                <table class="table">
-                                    <thead></thead>
-                                    <tbody id="tbody-response">
-                                    </tbody>
-                                </table>
+                        <!-- result -->
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong>Résultat</strong></div>
+                                    <div class="panel-body">
+                                        <table class="table">
+                                            <thead></thead>
+                                            <tbody id="tbody-response">
+                                            </tbody>
+                                        </table>
 
-                                <!-- research root element -->
-                                <div id="app-result-research">
-                                    <form id="search">
-                                        Recherche <input type="text" name="query" v-model="searchQuery">
-                                    </form>
-                                    <hr>
-                                    <spreadsheet
-                                            :data="data"
-                                            :columns="columns"
-                                            :filter-key="searchQuery">
-                                    </spreadsheet>
+                                        <!-- research root element -->
+                                        <div id="app-result-research">
+                                            <form id="search">
+                                                Recherche <input type="text" name="query" v-model="searchQuery">
+                                            </form>
+                                            <hr>
+                                            <spreadsheet
+                                                    :data="data"
+                                                    :columns="columns"
+                                                    :filter-key="searchQuery">
+                                            </spreadsheet>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"><strong>Requête SQL</strong></div>
-                            <div class="panel-body">
-                                <span>{{ sqlRequest }}</span>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading"><strong>Requête SQL</strong></div>
+                                    <div class="panel-body">
+                                        <span>{{ sqlRequest }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
-
             </div>
+
         </div>
-    </div>
 
-</div>
-
-<script src="assets/vendor/jquery/dist/jquery.min.js"></script>
-<script src="assets/vendor/vue/dist/vue.js"></script>
-<script src="assets/vendor/vue-resource/dist/vue-resource.min.js"></script>
-<script src="assets/js/vue/component/spreadsheet.js"></script>
-<script src="assets/js/vue/component/select.js"></script>
-<script src="assets/js/vue/component/condition.js"></script>
-<script src="assets/js/vue/filter.js"></script>
-<script src="assets/js/vue/appRequest.js"></script>
+        <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+        <script src="assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="assets/vendor/vue/dist/vue.js"></script>
+        <script src="assets/vendor/vue-resource/dist/vue-resource.min.js"></script>
+        <script src="assets/js/vue/component/spreadsheet.js"></script>
+        <script src="assets/js/vue/component/select.js"></script>
+        <script src="assets/js/vue/component/condition.js"></script>
+        <script src="assets/js/vue/component/modal.js"></script>
+        <script src="assets/js/vue/filter.js"></script>
+        <script src="assets/js/vue/appRequest.js"></script>
 
 </body>
 </html>

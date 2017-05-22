@@ -324,8 +324,7 @@ class QueryBuilderDoctrine
      * @param string $value
      * @return null|string
      */
-    private
-    function getCondition(string $operator, string $alias, string $value)
+    private function getCondition(string $operator, string $alias, string $value)
     {
         $condition = null;
         switch ($operator) {
@@ -350,8 +349,7 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @throws \Exception
      */
-    private
-    function prepareJsonQuery(string $jsonQuery)
+    private function prepareJsonQuery(string $jsonQuery)
     {
         /// Try to decode json
         $queryObj = json_decode($jsonQuery);
@@ -379,8 +377,7 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @return array
      */
-    public
-    function executeQuery(string $jsonQuery): array
+    public function executeQuery(string $jsonQuery): array
     {
         /// Reset DQL parts if exist
         $this->resetSQLRequest();
@@ -419,8 +416,7 @@ class QueryBuilderDoctrine
      * @param string $jsonQuery
      * @return string
      */
-    public
-    function executeQueryJson(string $jsonQuery): string
+    public function executeQueryJson(string $jsonQuery): string
     {
         $result = $this->executeQuery($jsonQuery);
         if (count($result) > 0) {
@@ -454,8 +450,7 @@ class QueryBuilderDoctrine
      * @return array
      * @throws \Exception
      */
-    public
-    function getQueryColumns(bool $getTranslationName = false): array
+    public function getQueryColumns(bool $getTranslationName = false): array
     {
         if (null === $this->fields) {
             http_response_code(400);
@@ -478,8 +473,7 @@ class QueryBuilderDoctrine
      * @param bool $getTranslationName
      * @return string
      */
-    public
-    function getJsonQueryColumns(bool $getTranslationName = false): string
+    public function getJsonQueryColumns(bool $getTranslationName = false): string
     {
         return json_encode($this->getQueryColumns($getTranslationName));
     }
@@ -488,8 +482,7 @@ class QueryBuilderDoctrine
      * Adding extra DQL and return the SQL request
      * @return string
      */
-    public
-    function getSQLRequest(): string
+    public function getSQLRequest(): string
     {
         $sqlRequest = $this->queryBuilder->getDQL();
         $sqlRequest = null !== $this->limit && 0 !== $this->limit ? $sqlRequest . ' LIMIT ' . $this->limit : $sqlRequest;
@@ -500,8 +493,7 @@ class QueryBuilderDoctrine
     /**
      * Reset DQL parts
      */
-    private
-    function resetSQLRequest()
+    private function resetSQLRequest()
     {
         $this->queryBuilder->resetDQLParts();
     }
@@ -512,8 +504,7 @@ class QueryBuilderDoctrine
      * @param array $columns
      * @param array $data
      */
-    public
-    function spreadsheet(array $columns, array $data)
+    public function spreadsheet(array $columns, array $data)
     {
         $spreadsheet = new Spreadsheet($columns, $data);
         $spreadsheet->setCreator('Eductive GROUP');

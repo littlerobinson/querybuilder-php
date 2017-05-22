@@ -233,8 +233,8 @@ Add this in the config.yml file to tell the program where to find the restrictio
 
 ```yaml
 # config.yml
-rules:
-    user_id: { type: cookie }
+user: { name: user, type: cookie }
+association: { name: group, type: cookie }
 ...
 ```
 
