@@ -14,7 +14,7 @@ class QueryBackup
     private static $association;
 
     /**
-     * SQLite3DB constructor.
+     * QueryBackup constructor.
      * @param string $path
      */
     public function __construct($path = __DIR__ . '/../config/querybuilderdb.sqlite')

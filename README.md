@@ -1,4 +1,4 @@
-# Query Builder SDK
+# Query Builder PHP
 Generates queries dynamically on a database.
 The tool allows to set up the configuration of a database in a YML file.
 

@@ -1,10 +1,11 @@
 <?php
 require "../bootstrap.php";
 
-use Littlerobinson\QueryBuilder\Utils\View;
+use \Littlerobinson\QueryBuilder\RunQueryBuilder;
+use \Littlerobinson\QueryBuilder\Utils\View;
 
-
-/**
- * Run Template
- */
-$template = new View('vue-js');
+if (!empty($_POST['action_query_builder'])) {
+    RunQueryBuilder::execute();
+} else {
+    $template = new View('vue-js');
+}

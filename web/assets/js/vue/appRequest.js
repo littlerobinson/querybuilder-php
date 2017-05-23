@@ -75,7 +75,7 @@ request = new Vue({
             this.query.limit = this.limit;
             this.query.offset = this.offset;
             let $jsonQuery = JSON.stringify(this.query);
-            this.$http.post('/query.php', {action: 'execute_query_json', json_query: $jsonQuery}).then(
+            this.$http.post('/', {action_query_builder: 'execute_query_json', json_query: $jsonQuery}).then(
                 response => {
                     this.loading = false;
                     this.data = response.body.items;
@@ -88,7 +88,7 @@ request = new Vue({
             );
         },
         spreadsheet: function () {
-            this.$http.post('/query.php', {action: 'spreadsheet', columns: this.columns, data: this.data}).then(
+            this.$http.post('/', {action_query_builder: 'spreadsheet', columns: this.columns, data: this.data}).then(
                 response => {
                     console.log(response);
                     window.open("data:application/vnd.ms-excel, " + response.body);
@@ -106,7 +106,12 @@ request = new Vue({
             this.query.where = this.where;
             this.query.limit = this.limit;
             this.query.offset = this.offset;
-            this.$http.post('/query.php', {action: 'save_query', query: this.query, title: this.saveTitle, is_private: $isPrivate}).then(
+            this.$http.post('/', {
+                action_query_builder: 'save_query',
+                query: this.query,
+                title: this.saveTitle,
+                is_private: $isPrivate
+            }).then(
                 response => {
                     this.showModal = false;
                     this.loading = false;
@@ -123,7 +128,7 @@ request = new Vue({
         },
         loadSave: function ($id) {
             this.loading = true;
-            this.$http.post('/query.php', {action: 'load_query', query_id: $id}).then(
+            this.$http.post('/', {action_query_builder: 'load_query', query_id: $id}).then(
                 response => {
                     this.loading = false;
                     console.log(response.body.value);
@@ -134,8 +139,10 @@ request = new Vue({
                     this.limit = $object.limit;
                     this.offset = $object.offset;
                     this.search();
+                    this.__cleanQuery();
                     this.message.success = 'Chargement de la requête réussi';
                 }, response => {
+                    this.__cleanQuery();
                     this.loading = false;
                     this.message.error = 'Echec lors du chargement de la requête';
                 }
@@ -143,7 +150,7 @@ request = new Vue({
         },
         deleteSave: function ($id, $index) {
             this.loading = true;
-            this.$http.post('/query.php', {action: 'delete_query', query_id: $id}).then(
+            this.$http.post('/', {action_query_builder: 'delete_query', query_id: $id}).then(
                 response => {
                     this.saveQuery.splice($index, 1);
                     this.loading = false;
@@ -156,7 +163,7 @@ request = new Vue({
         },
         getListQuery: function () {
             this.loading = true;
-            this.$http.post('/query.php', {action: 'get_list_query'}).then(
+            this.$http.post('/', {action_query_builder: 'get_list_query'}).then(
                 response => {
                     this.showModal = false;
                     this.loading = false;
@@ -174,7 +181,7 @@ request = new Vue({
             delete this.message[$key];
         },
         _getDbObject: function (callback) {
-            this.$http.post('/query.php', {action: 'get_db_object'}).then(
+            this.$http.post('/', {action_query_builder: 'get_db_object'}).then(
                 response => {
                     this.dbObj = response.body;
                     callback();
@@ -185,7 +192,7 @@ request = new Vue({
             );
         },
         _getDbTitle: function () {
-            this.$http.post('/query.php', {action: 'get_db_title'}).then(
+            this.$http.post('/', {action_query_builder: 'get_db_title'}).then(
                 response => {
                     this.dbTitle = response.body;
                 }, response => {
@@ -208,6 +215,12 @@ request = new Vue({
 
                 this.where.push($where);
             }
+        },
+        __cleanQuery: function () {
+            this.from = {};
+            this.where = [];
+            this.limit = 0;
+            this.offset = 0;
         }
     },
     filter: {

@@ -268,7 +268,7 @@
                                         >
                                             Recherche
                                         </button>
-                                        <form method="post" action="query.php">
+                                        <form method="post">
                                             <input type="hidden" name="action" value="spreadsheet">
                                             <input type="hidden" name="columns" v-model="JSON.stringify(columns)">
                                             <input type="hidden" name="data" v-model="JSON.stringify(data)">
@@ -390,17 +390,19 @@
             </div>
 
         </div>
+    </div>
+</div>
 
-        <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
-        <script src="assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="assets/vendor/vue/dist/vue.js"></script>
-        <script src="assets/vendor/vue-resource/dist/vue-resource.min.js"></script>
-        <script src="assets/js/vue/component/spreadsheet.js"></script>
-        <script src="assets/js/vue/component/select.js"></script>
-        <script src="assets/js/vue/component/condition.js"></script>
-        <script src="assets/js/vue/component/modal.js"></script>
-        <script src="assets/js/vue/filter.js"></script>
-        <script src="assets/js/vue/appRequest.js"></script>
+<script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+<script src="assets/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="assets/vendor/vue/dist/vue.js"></script>
+<script src="assets/vendor/vue-resource/dist/vue-resource.min.js"></script>
+<script src="assets/js/vue/component/spreadsheet.js"></script>
+<script src="assets/js/vue/component/select.js"></script>
+<script src="assets/js/vue/component/condition.js"></script>
+<script src="assets/js/vue/component/modal.js"></script>
+<script src="assets/js/vue/filter.js"></script>
+<script src="assets/js/vue/appRequest.js"></script>
 
 </body>
 </html>
