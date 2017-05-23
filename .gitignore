@@ -1,5 +1,5 @@
 # Parameters
-config/
+config/*
 !/config/config-dist.yml
 !/config/security-dist.yml
 

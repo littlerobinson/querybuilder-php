@@ -1,0 +1,11 @@
+database:
+    config_path: '/../config/database-config.yml'
+    charset: utf8mb4
+    driver: pdo_mysql
+    host: 127.0.0.1
+    port: 3306
+    user: null
+    password: null
+    dbname: null
+identifier: null
+association: null

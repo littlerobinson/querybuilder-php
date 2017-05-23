@@ -1,0 +1,2228 @@
+affiliation_social_security:
+    _table_translation: 'Replacement secu'
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: 'Replacement field id'
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    parent_salary_scheme_id:
+        name: parent_salary_scheme_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    order_number:
+        name: order_number
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 30
+        not_null: true
+        definition: null
+    is_scholarship:
+        name: is_scholarship
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_unemployment:
+        name: is_unemployment
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    treatment_date:
+        name: treatment_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    organization_name:
+        name: organization_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    parent2_salary_scheme_id:
+        name: parent2_salary_scheme_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    _FK:
+        parent2_salary_scheme_id: { tableName: salary_scheme, columns: parent2_salary_scheme_id, foreignColumns: code, name: FK_2F4B2CA110298215, options: { onDelete: null, onUpdate: null } }
+        registrant_id: { tableName: registrant, columns: registrant_id, foreignColumns: id, name: FK_2F4B2CA13304A716, options: { onDelete: null, onUpdate: null } }
+        parent_salary_scheme_id: { tableName: salary_scheme, columns: parent_salary_scheme_id, foreignColumns: code, name: FK_2F4B2CA1A6707F4D, options: { onDelete: null, onUpdate: null } }
+attachment:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    attachment_type_id:
+        name: attachment_type_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    comment:
+        name: comment
+        _field_translation: null
+        _field_visibility: true
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    created_at:
+        name: created_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    file_name:
+        name: file_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    _FK:
+        registrant_id: { tableName: registrant, columns: registrant_id, foreignColumns: id, name: FK_795FD9BB3304A716, options: { onDelete: null, onUpdate: null } }
+        attachment_type_id: { tableName: attachment_type, columns: attachment_type_id, foreignColumns: id, name: FK_795FD9BBDD9D915, options: { onDelete: null, onUpdate: null } }
+attachment_type:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    enabled:
+        name: enabled
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    comment:
+        name: comment
+        _field_translation: null
+        _field_visibility: true
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+campus:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    is_enabled:
+        name: is_enabled
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+campuses_users:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: user_id
+    user_id:
+        name: user_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    campus_id:
+        name: campus_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    _FK:
+        user_id: { tableName: user, columns: user_id, foreignColumns: id, name: FK_901D288A76ED395, options: { onDelete: null, onUpdate: null } }
+        campus_id: { tableName: campus, columns: campus_id, foreignColumns: id, name: FK_901D288AF5D55E1, options: { onDelete: null, onUpdate: null } }
+civility:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 20
+        not_null: true
+        definition: null
+company:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    type:
+        name: type
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 50
+        not_null: true
+        definition: null
+    corporate_name:
+        name: corporate_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    siren:
+        name: siren
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 11
+        not_null: true
+        definition: null
+    intra_community_vat:
+        name: intra_community_vat
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 20
+        not_null: true
+        definition: null
+    vat_rate:
+        name: vat_rate
+        _field_translation: null
+        _field_visibility: true
+        type: float
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    rcs:
+        name: rcs
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 50
+        not_null: false
+        definition: null
+    capital:
+        name: capital
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    ape:
+        name: ape
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    particular_mention:
+        name: particular_mention
+        _field_translation: null
+        _field_visibility: true
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+company_internship:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registration_id:
+        name: registration_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    company_name:
+        name: company_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 150
+        not_null: true
+        definition: null
+    address1:
+        name: address1
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    address2:
+        name: address2
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    zip:
+        name: zip
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    city:
+        name: city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 70
+        not_null: false
+        definition: null
+    phone:
+        name: phone
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    tutor_first_name:
+        name: tutor_first_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    tutor_last_name:
+        name: tutor_last_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    tutor_email:
+        name: tutor_email
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    signatory_first_name:
+        name: signatory_first_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    signatory_last_name:
+        name: signatory_last_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    begin_date:
+        name: begin_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    end_date:
+        name: end_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    observation:
+        name: observation
+        _field_translation: null
+        _field_visibility: true
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    shipment_agreement_date:
+        name: shipment_agreement_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    return_agreement_date:
+        name: return_agreement_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    tutor_civility_id:
+        name: tutor_civility_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    tutor_function:
+        name: tutor_function
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    signatory_civility_id:
+        name: signatory_civility_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    _FK:
+        registration_id: { tableName: registration, columns: registration_id, foreignColumns: id, name: FK_AD5F599A833D8F43, options: { onDelete: null, onUpdate: null } }
+        signatory_civility_id: { tableName: civility, columns: signatory_civility_id, foreignColumns: id, name: FK_AD5F599AC347D9CA, options: { onDelete: null, onUpdate: null } }
+        tutor_civility_id: { tableName: civility, columns: tutor_civility_id, foreignColumns: id, name: FK_AD5F599AF113EDD8, options: { onDelete: null, onUpdate: null } }
+country:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: false
+        type: string
+        default: null
+        length: 2
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    calling_codes:
+        name: calling_codes
+        _field_translation: null
+        _field_visibility: true
+        type: simple_array
+        default: null
+        length: null
+        not_null: false
+        definition: null
+diploma:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+exit_cause:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    created_at:
+        name: created_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+experience_lign:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_name:
+        name: training_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    school_year:
+        name: school_year
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 9
+        not_null: false
+        definition: null
+    begin_date:
+        name: begin_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    end_date:
+        name: end_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    exit_date:
+        name: exit_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    exit_reason:
+        name: exit_reason
+        _field_translation: null
+        _field_visibility: true
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    establishment:
+        name: establishment
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    establishment_city:
+        name: establishment_city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    diploma_name:
+        name: diploma_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    is_diploma_validate:
+        name: is_diploma_validate
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    diploma_validation_date:
+        name: diploma_validation_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    diploma_speciality:
+        name: diploma_speciality
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 50
+        not_null: false
+        definition: null
+    _FK:
+        registrant_id: { tableName: registrant, columns: registrant_id, foreignColumns: id, name: FK_C314192A3304A716, options: { onDelete: null, onUpdate: null } }
+institution:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    company_id:
+        name: company_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_head_office:
+        name: is_head_office
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    siret:
+        name: siret
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 14
+        not_null: true
+        definition: null
+    address1:
+        name: address1
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    address2:
+        name: address2
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    zip:
+        name: zip
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 5
+        not_null: true
+        definition: null
+    city:
+        name: city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    _FK:
+        company_id: { tableName: company, columns: company_id, foreignColumns: id, name: FK_3A9F98E5979B1AD6, options: { onDelete: null, onUpdate: null } }
+registrant:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    crm_id:
+        name: crm_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    student_number:
+        name: student_number
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 11
+        not_null: false
+        definition: null
+    last_name:
+        name: last_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    first_name:
+        name: first_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    birth_date:
+        name: birth_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    birth_city:
+        name: birth_city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    birth_department:
+        name: birth_department
+        _field_translation: null
+        _field_visibility: true
+        type: smallint
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    nationality:
+        name: nationality
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    social_security:
+        name: social_security
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    address1:
+        name: address1
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    address2:
+        name: address2
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    zip:
+        name: zip
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    city:
+        name: city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    email:
+        name: email
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    email_school:
+        name: email_school
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    cell_phone:
+        name: cell_phone
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    phone:
+        name: phone
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    parent1_address1:
+        name: parent1_address1
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent1_address2:
+        name: parent1_address2
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent1_zip:
+        name: parent1_zip
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    parent1_city:
+        name: parent1_city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent1_email:
+        name: parent1_email
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    parent1_cell_phone:
+        name: parent1_cell_phone
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    parent1_phone:
+        name: parent1_phone
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    bac_establishment:
+        name: bac_establishment
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    bac_option:
+        name: bac_option
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    bac_date:
+        name: bac_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    bac_establishment_department:
+        name: bac_establishment_department
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    bac_establishment_city:
+        name: bac_establishment_city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    is_bac_public_establishment:
+        name: is_bac_public_establishment
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    bac_classroom_exit:
+        name: bac_classroom_exit
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    is_doubling:
+        name: is_doubling
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    created_at:
+        name: created_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    campus_id:
+        name: campus_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    parent1_last_name:
+        name: parent1_last_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent1_first_name:
+        name: parent1_first_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_last_name:
+        name: parent2_last_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_first_name:
+        name: parent2_first_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_address1:
+        name: parent2_address1
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent2_address2:
+        name: parent2_address2
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent2_zip:
+        name: parent2_zip
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    parent2_city:
+        name: parent2_city
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    parent2_email:
+        name: parent2_email
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: false
+        definition: null
+    parent2_cell_phone:
+        name: parent2_cell_phone
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    parent2_phone:
+        name: parent2_phone
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 15
+        not_null: false
+        definition: null
+    country_id:
+        name: country_id
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 2
+        not_null: false
+        definition: null
+    civility_id:
+        name: civility_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    maiden_name:
+        name: maiden_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    birth_country:
+        name: birth_country
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 2
+        not_null: false
+        definition: null
+    diploma:
+        name: diploma
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    diploma_code:
+        name: diploma_code
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    diploma_obtained:
+        name: diploma_obtained
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    diploma_speciality:
+        name: diploma_speciality
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 150
+        not_null: false
+        definition: null
+    diploma_speciality_code:
+        name: diploma_speciality_code
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    is_apprenticeship:
+        name: is_apprenticeship
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    diploma_level:
+        name: diploma_level
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    bac_type:
+        name: bac_type
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    parent1_salary_scheme_id:
+        name: parent1_salary_scheme_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    parent2_salary_scheme_id:
+        name: parent2_salary_scheme_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    is_disabled:
+        name: is_disabled
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    parent1_civility_id:
+        name: parent1_civility_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    parent2_civility_id:
+        name: parent2_civility_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    _FK:
+        parent2_salary_scheme_id: { tableName: salary_scheme, columns: parent2_salary_scheme_id, foreignColumns: code, name: FK_66135AC010298215, options: { onDelete: null, onUpdate: null } }
+        civility_id: { tableName: civility, columns: civility_id, foreignColumns: id, name: FK_66135AC023D6A298, options: { onDelete: null, onUpdate: null } }
+        birth_country: { tableName: country, columns: birth_country, foreignColumns: id, name: FK_66135AC0286E6510, options: { onDelete: null, onUpdate: null } }
+        parent2_civility_id: { tableName: civility, columns: parent2_civility_id, foreignColumns: id, name: FK_66135AC064DAF768, options: { onDelete: null, onUpdate: null } }
+        campus_id: { tableName: campus, columns: campus_id, foreignColumns: id, name: FK_66135AC0AF5D55E1, options: { onDelete: null, onUpdate: null } }
+        parent1_civility_id: { tableName: civility, columns: parent1_civility_id, foreignColumns: id, name: FK_66135AC0D9109BA6, options: { onDelete: null, onUpdate: null } }
+        country_id: { tableName: country, columns: country_id, foreignColumns: id, name: FK_66135AC0F92F3E70, options: { onDelete: null, onUpdate: null } }
+        parent1_salary_scheme_id: { tableName: salary_scheme, columns: parent1_salary_scheme_id, foreignColumns: code, name: FK_66135AC0FAAF5F77, options: { onDelete: null, onUpdate: null } }
+registrant_status:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 80
+        not_null: true
+        definition: null
+    comment:
+        name: comment
+        _field_translation: null
+        _field_visibility: true
+        type: text
+        default: null
+        length: null
+        not_null: false
+        definition: null
+registration:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registrant_id:
+        name: registrant_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    user_id:
+        name: user_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    registration_amount:
+        name: registration_amount
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 6
+        not_null: false
+        definition: null
+    registration_date:
+        name: registration_date
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    registration_breach_date:
+        name: registration_breach_date
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    registration_signature_date:
+        name: registration_signature_date
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    first_warning_date:
+        name: first_warning_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    second_warning_date:
+        name: second_warning_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    third_warning_date:
+        name: third_warning_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    is_educational_contract:
+        name: is_educational_contract
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_id:
+        name: training_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    school_year_id:
+        name: school_year_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    exit_cause:
+        name: exit_cause
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    registrant_status_id:
+        name: registrant_status_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    social_security_institution_id:
+        name: social_security_institution_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    is_check:
+        name: is_check
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_rib:
+        name: is_rib
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_cerfa:
+        name: is_cerfa
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_scholarship:
+        name: is_scholarship
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_unemployment:
+        name: is_unemployment
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    treatment_date:
+        name: treatment_date
+        _field_translation: null
+        _field_visibility: true
+        type: date
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    section_id:
+        name: section_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    hyperplanning_uuid:
+        name: hyperplanning_uuid
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 50
+        not_null: false
+        definition: null
+    created_at:
+        name: created_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    updated_at:
+        name: updated_at
+        _field_translation: null
+        _field_visibility: true
+        type: datetime
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    _FK:
+        registrant_id: { tableName: registrant, columns: registrant_id, foreignColumns: id, name: FK_62A8A7A73304A716, options: { onDelete: null, onUpdate: null } }
+        exit_cause: { tableName: exit_cause, columns: exit_cause, foreignColumns: id, name: FK_62A8A7A7839CBBA7, options: { onDelete: null, onUpdate: null } }
+        social_security_institution_id: { tableName: social_security_institution, columns: social_security_institution_id, foreignColumns: id, name: FK_62A8A7A78882CEE0, options: { onDelete: null, onUpdate: null } }
+        registrant_status_id: { tableName: registrant_status, columns: registrant_status_id, foreignColumns: id, name: FK_62A8A7A7A3FA2BFE, options: { onDelete: null, onUpdate: null } }
+        user_id: { tableName: user, columns: user_id, foreignColumns: id, name: FK_62A8A7A7A76ED395, options: { onDelete: null, onUpdate: null } }
+        training_id: { tableName: training, columns: training_id, foreignColumns: id, name: FK_62A8A7A7BEFD98D1, options: { onDelete: null, onUpdate: null } }
+        school_year_id: { tableName: school_year, columns: school_year_id, foreignColumns: id, name: FK_62A8A7A7D2EECC3F, options: { onDelete: null, onUpdate: null } }
+        section_id: { tableName: section, columns: section_id, foreignColumns: id, name: FK_62A8A7A7D823E37A, options: { onDelete: null, onUpdate: null } }
+salary_scheme:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: code
+    code:
+        name: code
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 150
+        not_null: true
+        definition: null
+    level:
+        name: level
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+school:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    code_uai:
+        name: code_uai
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 8
+        not_null: false
+        definition: null
+    hyperplanning_wsdl:
+        name: hyperplanning_wsdl
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: false
+        definition: null
+    hyperplanning_login:
+        name: hyperplanning_login
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    hyperplanning_pass:
+        name: hyperplanning_pass
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    campus_id:
+        name: campus_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    _FK:
+        campus_id: { tableName: campus, columns: campus_id, foreignColumns: id, name: FK_F99EDABBAF5D55E1, options: { onDelete: null, onUpdate: null } }
+school_year:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: true
+        definition: null
+    is_active:
+        name: is_active
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+schools_users:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: user_id
+    user_id:
+        name: user_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    school_id:
+        name: school_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    _FK:
+        user_id: { tableName: user, columns: user_id, foreignColumns: id, name: FK_6B1A1951A76ED395, options: { onDelete: null, onUpdate: null } }
+        school_id: { tableName: school, columns: school_id, foreignColumns: id, name: FK_6B1A1951C32A47EE, options: { onDelete: null, onUpdate: null } }
+section:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    training_id:
+        name: training_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    _FK:
+        training_id: { tableName: training, columns: training_id, foreignColumns: id, name: FK_2D737AEFBEFD98D1, options: { onDelete: null, onUpdate: null } }
+social_security_institution:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    is_enabled:
+        name: is_enabled
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+speciality:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    diploma_id:
+        name: diploma_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 255
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 25
+        not_null: false
+        definition: null
+    _FK:
+        diploma_id: { tableName: diploma, columns: diploma_id, foreignColumns: id, name: FK_F3D7A08EA99ACEB5, options: { onDelete: null, onUpdate: null } }
+training:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    school_id:
+        name: school_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    is_enabled:
+        name: is_enabled
+        _field_translation: null
+        _field_visibility: true
+        type: boolean
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_info_id:
+        name: training_info_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    training_objective_id:
+        name: training_objective_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    training_level_id:
+        name: training_level_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    diploma_id:
+        name: diploma_id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: false
+        definition: null
+    full_name:
+        name: full_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: false
+        definition: null
+    short_name:
+        name: short_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 20
+        not_null: false
+        definition: null
+    speciality_bpf:
+        name: speciality_bpf
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    speciality_opqf:
+        name: speciality_opqf
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: false
+        definition: null
+    _FK:
+        training_objective_id: { tableName: training_objective, columns: training_objective_id, foreignColumns: id, name: FK_D5128A8F6B5B653E, options: { onDelete: null, onUpdate: null } }
+        diploma_id: { tableName: diploma, columns: diploma_id, foreignColumns: id, name: FK_D5128A8FA99ACEB5, options: { onDelete: null, onUpdate: null } }
+        training_level_id: { tableName: training_level, columns: training_level_id, foreignColumns: id, name: FK_D5128A8FB8D45830, options: { onDelete: null, onUpdate: null } }
+        school_id: { tableName: school, columns: school_id, foreignColumns: id, name: FK_D5128A8FC32A47EE, options: { onDelete: null, onUpdate: null } }
+training_level:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 10
+        not_null: true
+        definition: null
+    level:
+        name: level
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+training_objective:
+    _table_translation: null
+    _table_visibility: true
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    name:
+        name: name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 50
+        not_null: true
+        definition: null
+    short_name:
+        name: short_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 1
+        not_null: false
+        definition: null
+user:
+    _table_translation: null
+    _table_visibility: false
+    _primary_key: id
+    id:
+        name: id
+        _field_translation: null
+        _field_visibility: true
+        type: integer
+        default: null
+        length: null
+        not_null: true
+        definition: null
+    first_name:
+        name: first_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    last_name:
+        name: last_name
+        _field_translation: null
+        _field_visibility: true
+        type: string
+        default: null
+        length: 100
+        not_null: true
+        definition: null
+    roles:
+        name: roles
+        _field_translation: null
+        _field_visibility: true
+        type: json_array
+        default: null
+        length: null
+        not_null: true
+        definition: null
