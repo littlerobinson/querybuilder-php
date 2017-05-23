@@ -269,7 +269,7 @@
                                             Recherche
                                         </button>
                                         <form method="post">
-                                            <input type="hidden" name="action" value="spreadsheet">
+                                            <input type="hidden" name="action_query_builder" value="spreadsheet">
                                             <input type="hidden" name="columns" v-model="JSON.stringify(columns)">
                                             <input type="hidden" name="data" v-model="JSON.stringify(data)">
                                             <input type="submit" value="Extraire" class="btn btn-info pull-right"
