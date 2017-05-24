@@ -2,13 +2,6 @@
 
 namespace Littlerobinson\QueryBuilder;
 
-/**
- * TODO: example, to be deleted
- */
-setcookie('school', 1);
-setcookie('EDUCTIVEAUTH', 'eyJ0eXAiOi');
-
-
 class RunQueryBuilder
 {
     private static function writeDatabaseYamlConfig()

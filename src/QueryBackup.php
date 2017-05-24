@@ -13,6 +13,8 @@ class QueryBackup
 
     private static $association;
 
+    private static $restriction;
+
     /**
      * QueryBackup constructor.
      * @param string $path
@@ -24,25 +26,29 @@ class QueryBackup
 
         switch ($user['type']) {
             case 'cookie':
-                self::$user = !@unserialize($_COOKIE[$user['name']]) ? $_COOKIE[$user['name']] : unserialize($_COOKIE[$user['name']]);
+                self::$user        = !@unserialize($_COOKIE[$user['name']]) ? $_COOKIE[$user['name']] : unserialize($_COOKIE[$user['name']]);
+                self::$restriction = true;
                 break;
             case "session":
-                self::$user = !@unserialize($_SESSION[$user['name']]) ? $_SESSION[$user['name']] : unserialize($_SESSION[$user['name']]);
+                self::$user        = !@unserialize($_SESSION[$user['name']]) ? $_SESSION[$user['name']] : unserialize($_SESSION[$user['name']]);
+                self::$restriction = true;
                 break;
             default:
-                self::$user = !@unserialize($_COOKIE[$user['name']]) ? $_COOKIE[$user['name']] : unserialize($_COOKIE[$user['name']]);
+                self::$restriction = false;
                 break;
         }
 
         switch ($association['type']) {
             case 'cookie':
                 self::$association = !@unserialize($_COOKIE[$association['name']]) ? $_COOKIE[$association['name']] : unserialize($_COOKIE[$association['name']]);
+                self::$restriction = true;
                 break;
             case "session":
                 self::$association = !@unserialize($_SESSION[$association['name']]) ? $_SESSION[$association['name']] : unserialize($_SESSION[$association['name']]);
+                self::$restriction = true;
                 break;
             default:
-                self::$association = !@unserialize($_COOKIE[$association['name']]) ? $_COOKIE[$association['name']] : unserialize($_COOKIE[$association['name']]);
+                self::$restriction = false;
                 break;
         }
 
@@ -79,10 +85,18 @@ class QueryBackup
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return false;
         }
-
         $association = self::$association ?? null;
+        $where       = '';
 
-        $sth = self::$pdo->prepare("SELECT * FROM query WHERE association = $association");
+        if (self::$restriction) {
+            $where = 'WHERE association = :association';
+        }
+
+
+        $sth = self::$pdo->prepare("SELECT * FROM query " . $where);
+        if (self::$restriction) {
+            $sth->bindValue(':association', $association);
+        }
         $sth->execute();
         $result = $sth->fetchAll();
 
@@ -130,7 +144,7 @@ class QueryBackup
 
         $stmt = self::$pdo->prepare("INSERT INTO 
                                 query 
-                                (user, title, \"association\", value, modified, created)
+                                (user, title, association, value, modified, created)
                             VALUES
                                 (:user, :title, :association, :value, :modified, :created)");
 
@@ -164,7 +178,7 @@ class QueryBackup
 
         $stmt = self::$pdo->prepare("UPDATE query 
                                         SET
-                                    user = :user , title = :title, \"association\" = :association, value = :value, modified = :modified");
+                                    user = :user , title = :title, association = :association, value = :value, modified = :modified");
 
         $stmt->bindValue(':title', $title);
         $stmt->bindValue(':user', $user);
