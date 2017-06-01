@@ -42,7 +42,7 @@ class DoctrineDatabase
         $this->databaseTitle = $database['title'];
         $this->databaseRules = Yaml::parse(file_get_contents(__DIR__ . '/../config/security.yml'))['database'];
         $this->configuration = Setup::createAnnotationMetadataConfiguration([], $database['is_dev_mode']);
-        $this->configPath    = __DIR__ . $database['config_path'];
+        $this->configPath    = __DIR__ . '/../config/' . $database['config_path'];
         $this->entityManager = EntityManager::create($database['params'], $this->configuration);
         $this->connection    = $this->entityManager->getConnection();
         $this->schemaManager = $this->connection->getSchemaManager();

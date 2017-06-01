@@ -1,15 +1,2 @@
 database:
-    title: Query builder
-    is_dev_mode: false
-    config_path: '/../config/database-config.yml'
-    params:
-        driver: pdo_mysql
-        host: 127.0.0.1
-        port: 3306
-        user: root
-        password: root
-        dbname: dbname
-        charset: utf8mb4
-user: null
-association: null
-rules: null
+    post: post.user

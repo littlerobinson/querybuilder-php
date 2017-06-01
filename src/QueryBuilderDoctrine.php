@@ -264,12 +264,13 @@ class QueryBuilderDoctrine
         $configCondition  = null;
 
         if (array_key_exists($fromTable, $this->doctrineDb->getDatabaseRules())) {
-            $rules = $this->doctrineDb->getDatabaseRules()[$fromTable];
+            $rules = explode('.', $this->doctrineDb->getDatabaseRules()[$fromTable]);
         }
-        if (null !== $rules) {
-            foreach ($rules as $keyRule => $rule) {
+
+        if (null !== $rules && null !== $this->configRules) {
+            foreach ($rules as $join) {
                 /// Case from table is the same as the table rule
-                if ($keyRule === $fromTable) {
+                if ($join === $fromTable) {
                     $configCondition = $this->configRules[$fromTable];
                     if (is_array($configCondition)) {
                         $this->queryBuilder->andWhere($fromAlias . ' . ' . $fromPK . ' IN (' . implode(',', $configCondition) . ')');
@@ -279,34 +280,32 @@ class QueryBuilderDoctrine
                     continue;
                 }
 
-                $addWhere = false;
-                $joins    = explode('.', $keyRule);
-                foreach ($joins as $keyJoin => $join) {
-                    $fk = $this->searchFK($fromTable, $join);
-                    if (sizeof($fk) === 0) { /// Case the Fk is in the other table
-                        $fkInverse               = $this->searchFK($join, $fromTable);
-                        $newFromTable            = $join;
-                        $fkInverseColumns        = $fkInverse[$fromTable]->{'columns'};
-                        $fkInverseForeignColumns = $fkInverse[$fromTable]->{'foreignColumns'};
-                        $fkForeignColumns        = $fkInverseForeignColumns;
-                        $alias                   = $join . '_' . $fkInverseForeignColumns;
-                        $condition               = $alias . ' . ' . $fkInverseColumns . ' = ' . $fkInverseColumns . '.' . $fkInverseForeignColumns;
-                        $addWhere                = true;
-                        $this->queryBuilder->innerJoin($join, $alias, 'ON', $condition);
-                    } else { /// Case FK is in the table
-                        $newFromTable     = $join;
-                        $fkColumns        = $fk[$join]->{'columns'};
-                        $fkForeignColumns = $fk[$join]->{'foreignColumns'};
-                        $alias            = $fkColumns;
-                        $condition        = $alias . ' . ' . $fkForeignColumns . ' = ' . $fromAlias . '.' . $fkColumns;
-                        $addWhere         = true;
-                        $this->queryBuilder->innerJoin($newFromTable, $alias, 'ON', $condition);
-                    }
-                    $fromTable = $newFromTable;
-                    $fromAlias = $alias;
+                $addWhere = null;
+                $fk       = $this->searchFK($fromTable, $join);
+                if (sizeof($fk) === 0) { /// Case the Fk is in the other table
+                    $fkInverse               = $this->searchFK($join, $fromTable);
+                    $newFromTable            = $join;
+                    $fkInverseColumns        = $fkInverse[$fromTable]->{'columns'};
+                    $fkInverseForeignColumns = $fkInverse[$fromTable]->{'foreignColumns'};
+                    $fkForeignColumns        = $fkInverseForeignColumns;
+                    $alias                   = $join . '_' . $fkInverseForeignColumns;
+                    $condition               = $alias . ' . ' . $fkInverseColumns . ' = ' . $fkInverseColumns . '.' . $fkInverseForeignColumns;
+                    $addWhere                = true;
+                    $this->queryBuilder->innerJoin($join, $alias, 'ON', $condition);
+                } else { /// Case FK is in the table
+                    $newFromTable     = $join;
+                    $fkColumns        = $fk[$join]->{'columns'};
+                    $fkForeignColumns = $fk[$join]->{'foreignColumns'};
+                    $alias            = $fkColumns;
+                    $condition        = $alias . ' . ' . $fkForeignColumns . ' = ' . $fromAlias . '.' . $fkColumns;
+                    $addWhere         = true;
+                    $this->queryBuilder->innerJoin($newFromTable, $alias, 'ON', $condition);
                 }
+                $fromTable = $newFromTable;
+                $fromAlias = $alias;
+
                 /// Add rule condition
-                if ($addWhere && null !== $join && array_key_exists($join, $this->configRules)) {
+                if ($addWhere && null !== $join && null !== $this->configRules && array_key_exists($join, $this->configRules)) {
                     $configCondition = is_array($this->configRules[$join]) ? implode(',', $this->configRules[$join]) : $this->configRules[$join];
                     if (is_array($this->configRules[$join])) {
                         $this->queryBuilder->andWhere($alias . ' . ' . $fkForeignColumns . ' IN (' . $configCondition . ')');
@@ -508,10 +507,10 @@ class QueryBuilderDoctrine
     public function spreadsheet(array $columns, array $data)
     {
         $spreadsheet = new Spreadsheet($columns, $data);
-        $spreadsheet->setCreator('Eductive GROUP');
-        $spreadsheet->setLastModifiedBy('Eductive GROUP');
-        $spreadsheet->setSubject('Résultat requête');
-        $spreadsheet->setTitle('Requête');
-        $spreadsheet->generate('Excel5', 'resultat_' . date('YmdHis'));
+        $spreadsheet->setCreator('Organisation Name');
+        $spreadsheet->setLastModifiedBy('Organisation Name');
+        $spreadsheet->setSubject('Query result');
+        $spreadsheet->setTitle('Query');
+        $spreadsheet->generate('Excel5', 'result_' . date('YmdHis'));
     }
 }

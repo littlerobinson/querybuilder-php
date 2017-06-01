@@ -4,115 +4,134 @@ namespace Littlerobinson\QueryBuilder;
 
 class RunQueryBuilder
 {
-    private static function writeDatabaseYamlConfig()
+    private static $instance;
+
+    /**
+     * @var DoctrineDatabase
+     */
+    private $db;
+    /**
+     * @var QueryBuilderDoctrine
+     */
+    private $qb;
+
+    /**
+     * @var QueryBackup
+     */
+    private $pdo;
+
+    private function __construct()
     {
-        $db = new DoctrineDatabase();
-        $db->writeDatabaseYamlConfig();
+        $this->db  = new DoctrineDatabase();
+        $this->qb  = new QueryBuilderDoctrine($this->db);
+        $this->pdo = new QueryBackup();
+        $this->pdo->createDatabase(); /// Create database if not exist
     }
 
-    private static function executeQueryJson(string $jsonQuery)
+    public static function getInstance()
     {
-        $db = new DoctrineDatabase();
-        $qb = new QueryBuilderDoctrine($db);
-        echo $qb->executeQueryJson($jsonQuery);
+        if (!self::$instance) {
+            self::$instance = new RunQueryBuilder();
+        }
+        return self::$instance;
     }
 
-    private static function getDbObject()
+    private function writeDatabaseYamlConfig()
     {
-        $db       = new DoctrineDatabase();
-        $response = $db->getDatabaseYamlConfig(true);
+        $this->db->writeDatabaseYamlConfig();
+    }
+
+    private function executeQueryJson(string $jsonQuery)
+    {
+        echo $this->qb->executeQueryJson($jsonQuery);
+    }
+
+    private function getDbObject()
+    {
+        $response = $this->db->getDatabaseYamlConfig(true);
         if (false === $response) {
             http_response_code(400);
         }
         echo $response;
     }
 
-    private static function getDbTitle()
+    private function getDbTitle()
     {
-        $db = new DoctrineDatabase();
-        echo $db->getDatabaseTitle();
+        echo $this->db->getDatabaseTitle();
     }
 
-    private static function getSpreadsheet(array $columns, array $data)
+    private function getSpreadsheet(array $columns, array $data)
     {
-        $db = new DoctrineDatabase();
-        $qb = new QueryBuilderDoctrine($db);
-        $qb->spreadsheet($columns, $data);
+        $this->qb->spreadsheet($columns, $data);
     }
 
-    private static function saveQuery()
+    private function saveQuery()
     {
-        $pdo = new QueryBackup();
-        $pdo::createDatabase();
-        $response = $pdo::insert();
+        $response = $this->pdo->insert();
         if (false === $response) {
             http_response_code(400);
         }
         echo $response;
     }
 
-    private static function loadQuery()
+    private function loadQuery()
     {
-        $pdo      = new QueryBackup();
-        $response = $pdo::findOne();
+        $response = $this->pdo->findOne();
         if (false === $response) {
             http_response_code(400);
         }
         echo $response;
     }
 
-    private static function deleteQuery()
+    private function deleteQuery()
     {
-        $pdo      = new QueryBackup();
-        $response = $pdo::delete();
+        $response = $this->pdo->delete();
         if (false === $response) {
             http_response_code(400);
         }
         echo $response;
     }
 
-    private static function getListQuery()
+    private function getListQuery()
     {
-        $pdo = new QueryBackup();
-        $pdo::createDatabase();
-        $response = $pdo::getList();
+        $response = $this->pdo->getList();
         if (false === $response) {
             http_response_code(400);
         }
         echo $response;
     }
 
-    public static function execute()
+    public function execute()
     {
         if (isset($_POST['action_query_builder'])) {
             $action = $_POST['action_query_builder'];
             switch ($action) {
                 case 'get_db_object':
-                    self::getDbObject();
+                    $this->getDbObject();
                     break;
                 case 'get_db_title':
-                    self::getDbTitle();
+                    $this->getDbTitle();
                     break;
                 case 'write_database_yaml_config':
-                    self::writeDatabaseYamlConfig();
+                    $this->writeDatabaseYamlConfig();
                     break;
                 case 'execute_query_json':
                     $jsonQuery = isset($_POST['json_query']) ? $_POST['json_query'] : '';
-                    self::executeQueryJson($jsonQuery);
+                    $this->executeQueryJson($jsonQuery);
                     break;
                 case 'spreadsheet':
                     $columns = isset($_POST['columns']) ? json_decode($_POST['columns']) : [];
                     $data    = isset($_POST['data']) ? json_decode($_POST['data']) : [];
-                    self::getSpreadsheet($columns, $data);
+                    $this->getSpreadsheet($columns, $data);
                     break;
                 case 'save_query':
-                    self::saveQuery();
+                    $this->saveQuery();
                     break;
                 case 'load_query':
-                    self::loadQuery();
+                    $this->loadQuery();
                     break;
                 case 'delete_query':
-                    self::deleteQuery();
+                    $this->deleteQuery();
                     break;
                 case 'get_list_query':
                     self::getListQuery();

@@ -1,5 +1,5 @@
 database:
-    config_path: '/../config/database-config.yml'
+    config_path: 'database-config.yml'
     charset: utf8mb4
     driver: pdo_mysql
     host: 127.0.0.1

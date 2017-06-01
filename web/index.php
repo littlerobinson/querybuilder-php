@@ -11,7 +11,7 @@ setcookie('school', 1);
 setcookie('EDUCTIVEAUTH', 'eyJ0eXAiOi');
 
 if (!empty($_POST['action_query_builder'])) {
-    RunQueryBuilder::execute();
+    RunQueryBuilder::getInstance()->execute();
 } else {
     $template = new View('vue-js');
 }
