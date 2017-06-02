@@ -7,8 +7,6 @@ A developer can modify certain values ​​in the configuration file to, for ex
 The applicant Builder takes as input a json file with the fields to request as well as the conditions.
 From this file it will construct the query, execute it and return the result.
 
-## Example
-
 ### Configuration file
 
 When executing the `writeDatabaseYamlConfig` method it will generate a configuration YAML file with a retro engineering of your database.
@@ -227,6 +225,12 @@ post:
         name: id
 ...
 ```
+
+- Set restriction in your code (cookie or session)
+```
+user_id = 1 OR user_id = [1,2]
+```
+
 ### Security
 
 Add this in the config.yml file to tell the program where to find the restriction value.

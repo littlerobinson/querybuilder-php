@@ -306,8 +306,8 @@ class QueryBuilderDoctrine
 
                 /// Add rule condition
                 if ($addWhere && null !== $join && null !== $this->configRules && array_key_exists($join, $this->configRules)) {
-                    $configCondition = is_array($this->configRules[$join]) ? implode(',', $this->configRules[$join]) : $this->configRules[$join];
-                    if (is_array($this->configRules[$join])) {
+                    $configCondition = is_array(json_decode($this->configRules[$join])) ? implode(',', json_decode($this->configRules[$join])) : $this->configRules[$join];
+                    if (is_array(json_decode($this->configRules[$join]))) {
                         $this->queryBuilder->andWhere($alias . ' . ' . $fkForeignColumns . ' IN (' . $configCondition . ')');
                     } else {
                         $this->queryBuilder->andWhere($alias . ' . ' . $fkForeignColumns . ' = ' . $configCondition);
