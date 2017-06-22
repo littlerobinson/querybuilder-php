@@ -384,7 +384,7 @@ class QueryBuilderDoctrine
         /// Prepare query
         $this->prepareJsonQuery($jsonQuery);
 
-        /// Loop on tables
+        /// Create Query
         foreach ($this->from as $fromTable => $select) {
             /// Create From Alias
             $fromAlias = $fromTable . '_' . $this->objDbConfig->{$fromTable}->{'_primary_key'}[0];
@@ -392,15 +392,18 @@ class QueryBuilderDoctrine
             $this->queryBuilder->from($fromTable, $fromAlias);
             /// Add specifics rules (like restrictions)
             $this->addRulesConditions($fromTable);
-
             /// Add Select (if many to many association add inner join)
             $joinType = (sizeof($this->objDbConfig->{$fromTable}->{'_primary_key'}) > 1) ? 'innerJoin' : 'leftJoin';
             $this->addQuerySelect($this->fkFrom, $fromTable, $select, $fromAlias, $joinType);
         }
-
         /// Adding query conditions
         $this->addQueryCondition();
-
+        /// Add Group By FromTable unless if is a many to many table
+        if (sizeof($this->objDbConfig->{key($this->from)}->{'_primary_key'}) === 1) {
+            $fromPK  = $this->objDbConfig->{key($this->from)}->{'_primary_key'}[0];
+            $groupBy = key($this->from) . '_' . $fromPK . '.' . $fromPK;
+            $this->queryBuilder->addGroupBy($groupBy);
+        }
         /// Execute query and fetch result
         try {
             $result            = $this->doctrineDb->getConnection()->executeQuery($this->getSQLRequest());
