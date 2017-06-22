@@ -271,9 +271,9 @@ class QueryBuilderDoctrine
             foreach ($rules as $join) {
                 /// Case from table is the same as the table rule
                 if ($join === $fromTable) {
-                    $configCondition = $this->configRules[$fromTable];
-                    if (is_array($configCondition)) {
-                        $this->queryBuilder->andWhere($fromAlias . ' . ' . $fromPK . ' IN (' . implode(',', $configCondition) . ')');
+                    $configCondition = is_array(json_decode($this->configRules[$fromTable])) ? implode(',', json_decode($this->configRules[$fromTable])) : $this->configRules[$fromTable];
+                    if (is_array(json_decode($this->configRules[$fromTable]))) {
+                        $this->queryBuilder->andWhere($fromAlias . ' . ' . $fromPK . ' IN ( ' . $configCondition . ' )');
                     } else {
                         $this->queryBuilder->andWhere($fromAlias . ' . ' . $fromPK . ' = ' . $configCondition);
                     }
