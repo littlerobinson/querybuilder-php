@@ -75,7 +75,7 @@ class QueryBuilderDoctrine
                     $rules[$key] = !@unserialize($_COOKIE[$key]) ? $_COOKIE[$key] : unserialize($_COOKIE[$key]);
                     break;
                 case "session":
-                    $rules[$key] = $_SESSION[$key];
+                    $rules[$key] = !@unserialize($_SESSION[$key]) ? $_SESSION[$key] : unserialize($_SESSION[$key]);
                     break;
                 default:
                     $rules[$key] = !@unserialize($_COOKIE[$key]) ? $_COOKIE[$key] : unserialize($_COOKIE[$key]);

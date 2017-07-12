@@ -89,28 +89,33 @@ class DoctrineDatabase
         }
 
         /// Get database config array
-        $datas = $this->getDatabaseConfig();
+        $data = $this->getDatabaseConfig();
 
         /// Put current config traduction if an existing configuration file exist
         if ($currentConfig) {
-            $arrDiff = array_diff(array_map('serialize', $currentConfig), array_map('serialize', $datas));
+            $arrDiff       = array_diff(array_map('serialize', $currentConfig), array_map('serialize', $data));
+            $tableToDelete = array_diff_key($currentConfig, $data);
             foreach ($arrDiff as $tableKey => $tableDiff) {
+                /// Not take deleted table
+                if (array_key_exists($tableKey, $tableToDelete)) {
+                    continue;
+                }
                 $newTableDiff = unserialize($tableDiff);
 
-                $datas[$tableKey]['_table_translation'] = $newTableDiff['_table_translation'];
-                $datas[$tableKey]['_table_visibility']  = $newTableDiff['_table_visibility'];
+                $data[$tableKey]['_table_translation'] = $newTableDiff['_table_translation'];
+                $data[$tableKey]['_table_visibility']  = $newTableDiff['_table_visibility'];
                 foreach ($newTableDiff as $fieldKey => $fieldDiff) {
                     if (!is_array($fieldDiff) || $fieldKey === '_FK' || $fieldKey === '_primary_key') {
                         continue;
                     }
                     try {
-                        $datas[$tableKey][$fieldKey]['_field_translation'] = $fieldDiff['_field_translation'];
-                        $datas[$tableKey][$fieldKey]['_field_visibility']  = $fieldDiff['_field_visibility'];
-                        $datas[$tableKey][$fieldKey]['name']               = $fieldDiff['name'];
-                        $datas[$tableKey][$fieldKey]['type']               = $fieldDiff['type'];
-                        $datas[$tableKey][$fieldKey]['length']             = $fieldDiff['length'];
-                        $datas[$tableKey][$fieldKey]['not_null']           = $fieldDiff['not_null'];
-                        $datas[$tableKey][$fieldKey]['definition']         = $fieldDiff['definition'];
+                        $data[$tableKey][$fieldKey]['_field_translation'] = $fieldDiff['_field_translation'];
+                        $data[$tableKey][$fieldKey]['_field_visibility']  = $fieldDiff['_field_visibility'];
+                        $data[$tableKey][$fieldKey]['name']               = $fieldDiff['name'];
+                        $data[$tableKey][$fieldKey]['type']               = $fieldDiff['type'];
+                        $data[$tableKey][$fieldKey]['length']             = $fieldDiff['length'];
+                        $data[$tableKey][$fieldKey]['not_null']           = $fieldDiff['not_null'];
+                        $data[$tableKey][$fieldKey]['definition']         = $fieldDiff['definition'];
                     } catch (\Exception $e) {
                         return false;
                     }
@@ -118,10 +123,10 @@ class DoctrineDatabase
             }
         }
         /// Add FK
-        $datas = $this->addForeignKeys($datas);
+        $data = $this->addForeignKeys($data);
 
         /// Write yaml
-        $yaml = Yaml::dump($datas, $yamlInline);
+        $yaml = Yaml::dump($data, $yamlInline);
 
         $response = (@file_put_contents($this->configPath, $yaml) === false) ? false : true;
 
