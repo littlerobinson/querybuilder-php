@@ -59,7 +59,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <select v-model="newRuleRow" class="form-control">
+                <select v-model="newRuleRow" @change="addRuleOperator" class="form-control">
                     <option value="">-- Sélectionner un champs --</option>
                     <option v-if="newRuleTable != ''" v-for="(row, index) in rows" :value="index">
                         {{ row }}
@@ -75,7 +75,10 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <input type="text" v-model="newValue" class="form-control" placeholder="Condition">
+                <input v-if="type == 'text'" type="text" v-model="newValue" class="form-control" placeholder="Condition">
+                <input v-if="type == 'number'" type="number" v-model="newValue" class="form-control" placeholder="Condition">
+                <input v-if="type == 'date'" type="date" v-model="newValue" class="form-control" placeholder="Condition">
+                <input v-if="newRuleOperator == 'BETWEEN'" type="date" v-model="newValue2" class="form-control" placeholder="Condition 2">
             </div>
             <div class="form-group col-md-1">
                 <div v-if="adding">
@@ -116,7 +119,7 @@
                 <td>{{ conditionValue.logicalOperator }}</td>
                 <td>{{ conditionValue.field }}</td>
                 <td>{{ conditionValue.ruleOperator }}</td>
-                <td>{{ conditionValue.value }}</td>
+                <td>{{ conditionValue.value }} {{ conditionValue.value2 }}</td>
                 <td>
                     <a class="btn btn-danger delete-condition" href="#" @click="deleteCondition(conditionKey)"><i
                                 class="icon-trash icon-bar"></i> X</a>

@@ -2,8 +2,7 @@
 /* ******************************* Bootstrap REQUEST ************************************* */
 /* *********************************************************************************** */
 
-let request;
-request = new Vue({
+let request = new Vue({
     el: '#app-request',
     http: {
         emulateJSON: true,
@@ -75,7 +74,7 @@ request = new Vue({
             this.query.limit = this.limit;
             this.query.offset = this.offset;
             let $jsonQuery = JSON.stringify(this.query);
-            this.$http.post('/', {action_query_builder: 'execute_query_json', json_query: $jsonQuery}).then(
+            this.$http.post(this.queryPath, {action_query_builder: 'execute_query_json', json_query: $jsonQuery}).then(
                 response => {
                     this.loading = false;
                     this.data = response.body.items;
@@ -88,7 +87,7 @@ request = new Vue({
             );
         },
         spreadsheet: function () {
-            this.$http.post('/', {action_query_builder: 'spreadsheet', columns: this.columns, data: this.data}).then(
+            this.$http.post(this.queryPath, {action_query_builder: 'spreadsheet', columns: this.columns, data: this.data}).then(
                 response => {
                     console.log(response);
                     window.open("data:application/vnd.ms-excel, " + response.body);
@@ -106,7 +105,7 @@ request = new Vue({
             this.query.where = this.where;
             this.query.limit = this.limit;
             this.query.offset = this.offset;
-            this.$http.post('/', {
+            this.$http.post(this.queryPath, {
                 action_query_builder: 'save_query',
                 query: this.query,
                 title: this.saveTitle,
@@ -128,7 +127,7 @@ request = new Vue({
         },
         loadSave: function ($id) {
             this.loading = true;
-            this.$http.post('/', {action_query_builder: 'load_query', query_id: $id}).then(
+            this.$http.post(this.queryPath, {action_query_builder: 'load_query', query_id: $id}).then(
                 response => {
                     this.loading = false;
                     console.log(response.body.value);
@@ -150,7 +149,7 @@ request = new Vue({
         },
         deleteSave: function ($id, $index) {
             this.loading = true;
-            this.$http.post('/', {action_query_builder: 'delete_query', query_id: $id}).then(
+            this.$http.post(this.queryPath, {action_query_builder: 'delete_query', query_id: $id}).then(
                 response => {
                     this.saveQuery.splice($index, 1);
                     this.loading = false;
@@ -163,7 +162,7 @@ request = new Vue({
         },
         getListQuery: function () {
             this.loading = true;
-            this.$http.post('/', {action_query_builder: 'get_list_query'}).then(
+            this.$http.post(this.queryPath, {action_query_builder: 'get_list_query'}).then(
                 response => {
                     this.showModal = false;
                     this.loading = false;
@@ -181,7 +180,7 @@ request = new Vue({
             delete this.message[$key];
         },
         _getDbObject: function (callback) {
-            this.$http.post('/', {action_query_builder: 'get_db_object'}).then(
+            this.$http.post(this.queryPath, {action_query_builder: 'get_db_object'}).then(
                 response => {
                     this.dbObj = response.body;
                     callback();
@@ -192,7 +191,7 @@ request = new Vue({
             );
         },
         _getDbTitle: function () {
-            this.$http.post('/', {action_query_builder: 'get_db_title'}).then(
+            this.$http.post(this.queryPath, {action_query_builder: 'get_db_title'}).then(
                 response => {
                     this.dbTitle = response.body;
                 }, response => {
@@ -207,11 +206,15 @@ request = new Vue({
                 let $field = this.conditions[$condition].field;
                 let $ruleOperator = this.conditions[$condition].ruleOperator;
                 let $value = this.conditions[$condition].value;
+                let $value2 = this.conditions[$condition].value2;
 
                 $where[$logicalOperator] = {};
                 $where[$logicalOperator][$field] = {};
                 $where[$logicalOperator][$field][$ruleOperator] = [];
                 $where[$logicalOperator][$field][$ruleOperator].push($value);
+                if('' !== $value2) {
+                    $where[$logicalOperator][$field][$ruleOperator].push($value2);
+                }
 
                 this.where.push($where);
             }

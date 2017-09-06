@@ -34,13 +34,10 @@ Vue.component('conditionItem', {
             newRuleRow: '',
             newRuleOperator: '',
             newValue: '',
+            newValue2: '',
+            type: 'text',
             newCondition: [],
-            ruleOperators: [
-                {value: 'EQUAL', name: 'Est égal à'},
-                {value: 'LIKE', name: 'Contient'},
-                {value: 'BEGINS_WITH', name: 'Commence par'},
-                {value: 'ENDS_WITH', name: 'Fini par'}
-            ],
+            ruleOperators: [],
             logicalOperators: [
                 {value: 'AND', name: 'ET'},
                 {value: 'OR', name: 'OU'}
@@ -61,10 +58,10 @@ Vue.component('conditionItem', {
     computed: {
         adding: function () {
             return (this.newLogicalOperator !== ''
-            && this.newRuleTable !== ''
-            && this.newRuleRow !== ''
-            && this.newRuleOperator !== ''
-            && this.newValue !== '');
+                && this.newRuleTable !== ''
+                && this.newRuleRow !== ''
+                && this.newRuleOperator !== ''
+                && this.newValue !== '');
         },
     },
     watch: {
@@ -81,7 +78,8 @@ Vue.component('conditionItem', {
                 logicalOperator: this.newLogicalOperator,
                 field: $field,
                 ruleOperator: this.newRuleOperator,
-                value: this.newValue
+                value: this.newValue,
+                value2: this.newValue2
             };
             this.conditions.push($newCondition);
         },
@@ -112,6 +110,47 @@ Vue.component('conditionItem', {
                     : this.dbObj[$newRuleTable.table][$tableName].name;
 
                 this.rows[this.dbObj[$newRuleTable.table][$tableName].name] = $translation;
+            }
+        },
+        addRuleOperator: function () {
+            let $rowType;
+            $rowType = this.dbObj[this.newRuleTable.table][this.newRuleRow].type;
+            console.log($rowType);
+            switch ($rowType) {
+                case 'string':
+                    this.ruleOperators = [
+                        {value: 'EQUAL', name: 'Est égal à'},
+                        {value: 'LIKE', name: 'Contient'},
+                        {value: 'BEGINS_WITH', name: 'Commence par'},
+                        {value: 'ENDS_WITH', name: 'Fini par'}
+                    ];
+                    this.type = 'text';
+                    break;
+                case 'datetime':
+                    this.ruleOperators = [
+                        {value: 'EQUAL', name: 'Est égal à'},
+                        {value: 'LESS_THAN', name: 'Inférieur à'},
+                        {value: 'MORE_THAN', name: 'Supérieur à'},
+                        {value: 'BETWEEN', name: 'Entre'}
+                    ];
+                    this.type = 'date';
+                    break;
+                case 'integer':
+                    this.ruleOperators = [
+                        {value: 'EQUAL', name: 'Est égal à'},
+                        {value: 'LESS_THAN', name: 'Inférieur à'},
+                        {value: 'MORE_THAN', name: 'Supérieur à'}
+                    ];
+                    this.type = 'number';
+                    break;
+                default:
+                    this.ruleOperators = [
+                        {value: 'EQUAL', name: 'Est égal à'},
+                        {value: 'LIKE', name: 'Contient'},
+                        {value: 'BEGINS_WITH', name: 'Commence par'},
+                        {value: 'ENDS_WITH', name: 'Fini par'}
+                    ];
+                    this.type = 'text';
             }
         },
         _clearNewCondition: function () {
