@@ -143,6 +143,12 @@ Vue.component('conditionItem', {
                     ];
                     this.type = 'number';
                     break;
+                case 'boolean':
+                    this.ruleOperators = [
+                        {value: 'EQUAL', name: 'Est vrai'}
+                    ];
+                    this.type = 'boolean';
+                    break;
                 default:
                     this.ruleOperators = [
                         {value: 'EQUAL', name: 'Est égal à'},

@@ -77,6 +77,7 @@
             <div class="col-md-2">
                 <input v-if="type == 'text'" type="text" v-model="newValue" class="form-control" placeholder="Condition">
                 <input v-if="type == 'number'" type="number" v-model="newValue" class="form-control" placeholder="Condition">
+                <input v-if="type == 'boolean'" type="checkbox" v-model="newValue" class="form-control" placeholder="Condition">
                 <input v-if="type == 'date'" type="date" v-model="newValue" class="form-control" placeholder="Condition">
                 <input v-if="newRuleOperator == 'BETWEEN'" type="date" v-model="newValue2" class="form-control" placeholder="Condition 2">
             </div>
